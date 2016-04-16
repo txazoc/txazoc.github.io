@@ -1,0 +1,38 @@
+@charset "UTF-8";
+
+// Footer
+.footer {
+    display: none;
+
+    .focus {
+        padding: 10px 0;
+        text-align: center;
+
+        a {
+            color: #111;
+
+            &:hover, &:focus {
+                color: #f66;
+            }
+        }
+    }
+
+    .copy-right {
+        padding: 20px 0;
+        font-size: 13px;
+        text-align: center;
+        background-color: #222;
+
+        span {
+            color: #999;
+
+            @media (max-width: $media-divide-width) {
+                display: block;
+
+                &.split {
+                    display: none;
+                }
+            }
+        }
+    }
+}

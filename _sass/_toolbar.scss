@@ -1,0 +1,77 @@
+@charset "UTF-8";
+
+// 工具条
+.toolbar {
+    position: fixed;
+    right: 10px;
+    bottom: 59.5px;
+
+    @media (max-width: $media-divide-width) {
+        bottom: 79px;
+    }
+
+    .toolbar-item {
+        position: relative;
+        display: block;
+        width: $toolbar-size;
+        height: $toolbar-size;
+        margin-top: 1px;
+
+        &:hover, &:focus {
+            .toolbar-icon {
+                top: -$toolbar-size;
+            }
+
+            .toolbar-text {
+                top: 0;
+            }
+        }
+
+        .toolbar-btn {
+            position: absolute;
+            left: 0;
+            top: 0;
+            width: $toolbar-size;
+            height: $toolbar-size;
+            overflow: hidden;
+        }
+
+        // 工具条图标
+        .toolbar-icon {
+            position: absolute;
+            left: 0;
+            top: 0;
+            width: $toolbar-size;
+            height: $toolbar-size;
+            background-color: #c0c6c9;
+            font-size: 30px;
+            color: #fff;
+            text-align: center;
+            line-height: $toolbar-size;
+            @include transition(top 1s);
+        }
+
+        // 工具条文字
+        .toolbar-text {
+            position: absolute;
+            left: 0;
+            top: $toolbar-size;
+            width: $toolbar-size;
+            height: $toolbar-size;
+            background-color: #98a1a6;
+            padding-top: 12px;
+            font-size: 12px;
+            color: #fff;
+            text-align: center;
+            line-height: 1.2;
+            @include transition(top 1s);
+        }
+
+        .toolbar-layer {
+            position: absolute;
+            right: $toolbar-size - 6;
+            bottom: -10px;
+            width: 172px;
+        }
+    }
+}

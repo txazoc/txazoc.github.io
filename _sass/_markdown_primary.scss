@@ -1,0 +1,134 @@
+@charset "UTF-8";
+
+// Markdown 样式一
+.md-primary {
+    font-size: 14px;
+    line-height: 2;
+    color: #333;
+    word-wrap: break-word;
+
+    // 标题h1 h2 h3
+    h1, h2, h3 {
+        font-size: 20px;
+        font-weight: bold;
+        line-height: 2;
+    }
+
+    // 标题h4 h5 h6
+    h4, h5, h6 {
+        font-size: 16px;
+        font-weight: bold;
+        line-height: 2;
+    }
+
+    // 段落
+    p {
+        text-indent: 28px;
+
+        + p {
+            margin: 10px auto;
+        }
+
+        // 代码块
+        code {
+            padding: 2px 4px;
+            font-size: 95%;
+            color: #C7254E;
+            background-color: #F9F2F4;
+            border-radius: 4px;
+            text-indent: 0;
+        }
+    }
+
+    // pre code
+    pre {
+        display: none;
+        position: relative;
+        margin: 20px auto;
+        font-size: .9em;
+        line-height: 1.6;
+        border: 1px solid #333;
+        border-radius: 8px;
+        overflow-x: auto;
+        overflow-y: hidden;
+        white-space: nowrap;
+        word-break: break-all;
+        word-wrap: break-word;
+
+        code {
+            display: block;
+            margin: 0;
+            padding: 0.8em 1em !important;
+            border-radius: 0;
+            white-space: pre;
+            word-wrap: normal;
+        }
+    }
+
+    // 图片
+    img {
+        display: block;
+        margin: 20px auto;
+        max-width: 100%;
+        height: auto;
+    }
+
+    // 斜体字
+    em {
+        font-style: italic;
+    }
+
+    // 粗体字
+    strong {
+        font-weight: bold;
+
+        em {
+            font-style: italic;
+        }
+    }
+
+    // 引用
+    blockquote {
+        padding: 10px 20px;
+        margin: 10px auto;
+        font-size: 14px;
+        border-left: 8px solid #ccc;
+        background-color: #eee;
+        border-radius: 4px;
+
+        p {
+            text-indent: 0;
+        }
+    }
+
+    // 链接
+    a {
+        text-decoration: none;
+
+        &:link, &:visited {
+            outline: medium none;
+        }
+    }
+
+    // 水平线
+    hr {
+        margin: 20px auto;
+        height: 0;
+        box-sizing: content-box;
+        border: {
+            width: 1px 0;
+            style: solid none none;
+            color: #ddd;
+        }
+    }
+
+    // 列表
+    ul {
+        margin: 10px 0 10px 14px;
+
+        li {
+            padding-left: 14px;
+        }
+    }
+
+}

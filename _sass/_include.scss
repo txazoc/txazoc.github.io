@@ -1,0 +1,23 @@
+@charset "UTF-8";
+
+@mixin font-feature-settings($font-feature-settings) {
+    font-feature-settings: $font-feature-settings;
+    -o-font-feature-settings: $font-feature-settings;
+    -moz-font-feature-settings: $font-feature-settings;
+    -webkit-font-feature-settings: $font-feature-settings;
+}
+
+@mixin transition($transition) {
+    transition: $transition;
+    -o-transition: $transition;
+    -ms-transition: $transition;
+    -moz-transition: $transition;
+    -webkit-transition: $transition;
+}
+
+@mixin linear-gradient($linear-gradient) {
+    background: linear-gradient($linear-gradient);
+    background: -o-linear-gradient($linear-gradient);
+    background: -moz-linear-gradient($linear-gradient);
+    background: -webkit-linear-gradient($linear-gradient);
+}

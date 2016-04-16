@@ -1,0 +1,35 @@
+@charset "UTF-8";
+
+// 默认字体大小
+$default-font-size: 16px;
+// 默认字体粗细
+$default-font-weight: 400;
+// 默认字体
+$default-font-family: Menlo, "Courier New", Consolas, Monaco, "Andale Mono", monospace;
+// 默认行高
+$default-line-height: 1.5;
+
+// 默认颜色
+$default-color: #000;
+// 默认背景色
+$default-background-color: #fff;
+
+// 媒体分界宽度
+$media-divide-width: 768px;
+
+// Wrapper内边距
+$wrapper-padding: 20px;
+// Wrapper最大宽度
+//$wrapper-max-width: $media-divide-width - $wrapper-padding * 2;
+$wrapper-max-width: $media-divide-width;
+
+// logo宽度
+$logo-width: 120px;
+
+// 菜单
+$menu-count: 5;
+$menu-font-size: 16px;
+$menu-padding: ($media-divide-width - $logo-width - $menu-count * $menu-font-size * 3 - $wrapper-padding * 2 - 126px) / $menu-count / 2;
+
+// 工具条
+$toolbar-size: 52px;

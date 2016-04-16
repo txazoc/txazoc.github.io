@@ -1,0 +1,174 @@
+@charset "UTF-8";
+
+// 导航条高度
+$navbar-height: 54px;
+// 导航条底部边框宽度
+$navbar-border-bottom-width: 0;
+// 导航条底部边框颜色
+$navbar-border-bottom-color: #fff;
+// 导航条颜色
+$navbar-color: #ffc;
+// 导航条悬停颜色
+$navbar-hover-color: #ff6;
+// 导航条背景色
+$navbar-background-color: left, #3cc, lighten(#f66, 10%);
+// 导航条悬停背景色
+$navbar-hover-background-color: top, #f99, #f66, #f99;
+
+// 头部 (ok)
+.header {
+}
+
+// 导航条
+.navbar {
+    min-height: $navbar-height;
+    margin: 0;
+    padding: 0;
+    border: 0;
+    border-bottom: $navbar-border-bottom-width solid $navbar-border-bottom-color !important;
+}
+
+// 导航条颜色背景色
+.navbar-color {
+    @include linear-gradient(#{$navbar-background-color});
+
+    // logo颜色背景色
+    .navbar-brand {
+        color: $navbar-color;
+    }
+
+    // toggle颜色背景色
+    .navbar-toggle {
+        border-color: $navbar-color;
+
+        &:hover, &:focus {
+            background-color: #f66;
+            @include linear-gradient(#{$navbar-hover-background-color});
+        }
+
+        .icon-bar {
+            background-color: $navbar-color;
+        }
+    }
+
+    // 菜单下拉分隔线颜色
+    .navbar-collapse {
+        border-color: $navbar-color;
+    }
+
+    // 菜单颜色背景色
+    .navbar-nav {
+        > li {
+            > a {
+                color: $navbar-color;
+
+                &:hover, &:focus {
+                    color: $navbar-hover-color;
+                    background-color: #f66;
+                    @include linear-gradient(#{$navbar-hover-background-color});
+                }
+            }
+        }
+    }
+}
+
+// navbar-header
+.navbar-header {
+    @media (max-width: $media-divide-width) {
+        margin: 0;
+    }
+
+    @media (min-width: $media-divide-width) {
+        margin: 0;
+    }
+}
+
+// navbar-toggle
+.navbar-toggle {
+    padding: 9px 10px;
+    margin: ($navbar-height - 9px * 2 - 16px) / 2 0;
+    background-color: transparent;
+    border: 1px solid transparent;
+    border-radius: 4px;
+
+    .icon-bar {
+        width: 24px;
+        height: 2px;
+        border-radius: 1px;
+
+        + .icon-bar {
+            margin-top: 4px;
+        }
+    }
+}
+
+// navbar-logo
+.navbar-logo {
+    width: $logo-width;
+}
+
+// navbar-brand
+.navbar-brand {
+    margin: 0;
+    padding: 0;
+    height: $navbar-height;
+    font-size: 24px;
+    line-height: $navbar-height;
+    letter-spacing: 2px;
+}
+
+// navbar-collapse
+.navbar-collapse {
+    margin: 0;
+    padding: 0;
+}
+
+// nav
+.nav {
+    > li {
+        > a {
+            padding: 10px 15px;
+        }
+    }
+}
+
+// navbar-nav
+.navbar-nav {
+    margin: 0;
+
+    > li {
+        > a {
+            padding: ($navbar-height - 16px) / 2 $menu-padding - $menu-font-size / 2 ($navbar-height - 16px) / 2 $menu-padding + $menu-font-size / 2;
+            height: $navbar-height;
+            font-size: $menu-font-size;
+            letter-spacing: $menu-font-size;
+            line-height: $menu-font-size;
+            text-align: center;
+
+            @media (max-width: $media-divide-width) {
+                text-align: left;
+                padding-left: 20px;
+
+                &:hover, &:focus {
+                    padding-top: ($navbar-height - 18px) / 2;
+                    border: {
+                        width: 1px 0 1px 0;
+                        style: solid;
+                        color: $navbar-color;
+                    }
+                }
+            }
+        }
+
+        &:first-child {
+            > a {
+                @media (max-width: $media-divide-width) {
+                    &:hover, &:focus {
+                        padding-top: ($navbar-height - 18px) / 2 + 1px;
+                        border-top-width: 0;
+                    }
+                }
+            }
+        }
+    }
+}

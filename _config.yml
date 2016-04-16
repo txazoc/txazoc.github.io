@@ -1,0 +1,57 @@
+source:       .
+destination:  ./_site
+include:      []
+exclude:      [CNAME, Gemfile, Gemfile.lock, pom.xml, txazo-github-io.iml]
+timezone:     Asia/Shanghai
+encoding:     UTF-8
+
+permalink:  /:categories/:title.html
+
+gems: [jekyll-paginate]
+
+# 网站设置
+title: "txazoc"
+email: "txazo1218@163.com"
+description: "Java,JVM,Java编程,Java开发,Java Web开发,Java设计模式,Java开源框架,Struts2,Spring,Hibernate,数据库,MySQL,Linux,CSS,HTML,JavaScript,jQuery"
+baseurl: ""
+url: "http://www.txazo.com"
+# twitter_username: txazo
+# github_username:  txazo
+
+# Markdown引擎
+# kramdown, maruku, rdiscount, redcarpet
+markdown:      rdiscount
+markdownStyle: md-primary
+
+# highlight高亮样式
+highlightstyle: hljs-txazo
+
+# css引入
+css: ["http://cdn.bootcss.com/bootstrap/3.3.6/css/bootstrap.min.css", "/css/core.css"]
+# js引入
+js: ["http://cdn.bootcss.com/jquery/1.12.1/jquery.min.js", "http://cdn.bootcss.com/bootstrap/3.3.6/js/bootstrap.min.js", "http://cdn.bootcss.com/seajs/3.0.2/sea.js", "/js/load.js"]
+
+# rss
+rssxml: "/feed.xml"
+
+# 导航条菜单
+menu:
+    首页: /
+    分类: /
+    标签: /
+    归档: /
+    关于: /
+
+focus:
+    email: "mailto:txazo1218@163.com"
+    facebook: "https://www.facebook.com/txazo"
+    twitter: "https://twitter.com/txazo1218"
+    github: "https://github.com/txazo"
+    rss: "/feed.xml"
+    weibo: "http://weibo.com/txazo"
+    qzone: "javascript:;"
+    weixin: "javascript:;"
+
+# 分页
+paginate: 50
+paginate_path: "index/:num"

@@ -1,0 +1,43 @@
+@charset "UTF-8";
+
+// Reset margin and padding
+html, body, header, nav, footer, div, h1, h2, h3, h4, h5, h6, p, pre, blockquote, span, ul, li, a, hr, i {
+    margin: 0;
+    padding: 0;
+}
+
+// Body
+body {
+    font: $default-font-weight #{$default-font-size}/#{$default-line-height} $default-font-family;
+    color: $default-color;
+    background-color: $default-background-color;
+    -webkit-text-size-adjust: 100%;
+    font-kerning: normal;
+    @include font-feature-settings("kern" 1)
+}
+
+// Wrapper
+.wrapper {
+    max-width: calc(#{$wrapper-max-width});
+    margin: 0 auto;
+    padding: 0 $wrapper-padding;
+}
+
+// Link
+a {
+    text-decoration: none;
+
+    &:hover, &:focus {
+        text-decoration: none;
+    }
+
+    &:link, &:visited {
+        outline: none;
+    }
+}
+
+// Image
+img {
+    max-width: 100%;
+    vertical-align: middle;
+}
