@@ -1,0 +1,100 @@
+@charset "UTF-8";
+
+.hljs-dark {
+    background: #23241f;
+}
+
+.hljs-dark, .hljs-dark .hljs-tag, .hljs-dark .css .hljs-rules, .hljs-dark .css .hljs-value, .hljs-dark .css .hljs-function .hljs-preprocessor, .hljs-dark .hljs-pragma {
+    color: #f8f8f2
+}
+
+.hljs-dark .hljs-strongemphasis, .hljs-dark .hljs-strong, .hljs-dark .hljs-emphasis {
+    color: #a8a8a2
+}
+
+.hljs-dark .hljs-bullet, .hljs-dark .hljs-blockquote, .hljs-dark .hljs-horizontal_rule, .hljs-dark .hljs-number, .hljs-dark .hljs-regexp, .hljs-dark .alias .hljs-keyword, .hljs-dark .hljs-literal, .hljs-dark .hljs-hexcolor {
+    color: #ae81ff
+}
+
+.hljs-dark .hljs-tag .hljs-value, .hljs-dark .hljs-code, .hljs-dark .hljs-title, .hljs-dark .css .hljs-class, .hljs-dark .hljs-class .hljs-title:last-child {
+    color: #a6e22e
+}
+
+.hljs-dark .hljs-link_url {
+    font-size: 80%
+}
+
+.hljs-dark .hljs-strong, .hljs-dark .hljs-strongemphasis {
+    font-weight: bold
+}
+
+.hljs-dark .hljs-emphasis, .hljs-dark .hljs-strongemphasis, .hljs-dark .hljs-class .hljs-title:last-child {
+    font-style: italic
+}
+
+.hljs-dark .hljs-keyword, .hljs-dark .hljs-function, .hljs-dark .hljs-change, .hljs-dark .hljs-winutils, .hljs-dark .hljs-flow, .hljs-dark .lisp .hljs-title, .hljs-dark .clojure .hljs-built_in, .hljs-dark .nginx .hljs-title, .hljs-dark .tex .hljs-special, .hljs-dark .hljs-header, .hljs-dark .hljs-attribute, .hljs-dark .hljs-symbol, .hljs-dark .hljs-symbol .hljs-string, .hljs-dark .hljs-tag .hljs-title, .hljs-dark .hljs-value, .hljs-dark .alias .hljs-keyword:first-child, .hljs-dark .css .hljs-tag, .hljs-dark .css .unit, .hljs-dark .css .hljs-important {
+    color: #f92672
+}
+
+.hljs-dark .hljs-function .hljs-keyword, .hljs-dark .hljs-class .hljs-keyword:first-child, .hljs-dark .hljs-constant, .hljs-dark .css .hljs-attribute {
+    color: #66d9ef
+}
+
+.hljs-dark .hljs-variable, .hljs-dark .hljs-params, .hljs-dark .hljs-class .hljs-title {
+    color: #f8f8f2
+}
+
+.hljs-dark .hljs-string, .hljs-dark .css .hljs-id, .hljs-dark .hljs-subst, .hljs-dark .haskell .hljs-type, .hljs-dark .ruby .hljs-class .hljs-parent, .hljs-dark .hljs-built_in, .hljs-dark .sql .hljs-aggregate, .hljs-dark .django .hljs-template_tag, .hljs-dark .django .hljs-variable, .hljs-dark .smalltalk .hljs-class, .hljs-dark .django .hljs-filter .hljs-argument, .hljs-dark .smalltalk .hljs-localvars, .hljs-dark .smalltalk .hljs-array, .hljs-dark .hljs-attr_selector, .hljs-dark .hljs-pseudo, .hljs-dark .hljs-addition, .hljs-dark .hljs-stream, .hljs-dark .hljs-envvar, .hljs-dark .apache .hljs-tag, .hljs-dark .apache .hljs-cbracket, .hljs-dark .tex .hljs-command, .hljs-dark .hljs-prompt, .hljs-dark .hljs-link_label, .hljs-dark .hljs-link_url {
+    color: #e6db74
+}
+
+.hljs-dark .hljs-comment, .hljs-dark .hljs-javadoc, .hljs-dark .java .hljs-annotation, .hljs-dark .python .hljs-decorator, .hljs-dark .hljs-template_comment, .hljs-dark .hljs-pi, .hljs-dark .hljs-doctype, .hljs-dark .hljs-deletion, .hljs-dark .hljs-shebang, .hljs-dark .apache .hljs-sqbracket, .hljs-dark .tex .hljs-formula {
+    color: #75715e
+}
+
+.hljs-dark .coffeescript .javascript, .hljs-dark .javascript .xml, .hljs-dark .tex .hljs-formula, .hljs-dark .xml .javascript, .hljs-dark .xml .vbscript, .hljs-dark .xml .css, .hljs-dark .xml .hljs-cdata, .hljs-dark .xml .php, .hljs-dark .php .xml {
+    opacity: .5
+}
+
+.language-git {
+    color: #66d9ef;
+}
+
+// java
+.language-java {
+    .hljs-class {
+        .hljs-keyword {
+            color: #ae81ff !important;
+        }
+
+        .hljs-title {
+            color: #f92672 !important;
+        }
+    }
+
+    .hljs-function {
+        .hljs-keyword {
+            color: #ae81ff !important;
+        }
+
+        .hljs-title {
+            color: #a6e22e !important;
+        }
+    }
+
+    .hljs-keyword {
+        color: #ae81ff !important;
+    }
+
+    .hljs-string {
+        color: #66d9ef !important;
+    }
+
+    .hljs-meta {
+        color: #e6db74 !important;
+    }
+
+    .hljs-comment {
+        color: #880 !important;
+    }
+}
