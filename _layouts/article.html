@@ -8,9 +8,9 @@ layout: default
     </div>
     <div class="tag">
         {% for tag in page.tags %}
-        <span>
-            {{ tag }}
-        </span>
+        <div class="item">
+            <a href="#">{{ tag }}</a>
+        </div>
         {% endfor %}
     </div>
     <div class="info">
