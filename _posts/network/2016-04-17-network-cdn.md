@@ -6,11 +6,13 @@ tags:       [网络]
 date:       2016-04-14
 ---
 
-> CDN, Content Delivery Network, 内容分发网络, 一种实现静态资源加速的网络系统.
+> CDN，Content Delivery Network，内容分发网络，一种实现静态资源加速的网络系统。－百度百科
 
 #### 传统的Web访问方式
 
-传统的Web访问方式是直接将请求发送给服务器, 这中间
+先来介绍下传统的Web访问方式，过程为：客户端要访问网络资源，先通过DNS查询到资源对应的服务器IP地址，然后向服务器发送请求，服务器接受请求并处理后响应。
+
+这种方式存在什么缺点呢？
 
 #### CDN的Web访问方式
 
@@ -34,5 +36,4 @@ image.txazo.com - DNS Server - image.txazo.com CNAME image.txazo.com.w.kunlunar.
 * 迭代查询: 本地DNS服务器 - DNS服务器
 * 迭代查询: 本地DNS服务器 - CNAME - 智能DNS服务器
 * 返回最近的CDN节点的IP地址
-* 向返回的CDN节点请求资源, 存在直接返回, 不存在, 从资源服务器
-拉取资源
+* 向返回的CDN节点请求资源, 存在直接返回, 不存在, 从资源服务器拉取资源
