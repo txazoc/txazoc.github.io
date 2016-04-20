@@ -3,7 +3,7 @@ layout:     article
 categories: [java]
 title:      Java多线程
 tags:       [java, 多线程]
-date:       2016-04-20 22:00:00
+date:       2016-04-20
 ---
 
 #### Runnable
