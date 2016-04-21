@@ -22,6 +22,49 @@ public interface Runnable {
 
 `java.lang.Thread`
 
+#### 线程优先级
+
+Java线程可以设置优先级，优先级范围为`1 ~ 10`，默认优先级为5，优先级高的线程会被分配更多的CPU时间片。针对IO密集型线程，设置较高优先级，针对CPU密集型线程，设置较低优先级，防止CPU被独占。
+
+```java
+public class Thread {
+
+    // 最低优先级
+    public final static int MIN_PRIORITY = 1;
+    // 最高优先级
+    public final static int MAX_PRIORITY = 10;
+
+    // 线程优先级
+    private int priority;
+
+    public Thread() {
+        Thread parent = currentThread();
+        // 默认继承父线程优先级
+        this.priority = parent.getPriority();
+        setPriority(priority);
+    }
+
+    public final void setPriority(int newPriority) {
+        ThreadGroup g;
+        // 优先级大小校验
+        if (newPriority > MAX_PRIORITY || newPriority < MIN_PRIORITY) {
+            throw new IllegalArgumentException();
+        }
+        if ((g = getThreadGroup()) != null) {
+            // 线程优先级不超过线程组最大优先级
+            if (newPriority > g.getMaxPriority()) {
+                newPriority = g.getMaxPriority();
+            }
+            setPriority0(priority = newPriority);
+        }
+    }
+
+    // native方法改变线程优先级
+    private native void setPriority0(int newPriority);
+
+}
+```
+
 #### 线程状态
 
 Java线程有下面几种状态，参见`java.lang.Thread.State`。
@@ -36,12 +79,20 @@ synchronized(this) {
 }
 ```
 
-* `WAITING`，`等待状态`，线程进入等待状态，有
-    * as
-    * as
-    * as
-* `TIMED_WAITING`，`超时等待状态`
-* `TERMINATED`，`终止状态`
+* `WAITING`，`等待状态`，线程进入等待状态，对应的方法有：
+    * Object.wait()
+    * Thread.join()
+    * LockSupport.park()
+
+处于等待状态的线程，等待其它线程对它进行唤醒操作。
+
+* `TIMED_WAITING`，`超时等待状态`，线程等待指定的时间，对应的方法有：
+    * Object.wait(timeout)
+    * Thread.join(timeout)
+    * Thread.sleep(timeout)
+    * LockSupport.parkNanos(timeout)
+    * LockSupport.parkUntil(timeout)
+* `TERMINATED`，`终止状态`，线程结束执行。
 
 #### start()和run()
 
