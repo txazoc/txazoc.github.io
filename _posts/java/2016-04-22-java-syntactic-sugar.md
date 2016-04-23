@@ -382,17 +382,17 @@ public void testSwitchString() {
     String mode = "ACTIVE";
     String s;
     switch ((s = mode).hashCode()) {
-        default:
+        case -74056953:
+            if (s.equals("PASSIVE")) {
+                System.out.println(mode);
+            }
             break;
         case 1925346054:
             if (s.equals("ACTIVE")) {
                 System.out.println(mode);
             }
             break;
-        case -74056953:
-            if (s.equals("PASSIVE")) {
-                System.out.println(mode);
-            }
+        default:
             break;
     }
 }
