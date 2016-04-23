@@ -169,7 +169,7 @@ public void testGeneric();
       28: return
 ```
 
-通过反编译后的代码可以看出，24行的`checkcast`检查操作数栈顶的对象是否String类型，是的话就赋值给`name`，否则抛出`ClassCastExceptio`异常。
+通过反编译后的代码可以看出，字节码中没有泛型的痕迹，24行的`checkcast`检查操作数栈顶的对象是否String类型，是的话就赋值给`name`，否则抛出`ClassCastExceptio`异常。
 
 上面添加了泛型的代码和下面没有泛型的代码反编译后的效果是一样的。
 
@@ -183,13 +183,220 @@ public void testGeneric() {
 
 #### 4. 可变长参数
 
+```java
+public class VarargsTest {
 
+    public void varargs(int... params) {
+    }
+
+    public void testVarargs() {
+        varargs();
+        varargs(1);
+        varargs(1, 2);
+        varargs(new int[]{1, 2, 3});
+    }
+
+}
+```
+
+```java
+public void varargs(int...);
+    descriptor: ([I)V
+    flags: ACC_PUBLIC, ACC_VARARGS
+```
+
+```java
+public void testVarargs();
+    Code:
+       // 调用varargs()
+       0: aload_0
+       1: iconst_0
+       2: newarray       int
+       4: invokevirtual #2                  // Method varargs:([I)V
+
+       // 调用varargs(1)
+       7: aload_0
+       8: iconst_1
+       9: newarray       int
+      11: dup
+      12: iconst_0
+      13: iconst_1
+      14: iastore
+      15: invokevirtual #2                  // Method varargs:([I)V
+```
+
+从`varargs`的方法描述可以看出，params参数的类型为`[I`(int数组)，`ACC_VARARGS`代表该方法包含不定参数。在调用`varargs()`方法时，可以有以下几种参数传递方式：
+
+* 不传递参数，字节码：new一个空数组，传递给`varargs()`方法
+* 传递单个参数，字节码：new一个数组，参数加入到数组，然后传递数组给`varargs()`方法
+* 传递多个参数，字节码：new一个数组，参数加入到数组，然后传递数组给`varargs()`方法
+* 传递数组参数，字节码：直接传递数组给`varargs()`方法
 
 #### 5. 自动装箱拆箱
 
+`装箱`：基本数据类型转换为包装类型
+
+`拆箱`：包装类型转换为基本数据类型
+
+```java
+public void testAutoBox() {
+    // 装箱
+    Integer a = 10;
+    // 拆箱
+    int b = a;
+}
+```
+
+```java
+public void testAutoBox();
+    Code:
+       0: bipush        10
+       2: invokestatic  #2                  // Method java/lang/Integer.valueOf:(I)Ljava/lang/Integer;
+       5: astore_1
+       6: aload_1
+       7: invokevirtual #3                  // Method java/lang/Integer.intValue:()I
+      10: istore_2
+      11: return
+```
+
+```java
+public void testAutoBox() {
+    // 装箱，Integer.valueOf()转换为包装类型
+    Integer a = Integer.valueOf(10);
+    // 拆箱, Integer.intValue()转换为基本数据类型
+    int b = a.intValue();
+}
+```
+
 #### 6. 增强for循环
 
+```java
+public void testForEach() {
+    int number = 0;
+    List<Integer> list = new ArrayList<Integer>();
+    for (Integer i : list) {
+        number = i;
+    }
+}
+```
+
+```java
+public void testForEach();
+    Code:
+       0: iconst_0
+       1: istore_1
+       2: new           #2                  // class java/util/ArrayList
+       5: dup
+       6: invokespecial #3                  // Method java/util/ArrayList."<init>":()V
+       9: astore_2
+      10: aload_2
+      11: invokeinterface #4,  1            // InterfaceMethod java/util/List.iterator:()Ljava/util/Iterator;
+      16: astore_3
+      17: aload_3
+      18: invokeinterface #5,  1            // InterfaceMethod java/util/Iterator.hasNext:()Z
+      23: ifeq          46
+      26: aload_3
+      27: invokeinterface #6,  1            // InterfaceMethod java/util/Iterator.next:()Ljava/lang/Object;
+      32: checkcast     #7                  // class java/lang/Integer
+      35: astore        4
+      37: aload         4
+      39: invokevirtual #8                  // Method java/lang/Integer.intValue:()I
+      42: istore_1
+      43: goto          17
+      46: return
+```
+
+```java
+public void testForEach() {
+    int number = 0;
+    List list = new ArrayList();
+    for (Iterator i = list.iterator(); i.hasNext(); ) {
+        number = ((Integer) i.next()).intValue();
+    }
+}
+```
+
 #### 7. switch字符串
+
+```java
+public void testSwitchString() {
+    String mode = "ACTIVE";
+    switch (mode) {
+        case "ACTIVE":
+            System.out.println(mode);
+            break;
+        case "PASSIVE":
+            System.out.println(mode);
+            break;
+    }
+}
+```
+
+```java
+public void testSwitchString();
+    Code:
+       0: ldc           #2                  // String ACTIVE
+       2: astore_1
+       3: aload_1
+       4: astore_2
+       5: iconst_m1
+       6: istore_3
+       7: aload_2
+       8: invokevirtual #3                  // Method java/lang/String.hashCode:()I
+      11: lookupswitch  { // 2
+             -74056953: 50
+            1925346054: 36
+               default: 61
+          }
+      36: aload_2
+      37: ldc           #2                  // String ACTIVE
+      39: invokevirtual #4                  // Method java/lang/String.equals:(Ljava/lang/Object;)Z
+      42: ifeq          61
+      45: iconst_0
+      46: istore_3
+      47: goto          61
+      50: aload_2
+      51: ldc           #5                  // String PASSIVE
+      53: invokevirtual #4                  // Method java/lang/String.equals:(Ljava/lang/Object;)Z
+      56: ifeq          61
+      59: iconst_1
+      60: istore_3
+      61: iload_3
+      62: lookupswitch  { // 2
+                     0: 88
+                     1: 98
+               default: 105
+          }
+      88: getstatic     #6                  // Field java/lang/System.out:Ljava/io/PrintStream;
+      91: aload_1
+      92: invokevirtual #7                  // Method java/io/PrintStream.println:(Ljava/lang/String;)V
+      95: goto          105
+      98: getstatic     #6                  // Field java/lang/System.out:Ljava/io/PrintStream;
+     101: aload_1
+     102: invokevirtual #7                  // Method java/io/PrintStream.println:(Ljava/lang/String;)V
+     105: return
+```
+
+```java
+public void testSwitchString() {
+    String mode = "ACTIVE";
+    String s;
+    switch ((s = mode).hashCode()) {
+        default:
+            break;
+        case 1925346054:
+            if (s.equals("ACTIVE")) {
+                System.out.println(mode);
+            }
+            break;
+        case -74056953:
+            if (s.equals("PASSIVE")) {
+                System.out.println(mode);
+            }
+            break;
+    }
+}
+```
 
 #### 8. try-with-resources
 
