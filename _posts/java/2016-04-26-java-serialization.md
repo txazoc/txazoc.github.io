@@ -86,11 +86,11 @@ JSON序列化的特点：
 ```javascript
 {
     "id": "1",
-    "list": [
-        {
-            "name": "admin"
-        }
-    ]
+    "name": "xiaoming",
+    "teacher": {
+        "id": "1",
+        "name": "xiaohong"
+    }
 }
 ```
 

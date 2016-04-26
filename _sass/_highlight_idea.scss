@@ -90,3 +90,31 @@
         color: #880 !important;
     }
 }
+
+// javascript
+.language-javascript {
+    .hljs-string {
+        color: #f92672 !important;
+    }
+}
+
+// xml
+.language-xml {
+    color: #ae81ff !important;
+
+    .hljs-tag {
+        color: #a6e22e !important;
+    }
+
+    .hljs-name {
+        color: #e6db74 !important;
+    }
+
+    .hljs-attr {
+        color: #66d9ef !important;
+    }
+
+    .hljs-string {
+        color: #f92672 !important;
+    }
+}
