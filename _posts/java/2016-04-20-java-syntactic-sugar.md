@@ -3,7 +3,7 @@ layout:     article
 categories: [java]
 title:      Java语法糖
 tags:       [java, 语法糖]
-date:       2016-04-22
+date:       2016-04-20
 ---
 
 > `语法糖`，Syntactic Sugar，也译为`糖衣语法`，指计算机语言中添加的某种语法。
