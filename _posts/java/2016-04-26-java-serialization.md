@@ -103,10 +103,14 @@ Hessian序列化的特点：
 
 #### Thrift
 
+Thrift的特点：
+
 * 数据格式：二进制
 * 支持语言：Java、C++、Python、Ruby、PHP
 
 #### Protobuf
+
+Protobuf的特点：
 
 * 序列化格式：流
 * 支持语言：Java、C++、Python、Go
