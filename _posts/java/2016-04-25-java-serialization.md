@@ -27,9 +27,13 @@ Java序列化的特点：
 * 数据格式：对象流
 
 ```java
+package org.txazo.java.serialization.jdk;
+
+import java.io.Serializable;
+
 public class Teacher implements Serializable {
 
-    private static final long serialVersionUID = -2513305609411074005L;
+    private static final long serialVersionUID = 3065959900182294875L;
 
     private int id;
     private String name;
@@ -40,22 +44,32 @@ public class Teacher implements Serializable {
     }
 
 }
+```
+
+```java
+package org.txazo.java.serialization.jdk;
+
+import java.io.Serializable;
 
 public class Student implements Serializable {
 
-    private static final long serialVersionUID = 1152043348774545250L;
+    private static final long serialVersionUID = 7782253254733071150L;
 
     private int id;
     private String name;
-    private Teacher teacher;
+    private Teacher[] teachers;
 
-    public Student(int id, String name, Teacher teacher) {
+    public Student(int id, String name, Teacher[] teachers) {
         this.id = id;
         this.name = name;
-        this.teacher = teacher;
+        this.teachers = teachers;
     }
 
 }
+```
+
+```java
+
 ```
 
 我们来通过一个简单的Java对象来看下Java序列化后生成的二进制格式。
