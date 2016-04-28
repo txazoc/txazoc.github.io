@@ -4,7 +4,7 @@ define(function (require, exports, module) {
         init: function () {
             Init.initEvent();
             Init.initHighlight();
-            Init.isWeiXin();
+            Init.initWeiXin();
         },
 
         initEvent: function () {
@@ -37,9 +37,25 @@ define(function (require, exports, module) {
             }
         },
 
+        initWeiXin: function () {
+            if (Init.isWeiXin()) {
+                $('#header .navbar-nav').find('li a').each(function (i, e) {
+                    var content = '';
+                    var text = $(this).html();
+                    for (var k = 0; k < text.length; k++) {
+                        content += text.charAt(k);
+                        if (k != text.length - 1) {
+                            content += '<label></label>';
+                        }
+                    }
+                    $(this).html(content);
+                });
+            }
+        },
+
         isWeiXin: function () {
             var userAgent = window.navigator.userAgent.toLowerCase();
-            alert(userAgent);
+            return userAgent.match(/MicroMessenger/i) == "micromessenger";
         }
     };
 

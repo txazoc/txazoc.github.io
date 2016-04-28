@@ -145,10 +145,15 @@ $navbar-hover-background-color: top, #f99, #f66, #f99;
             line-height: $menu-font-size;
             text-align: center;
 
+            > label {
+                width: $menu-font-size;
+                min-height: 1px;
+                visibility: hidden;
+            }
+
             @media (max-width: $media-divide-width) {
                 text-align: left;
                 padding-left: 20px;
-                letter-spacing: $menu-font-size !important;
 
                 &:hover, &:focus {
                     padding-top: ($navbar-height - 18px) / 2;
