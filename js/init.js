@@ -4,6 +4,7 @@ define(function (require, exports, module) {
         init: function () {
             Init.initEvent();
             Init.initHighlight();
+            Init.isWeiXin();
         },
 
         initEvent: function () {
@@ -34,6 +35,11 @@ define(function (require, exports, module) {
                     });
                 });
             }
+        },
+
+        isWeiXin: function () {
+            var userAgent = window.navigator.userAgent.toLowerCase();
+            alert(userAgent);
         }
     };
 
