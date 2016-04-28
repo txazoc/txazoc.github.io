@@ -26,7 +26,7 @@ Java序列化的特点：
 
 * 数据格式：对象流
 
-为了深入了解Java序列化的过程，先来创建下面两个类。
+为了深入理解Java序列化的过程，先来创建下面两个类。
 
 ```java
 package org.txazo.java.serialization.jdk;
