@@ -89,7 +89,11 @@ public void testJDKSerialization() throws Exception {
 ```java
 AC ED       // 对象流头部的魔数，固定为0xACED
 00 05       // 序列化版本号5
+
+// 开始写入对象
 73          // TC_OBJECT，对象标识
+
+// 先写对象的描述
 72          // TC_CLASSDESC，Class描述标识
 00 28       // 字符串长度40
 6F 72 67 2E 74 78 61 7A 
@@ -116,12 +120,19 @@ AC ED       // 对象流头部的魔数，固定为0xACED
 2F 73 65 72 69 61 6C 69 7A 61 74 69 6F 6E 2F 6A
 64 6B 2F 54 65 61 63 68 65 72 3B // [Lorg/txazo/java/serialization/jdk/Teacher;
 78          // TC_ENDBLOCKDATA，对象的数据块结束标识
-70          // TC_NULL，NULL标识
+70          // TC_NULL，父类的类描述，为NULL代表没有
+// 结束写入对象的描述
+
+// 写入对象的属性id和name
 00 00 03 E8 // int值1000
 74          // TC_STRING，字符串标识
 00 08       // 字符串长度8
 78 69 61 6F 6D 69 6E 67 // 字符串xiaoming
 75          // TC_ARRAY，数组标识
+
+// 写入对象的属性teachers
+
+// 写入Teacher数组的描述
 72          // TC_CLASSDESC，Class描述标识
 00 2B       // 字符串长度43
 5B 4C 6F 72 67 2E 74 78 61 7A 6F 2E 6A 61 76 61
@@ -131,9 +142,13 @@ AC ED       // 对象流头部的魔数，固定为0xACED
 02          // SC_SERIALIZABLE，可序列化标识
 00 00       // 属性数量0
 78          // TC_ENDBLOCKDATA，对象的数据块结束标识
-70          // TC_NULL，NULL标识
+70          // TC_NULL，父类的类描述，为NULL代表没有
 00 00 00 02 // 数组长度2
+
+// 写入teachers[0]
 73          // TC_OBJECT，对象标识
+
+// 写入Teacher的描述
 72          // TC_CLASSDESC，Class描述标识
 00 28       // 字符串长度40
 6F 72 67 2E 74 78 61 7A 6F 2E 6A 61 76 61 2E 73
@@ -151,11 +166,15 @@ AC ED       // 对象流头部的魔数，固定为0xACED
 71          // TC_REFERENCE，引用标识
 00 7E 00 01 // int值1(0x7e0000 + 1)，指向流中已经写入的对象
 78          // TC_ENDBLOCKDATA，对象的数据块结束标识
-70          // TC_NULL，NULL标识
+70          // TC_NULL，父类的类描述，为NULL代表没有
+
+// 写入teachers[0]的属性值id和name
 00 00 00 65 // int值101
 74          // TC_STRING，字符串标识
 00 07       // 字符串长度7
 63 68 69 6E 65 73 65 // 字符串chinese
+
+// 写入teachers[1]的属性值id和name
 73          // TC_OBJECT，对象标识
 71          // TC_REFERENCE，引用标识
 00 7E 00 07 // int值7(0x7e0000 + 7)，指向流中已经写入的对象
@@ -169,7 +188,7 @@ AC ED       // 对象流头部的魔数，固定为0xACED
 
 * 冗余数据较多，造成整体序列化后的数据量较大
 * 序列化的流程为：
-    * 写入对象描述
+    * 写入对象流的头部，包括魔数和版本号
     * 写入对象的值
 
 #### XML序列化
