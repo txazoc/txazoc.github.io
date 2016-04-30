@@ -30,6 +30,10 @@
             @media (max-width: $media-divide-width) {
                 display: block;
 
+                + span {
+                    margin-top: 10px;
+                }
+
                 &.split {
                     display: none;
                 }
