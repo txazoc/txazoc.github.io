@@ -3,7 +3,7 @@ layout:     article
 categories: [personal]
 title:      我的博客开通了
 tags:       [个人]
-date:       2016-01-26
+date:       2016-03-01
 ---
 
 我的博客开通了!

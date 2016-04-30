@@ -3,7 +3,7 @@ layout:     article
 categories: [network]
 title:      HTTP协议
 tags:       [个人]
-date:       2016-04-14
+date:       2016-03-10
 ---
 
 > HTTP, 超文本传输协议, 互联网上应用最为广泛的一种网络协议

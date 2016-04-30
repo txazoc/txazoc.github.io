@@ -3,7 +3,7 @@ layout:     article
 categories: [java]
 title:      Java List
 tags:       [java, 集合, list]
-date:       2016-04-21
+date:       2016-04-03
 ---
 
 > List，有序的集合(也称序列)。

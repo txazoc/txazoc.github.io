@@ -3,7 +3,7 @@ layout:     article
 categories: [network]
 title:      DNS
 tags:       [网络]
-date:       2016-04-14
+date:       2016-03-13
 ---
 
 > DNS, Domain Name System, 域名系统, 因特网上作为域名和IP地址相互映射的一个分布式系统

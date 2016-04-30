@@ -3,7 +3,7 @@ layout:     article
 categories: [network]
 title:      CDN
 tags:       [网络]
-date:       2016-04-14
+date:       2016-03-20
 ---
 
 > CDN，Content Delivery Network，内容分发网络，一种实现静态资源加速的网络系统。－百度百科

@@ -3,7 +3,7 @@ layout:     article
 categories: [分布式 调度]
 title:      任务调度
 tags:       [架构]
-date:       2016-04-18
+date:       2016-03-24
 ---
 
 在开发中常见的任务调度有脚本调度(Shell、Python、Ruby)、应用程序调度(Java)。
