@@ -48,6 +48,22 @@
     }
 }
 
+// Page
+.page {
+    margin-top: 25px;
+    text-align: center;
+
+    a {
+        &:hover {
+            color: #f99;
+        }
+
+        + a {
+            margin-left: 50px;
+        }
+    }
+}
+
 // Article
 .article {
     .title {

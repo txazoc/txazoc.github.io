@@ -1,7 +1,7 @@
 seajs.config({
     base: '/js',
     alias: {
-        'init': 'init.js',
+        'init': 'init.js?v=20160430',
         'highlight': '/js/lib/highlight.js'
     }
 });

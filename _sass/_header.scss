@@ -26,6 +26,7 @@ $navbar-hover-background-color: top, #f99, #f66, #f99;
     padding: 0;
     border: 0;
     border-bottom: $navbar-border-bottom-width solid $navbar-border-bottom-color !important;
+    border-radius: 0 !important;
 }
 
 // 导航条颜色背景色

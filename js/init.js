@@ -5,6 +5,7 @@ define(function (require, exports, module) {
             Init.initEvent();
             Init.initHighlight();
             Init.initWeiXin();
+            Init.initPagination();
         },
 
         initEvent: function () {
@@ -56,6 +57,50 @@ define(function (require, exports, module) {
         isWeiXin: function () {
             var userAgent = window.navigator.userAgent.toLowerCase();
             return userAgent.match(/MicroMessenger/i) == "micromessenger";
+        },
+
+        initPagination: function () {
+            var $page = $('.page');
+            if ($page.length > 0) {
+                var pageValue = $page.attr('page');
+                var pages = pageValue.split('#');
+                var currentPage = parseInt(pages[0]);
+                var totalPage = parseInt(pages[1]);
+                Init.buildPagination(currentPage, totalPage);
+            }
+        },
+
+        buildPagination: function (currentPage, totalPage) {
+            var pageArray = [];
+            if (totalPage <= 5) {
+                pageArray = Init.getIntArray(1, totalPage);
+            } else if (currentPage <= 3) {
+                pageArray = Init.getIntArray(1, 5);
+            } else if (currentPage >= totalPage - 2) {
+                pageArray = Init.getIntArray(totalPage - 4, totalPage);
+            } else {
+                pageArray = Init.getIntArray(currentPage - 2, currentPage + 2);
+            }
+
+            var $page = $('.page');
+            $.each(pageArray, function (i, v) {
+                var p = $('<a></a>').html(v);
+                if (v == currentPage) {
+                    p.css('color', '#ccc');
+                } else {
+                    p.attr('href', v == 1 ? '/' : '/index/' + v);
+                }
+                $page.append(p);
+            });
+            $page.show();
+        },
+
+        getIntArray: function (from, to) {
+            var array = [];
+            for (var i = from; i <= to; i++) {
+                array.push(i);
+            }
+            return array;
         }
     };
 
