@@ -6,6 +6,7 @@ define(function (require, exports, module) {
             Init.initHighlight();
             Init.initWeiXin();
             Init.initPagination();
+            Init.initBaiduStatis();
         },
 
         initEvent: function () {
@@ -102,6 +103,14 @@ define(function (require, exports, module) {
                 array.push(i);
             }
             return array;
+        },
+
+        initBaiduStatis: function () {
+            var _hmt = _hmt || [];
+            var hm = document.createElement("script");
+            hm.src = "//hm.baidu.com/hm.js?0d7547701e484811b2f5d1a2e0ad2450";
+            var s = document.getElementsByTagName("script")[0];
+            s.parentNode.insertBefore(hm, s);
         }
     };
 

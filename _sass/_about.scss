@@ -3,7 +3,25 @@
 // About
 .about {
     text-align: center;
-    margin-top: 30px;
+    margin-top: 10px;
+
+    h3 {
+        line-height: 2;
+    }
+
+    p {
+        line-height: 2;
+        color: #777;
+        font-size: 14px;
+    }
+
+    a {
+        color: #6cc;
+
+        &:hover {
+            color: #f66;
+        }
+    }
 
     .qrcode {
         text-align: center;
