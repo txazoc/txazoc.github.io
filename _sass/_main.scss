@@ -53,22 +53,40 @@
     margin-top: 25px;
     text-align: center;
 
-    a {
-        padding: 5px 25px;
-        color: #6cc;
-        background: #f6f6f6;
-        border-radius: 20px;
-        border: 1px solid #f3f3f3;
+    @media (min-width: $media-divide-width) {
+        a {
+            padding: 5px 25px;
+            color: #6cc;
+            background: #f6f6f6;
+            border-radius: 20px;
+            border: 1px solid #f3f3f3;
 
-        &.hover {
-            &:hover {
-                color: #f3f3f3;
-                background: #f99;
+            &.hover {
+                &:hover {
+                    color: #f3f3f3;
+                    background: #f99;
+                }
+            }
+
+            + a {
+                margin-left: 50px;
             }
         }
+    }
 
-        + a {
-            margin-left: 20px;
+    @media (max-width: $media-divide-width) {
+        a {
+            color: #6cc;
+
+            &.hover {
+                &:hover {
+                    color: #f99;
+                }
+            }
+
+            + a {
+                margin-left: 30px;
+            }
         }
     }
 
