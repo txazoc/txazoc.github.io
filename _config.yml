@@ -53,5 +53,5 @@ focus:
     weixin: "javascript:;"
 
 # 分页
-paginate: 2
+paginate: 8
 paginate_path: "index/:num"
