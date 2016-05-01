@@ -1,0 +1,27 @@
+@charset "UTF-8";
+
+// About
+.about {
+    text-align: center;
+    margin-top: 30px;
+
+    .qrcode {
+        text-align: center;
+        padding: 10px 0;
+
+        img {
+            width: 250px;
+            height: 250px;
+
+            &.weixin {
+                border: 1px solid #ccc;
+                border-radius: 5px;
+            }
+
+            &.zhifubao {
+                border: 1px solid #ccc;
+                border-radius: 5px;
+            }
+        }
+    }
+}
