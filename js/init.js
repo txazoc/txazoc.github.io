@@ -88,10 +88,11 @@ define(function (require, exports, module) {
                 if (v == currentPage) {
                     p.css('color', '#ccc');
                 } else {
-                    p.attr('href', v == 1 ? '/' : '/index/' + v);
+                    p.addClass('hover').attr('href', v == 1 ? '/' : '/index/' + v);
                 }
                 $page.append(p);
             });
+            $page.append($('<span class="summary"></span>').html(currentPage + ' / ' + totalPage));
             $page.show();
         },
 

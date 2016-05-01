@@ -54,13 +54,27 @@
     text-align: center;
 
     a {
-        &:hover {
-            color: #f99;
+        padding: 5px 25px;
+        color: #6cc;
+        background: #f6f6f6;
+        border-radius: 20px;
+        border: 1px solid #f3f3f3;
+
+        &.hover {
+            &:hover {
+                color: #f3f3f3;
+                background: #f99;
+            }
         }
 
         + a {
             margin-left: 50px;
         }
+    }
+
+    .summary {
+        float: right;
+        color: #999;
     }
 }
 
