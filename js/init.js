@@ -86,7 +86,7 @@ define(function (require, exports, module) {
             $.each(pageArray, function (i, v) {
                 var p = $('<a></a>').html(v);
                 if (v == currentPage) {
-                    p.css('color', '#ccc');
+                    p.css('color', '#999');
                 } else {
                     p.addClass('hover').attr('href', v == 1 ? '/' : '/index/' + v);
                 }

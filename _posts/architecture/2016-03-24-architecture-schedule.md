@@ -1,6 +1,6 @@
 ---
 layout:     article
-categories: [分布式 调度]
+categories: [分布式]
 title:      任务调度
 tags:       [架构]
 date:       2016-03-24
