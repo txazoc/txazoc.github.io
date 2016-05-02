@@ -51,6 +51,13 @@ define(function (require, exports, module) {
                     }
                     $(this).html(content);
                 });
+
+                var $about = $('.about');
+                if ($about.length > 0) {
+                    var $email = $about.find('.email');
+                    $email.parent().append($email.html());
+                    $email.remove();
+                }
             }
         },
 
