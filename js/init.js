@@ -6,6 +6,7 @@ define(function (require, exports, module) {
             Init.initHighlight();
             Init.initWeiXin();
             Init.initPagination();
+            Init.initPage();
         },
 
         initEvent: function () {
@@ -109,6 +110,51 @@ define(function (require, exports, module) {
                 array.push(i);
             }
             return array;
+        },
+
+        initPage: function () {
+            if (Page == 'tags') {
+                Init.initTags();
+            }
+        },
+
+        initTags: function () {
+            var tag = Init.getUrlParamValue('tag');
+            if (tag == null || (tag = tag.trim()) == '') {
+                return;
+            }
+
+            require.async('data', function () {
+                var postArray = [];
+                $.each(Post, function (i, p) {
+                    var tagArray = p.tags.trim().split(' ');
+                    if ($.inArray(tag, tagArray) >= 0) {
+                        postArray.push(p);
+                    }
+                });
+                Init.displayPost(postArray);
+            });
+        },
+
+        displayPost: function (posts) {
+            var listWrapper = $('<div class="list"><ul></ul></div>');
+            var list = listWrapper.find('ul');
+            $.each(posts, function (i, p) {
+                list.append($('<li></li>')
+                    .append($('<h3 class="list-title"></h3>').append($('<a></a>').attr('href', p.url).html(p.title)))
+                    .append($('<div class="list-content"></div>').append($('<p></p>').html(p.content)))
+                    .append($('<div class="list-info"></div>').append($('<span class="datetime"></span>').html(p.date))));
+            });
+            $('#main').find('.wrapper').html('').append(listWrapper);
+        },
+
+        getUrlParamValue: function (param) {
+            var reg = new RegExp("(^|&)" + param + "=([^&]*)(&|$)");
+            var r = window.location.search.substr(1).match(reg);
+            if (r != null) {
+                return decodeURI(r[2]);
+            }
+            return null;
         }
     };
 
