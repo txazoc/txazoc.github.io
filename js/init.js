@@ -1,5 +1,7 @@
 define(function (require, exports, module) {
 
+    var Color = ['#DB2828', '#F2711C', '#FBBD08', '#B5CC18', '#21BA45', '#00B5AD', '#2185D0', '#6435C9', '#A333C8', '#E03997'];
+
     var Init = {
         init: function () {
             // 事件
@@ -122,9 +124,21 @@ define(function (require, exports, module) {
         },
 
         initPage: function () {
-            if (Page == 'tags') {
+            if (Page == 'tag') {
+                Init.initTag();
+            } else if (Page == 'tags') {
                 Init.initTags();
             }
+        },
+
+        initTag: function () {
+            Color.sort(function () {
+                return 0.5 - Math.random();
+            });
+            $('.tags').find('.items .item a').each(function (i, e) {
+                $(this).css('background-color', Color[i % Color.length]);
+            });
+            $('.tags').show();
         },
 
         initTags: function () {

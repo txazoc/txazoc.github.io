@@ -2,28 +2,34 @@
 
 // Tags
 .tags {
+    display: none;
     margin-top: 30px;
 
     h3 {
-
+        line-height: 2;
     }
 
-    .item {
-        display: inline-block;
-        margin-right: 10px;
-        padding: 10px 0;
+    .items {
+        text-align: center;
+        margin-top: 10px;
 
-        a {
-            padding: 7px 14px;
-            font-size: 14px;
-            color: #787D82;
-            background-color: #EDF1F2;
-            border-radius: 14px;
-            white-space: nowrap;
+        .item {
+            display: inline-block;
+            margin-right: 10px;
+            padding: 15px 0;
 
-            &:hover {
-                color: #f8f8f8;
-                background-color: #f99;
+            a {
+                padding: 7px 14px;
+                font-size: 14px;
+                color: #FFF;
+                background-color: #EDF1F2;
+                border-radius: 14px;
+                white-space: nowrap;
+
+                &:hover {
+                    color: #f8f8f8;
+                    background-color: #f99;
+                }
             }
         }
     }

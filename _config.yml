@@ -37,7 +37,7 @@ rssxml: "/feed.xml"
 # 导航条菜单
 menu:
     首页: /
-    标签: /
+    标签: /tag.html
     归档: /
     关于: /about.html
 
