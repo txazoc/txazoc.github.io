@@ -1,0 +1,30 @@
+@charset "UTF-8";
+
+// Tags
+.tags {
+    margin-top: 30px;
+
+    h3 {
+
+    }
+
+    .item {
+        display: inline-block;
+        margin-right: 10px;
+        padding: 10px 0;
+
+        a {
+            padding: 7px 14px;
+            font-size: 14px;
+            color: #787D82;
+            background-color: #EDF1F2;
+            border-radius: 14px;
+            white-space: nowrap;
+
+            &:hover {
+                color: #f8f8f8;
+                background-color: #f99;
+            }
+        }
+    }
+}
