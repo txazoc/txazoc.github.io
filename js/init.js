@@ -2,11 +2,20 @@ define(function (require, exports, module) {
 
     var Init = {
         init: function () {
+            // 事件
             Init.initEvent();
-            Init.initHighlight();
-            Init.initWeiXin();
-            Init.initPagination();
+
+            // 页面
             Init.initPage();
+
+            // 分页
+            Init.initPagination();
+
+            // 微信
+            Init.initWeiXin();
+
+            // 代码高亮
+            Init.initHighlight();
         },
 
         initEvent: function () {
