@@ -27,7 +27,7 @@ markdownStyle: md-primary
 highlightstyle: hljs-txazo
 
 # css引入
-css: ["http://cdn.bootcss.com/bootstrap/3.3.6/css/bootstrap.min.css", "/css/core.css?v=20160501"]
+css: ["http://cdn.bootcss.com/bootstrap/3.3.6/css/bootstrap.min.css", "/css/core.css?v=20160503"]
 # js引入
 js: ["http://cdn.bootcss.com/jquery/1.12.1/jquery.min.js", "http://cdn.bootcss.com/bootstrap/3.3.6/js/bootstrap.min.js", "http://cdn.bootcss.com/seajs/3.0.2/sea.js", "/js/load.js"]
 

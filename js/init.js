@@ -1,6 +1,6 @@
 define(function (require, exports, module) {
 
-    var Color = ['#DB2828', '#F2711C', '#FBBD08', '#B5CC18', '#21BA45', '#00B5AD', '#2185D0', '#6435C9', '#A333C8', '#E03997'];
+    var Color = ['color_red', 'color_orange', 'color_yellow', 'color_olive', 'color_green', 'color_teal', 'color_blue', 'color_violet', 'color_purple', 'color_pink'];
 
     var Init = {
         init: function () {
@@ -132,11 +132,17 @@ define(function (require, exports, module) {
         },
 
         initTag: function () {
-            Color.sort(function () {
-                return 0.5 - Math.random();
-            });
+            Init.shuffleArray(Color);
+            var lastColor = Color[Color.length - 1];
             $('.tags').find('.items .item a').each(function (i, e) {
-                $(this).css('background-color', Color[i % Color.length]);
+                $(this).addClass(Color[i % Color.length]);
+                if (i % Color.length == 0) {
+                    Init.shuffleArray(Color);
+                    if (Color[0] == lastColor) {
+                        Init.switchInArray(Color, 0, Math.floor(Math.random() * (Color.length - 1) + 1));
+                    }
+                    lastColor = Color[Color.length - 1];
+                }
             });
             $('.tags').show();
         },
@@ -178,6 +184,18 @@ define(function (require, exports, module) {
                 return decodeURI(r[2]);
             }
             return null;
+        },
+
+        shuffleArray: function (array) {
+            array.sort(function () {
+                return 0.5 - Math.random();
+            });
+        },
+
+        switchInArray: function (array, i, j) {
+            var temp = array[i];
+            array[i] = array[j];
+            array[j] = temp;
         }
     };
 
