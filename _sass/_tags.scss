@@ -17,6 +17,10 @@
             display: inline-block;
             padding: 15px 15px;
 
+            @media (max-width: $media-divide-width) {
+                padding: 10px 5px;
+            }
+
             a {
                 padding: 7px 14px;
                 font-size: 14px;
@@ -24,6 +28,11 @@
                 text-shadow: 1px 1px 1px #ccc;
                 border-radius: 14px;
                 white-space: nowrap;
+
+                @media (max-width: $media-divide-width) {
+                    padding: 7px 7px;
+                    border-radius: 14px;
+                }
 
                 &:hover {
                     color: #f8f8f8;
