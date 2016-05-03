@@ -3,75 +3,79 @@
 // Tags
 .tags {
     display: none;
-    margin-top: 30px;
+    text-align: center;
+    margin-top: 10px;
 
     h3 {
         line-height: 2;
     }
 
     .items {
-        text-align: center;
         margin-top: 10px;
 
         .item {
             display: inline-block;
-            margin-right: 10px;
-            padding: 15px 0;
+            padding: 15px 15px;
 
             a {
                 padding: 7px 14px;
                 font-size: 14px;
                 color: #FFF;
+                text-shadow: 1px 1px 1px #ccc;
                 border-radius: 14px;
                 white-space: nowrap;
 
                 &:hover {
                     color: #f8f8f8;
-                    background-color: #f99;
+                    text-shadow: 1px 1px 1px #333;
+                    border-radius: 7px;
                 }
             }
         }
     }
 }
 
-$tag-color-ratio: 20%;
+$background-color-ratio: 25%;
+$border-color-ratio: 23%;
+$background-hover-color-ratio: 0%;
+$border-hover-color-ratio: 0%;
 
 .color_red {
-    background-color: lighten(#DB2828, $tag-color-ratio);
+    @include tag-color(#DB2828, $background-color-ratio, $border-color-ratio, $background-hover-color-ratio, $border-hover-color-ratio);
 }
 
 .color_orange {
-    background-color: lighten(#F2711C, $tag-color-ratio);
+    @include tag-color(#F2711C, $background-color-ratio, $border-color-ratio, $background-hover-color-ratio, $border-hover-color-ratio);
 }
 
 .color_yellow {
-    background-color: lighten(#FBBD08, $tag-color-ratio);
+    @include tag-color(#FBBD08, $background-color-ratio, $border-color-ratio, $background-hover-color-ratio, $border-hover-color-ratio);
 }
 
 .color_olive {
-    background-color: lighten(#B5CC18, $tag-color-ratio);
+    @include tag-color(#B5CC18, $background-color-ratio, $border-color-ratio, $background-hover-color-ratio, $border-hover-color-ratio);
 }
 
 .color_green {
-    background-color: lighten(#21BA45, $tag-color-ratio);
+    @include tag-color(#21BA45, $background-color-ratio, $border-color-ratio, $background-hover-color-ratio, $border-hover-color-ratio);
 }
 
 .color_teal {
-    background-color: lighten(#00B5AD, $tag-color-ratio);
+    @include tag-color(#00B5AD, $background-color-ratio, $border-color-ratio, $background-hover-color-ratio, $border-hover-color-ratio);
 }
 
 .color_blue {
-    background-color: lighten(#2185D0, $tag-color-ratio);
+    @include tag-color(#2185D0, $background-color-ratio, $border-color-ratio, $background-hover-color-ratio, $border-hover-color-ratio);
 }
 
 .color_violet {
-    background-color: lighten(#6435C9, $tag-color-ratio);
+    @include tag-color(#6435C9, $background-color-ratio, $border-color-ratio, $background-hover-color-ratio, $border-hover-color-ratio);
 }
 
 .color_purple {
-    background-color: lighten(#A333C8, $tag-color-ratio);
+    @include tag-color(#A333C8, $background-color-ratio, $border-color-ratio, $background-hover-color-ratio, $border-hover-color-ratio);
 }
 
 .color_pink {
-    background-color: lighten(#E03997, $tag-color-ratio);
+    @include tag-color(#E03997, $background-color-ratio, $border-color-ratio, $background-hover-color-ratio, $border-hover-color-ratio);
 }

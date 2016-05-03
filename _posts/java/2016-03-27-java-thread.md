@@ -2,7 +2,7 @@
 layout:     article
 categories: [java]
 title:      Java多线程
-tags:       [java, 多线程]
+tags:       [java, 多线程, 并发]
 date:       2016-03-27
 ---
 

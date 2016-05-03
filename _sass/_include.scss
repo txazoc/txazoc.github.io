@@ -21,3 +21,12 @@
     background: -moz-linear-gradient($linear-gradient);
     background: -webkit-linear-gradient($linear-gradient);
 }
+
+@mixin tag-color($color, $background-color-ratio, $border-color-ratio, $background-hover-color-ratio, $border-hover-color-ratio) {
+    background-color: lighten($color, $background-color-ratio);
+    border: 1px solid lighten($color, $border-color-ratio);
+    &:hover {
+        background-color: lighten($color, $background-hover-color-ratio);
+        border: 1px solid lighten($color, $border-hover-color-ratio);
+    }
+}

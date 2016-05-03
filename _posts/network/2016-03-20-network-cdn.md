@@ -2,7 +2,7 @@
 layout:     article
 categories: [network]
 title:      CDN
-tags:       [网络]
+tags:       [cdn, 静态加速]
 date:       2016-03-20
 ---
 

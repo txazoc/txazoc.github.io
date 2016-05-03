@@ -1,6 +1,6 @@
 define(function (require, exports, module) {
 
-    var Color = ['color_red', 'color_orange', 'color_yellow', 'color_olive', 'color_green', 'color_teal', 'color_blue', 'color_violet', 'color_purple', 'color_pink'];
+    var Color = ['color_red', 'color_yellow', 'color_olive', 'color_green', 'color_teal', 'color_blue', 'color_purple', 'color_pink'];
 
     var Init = {
         init: function () {
@@ -132,19 +132,30 @@ define(function (require, exports, module) {
         },
 
         initTag: function () {
-            Init.shuffleArray(Color);
-            var lastColor = Color[Color.length - 1];
-            $('.tags').find('.items .item a').each(function (i, e) {
-                $(this).addClass(Color[i % Color.length]);
-                if (i % Color.length == 0) {
-                    Init.shuffleArray(Color);
-                    if (Color[0] == lastColor) {
-                        Init.switchInArray(Color, 0, Math.floor(Math.random() * (Color.length - 1) + 1));
+            Init.loadData(function () {
+                Init.sortTag();
+                Init.shuffleArray(Color);
+                var lastColor = Color[Color.length - 1];
+                var $tags = $('.tags');
+                var $items = $tags.find('.items');
+                $.each(Tag, function (i, t) {
+                    if (i > 0 && i % Color.length == 0) {
+                        Init.shuffleArray(Color);
+                        if (Color[0] == lastColor) {
+                            Init.switchInArray(Color, 0, Math.floor(Math.random() * (Color.length - 1) + 1));
+                        }
+                        lastColor = Color[Color.length - 1];
                     }
-                    lastColor = Color[Color.length - 1];
-                }
+                    $items.append($('<div class="item"></div>').append($('<a></a>').attr('href', '/tags.html?tag=' + t.name).addClass(Color[i % Color.length]).html(t.name + '(' + t.size + ')')));
+                });
+                $tags.show();
             });
-            $('.tags').show();
+        },
+
+        sortTag: function () {
+            Tag.sort(function (a, b) {
+                return b.size - a.size;
+            });
         },
 
         initTags: function () {
@@ -196,6 +207,10 @@ define(function (require, exports, module) {
             var temp = array[i];
             array[i] = array[j];
             array[j] = temp;
+        },
+
+        loadData: function (callback) {
+            require.async('data', callback);
         }
     };
 

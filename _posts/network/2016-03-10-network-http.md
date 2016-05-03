@@ -2,7 +2,7 @@
 layout:     article
 categories: [network]
 title:      HTTP协议
-tags:       [个人]
+tags:       [http, 网络协议]
 date:       2016-03-10
 ---
 
