@@ -22,13 +22,14 @@
                 padding: 12px 8px;
             }
 
-            a {
+            span {
                 padding: 7px 14px;
                 font-size: 14px;
                 color: #FFF;
                 text-shadow: 1px 1px 1px #ccc;
                 border-radius: 14px;
                 white-space: nowrap;
+                cursor: pointer;
 
                 @media (max-width: $media-divide-width) {
                     padding: 6px 10px;

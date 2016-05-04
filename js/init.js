@@ -135,6 +135,7 @@ define(function (require, exports, module) {
             Init.loadData(function () {
                 Init.sortTag();
                 Init.shuffleArray(Color);
+                console.log(Color);
                 var lastColor = Color[Color.length - 1];
                 var $tags = $('.tags');
                 var $items = $tags.find('.items');
@@ -145,10 +146,13 @@ define(function (require, exports, module) {
                             Init.switchInArray(Color, 0, Math.floor(Math.random() * (Color.length - 1) + 1));
                         }
                         lastColor = Color[Color.length - 1];
+                        console.log(Color);
                     }
-                    $items.append($('<div class="item"></div>').append($('<a></a>').attr('href', '/tags.html?tag=' + t.name + '&color=' + Color[i % Color.length]).addClass(Color[i % Color.length]).html(t.name + '(' + t.size + ')')));
+                    $items.append($('<div class="item"></div>').append($('<span></span>').attr('tag', t.name).attr('color', Color[i % Color.length]).addClass(Color[i % Color.length]).html(t.name + '(' + t.size + ')')));
                 });
-                $tags.show();
+                $tags.delegate('.item span', 'click', function () {
+                    Init.redirectUrl('/tags.html?tag=' + $(this).attr('tag'));
+                }).show();
             });
         },
 
@@ -160,16 +164,9 @@ define(function (require, exports, module) {
 
         initTags: function () {
             var tag = Init.getUrlParamValue('tag');
-            var color = Init.getUrlParamValue('color');
             if (tag == null || (tag = tag.trim()) == '') {
                 return;
             }
-
-            if (color == null) {
-                color = Color[Math.floor(Math.random() * Color.length)];
-            }
-
-            console.log(color);
 
             require.async('data', function () {
                 var postArray = [];
@@ -179,13 +176,13 @@ define(function (require, exports, module) {
                         postArray.push(p);
                     }
                 });
-                Init.displayTag(tag, postArray.length, color);
+                Init.displayTag(tag, postArray.length);
                 Init.displayPost(postArray);
             });
         },
 
-        displayTag: function (tag, size, color) {
-            $('#main').find('.wrapper').html($('<div class="list_tag"></div>').append($('<h3>标签</h3>')).append($('<span></span>').addClass(color).html(tag + '(' + size + ')')));
+        displayTag: function (tag, size) {
+            $('#main').find('.wrapper').html($('<div class="list_tag"></div>').append($('<a href="/tag.html">标签</a>')).append($('<span class="dire"></span>').html('>>')).append($('<span class="tag"></span>').html(tag)));
         },
 
         displayPost: function (posts) {
@@ -211,7 +208,7 @@ define(function (require, exports, module) {
 
         shuffleArray: function (array) {
             array.sort(function () {
-                return 0.5 - Math.random();
+                return Math.random() - 0.5;
             });
         },
 
@@ -223,6 +220,10 @@ define(function (require, exports, module) {
 
         loadData: function (callback) {
             require.async('data', callback);
+        },
+
+        redirectUrl: function (url) {
+            window.location.href = url;
         }
     };
 

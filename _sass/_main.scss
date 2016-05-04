@@ -7,23 +7,32 @@
 
 .list_tag {
     margin-top: 30px;
+    padding-bottom: 10px;
+    border-bottom: 1px solid #e9F3F3;
 
-    h3 {
-        font-size: 20px;
-        float: left;
+    a {
+        color: #6cc;
+        font-size: 18px;
         line-height: 1.4;
+        font-weight: bold;
+
+        &:hover {
+            color: #f66;
+        }
     }
 
     span {
-        float: left;
-        margin-left: 20px;
-        padding: 0 14px;
+        margin-left: 15px;
         font-size: 14px;
-        line-height: 2;
-        color: #FFF;
-        text-shadow: 1px 1px 1px #ccc;
-        border-radius: 14px;
-        border-width: 0 !important;
+        line-height: 1.8;
+
+        &.tag {
+            color: #f1a7d1;
+        }
+
+        &.dire {
+            color: #ccc;
+        }
     }
 }
 
