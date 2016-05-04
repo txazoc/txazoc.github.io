@@ -3,7 +3,7 @@ layout:     article
 categories: [personal]
 title:      我的博客开通了
 tags:       [随笔]
-date:       2016-03-01
+date:       2016-02-01
 ---
 
 我的博客开通了！

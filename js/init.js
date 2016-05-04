@@ -128,6 +128,8 @@ define(function (require, exports, module) {
                 Init.initTag();
             } else if (Page == 'tags') {
                 Init.initTags();
+            } else if (Page == 'archive') {
+                Init.initArchive();
             }
         },
 
@@ -135,7 +137,6 @@ define(function (require, exports, module) {
             Init.loadData(function () {
                 Init.sortTag();
                 Init.shuffleArray(Color);
-                console.log(Color);
                 var lastColor = Color[Color.length - 1];
                 var $tags = $('.tags');
                 var $items = $tags.find('.items');
@@ -146,7 +147,6 @@ define(function (require, exports, module) {
                             Init.switchInArray(Color, 0, Math.floor(Math.random() * (Color.length - 1) + 1));
                         }
                         lastColor = Color[Color.length - 1];
-                        console.log(Color);
                     }
                     $items.append($('<div class="item"></div>').append($('<span></span>').attr('tag', t.name).attr('color', Color[i % Color.length]).addClass(Color[i % Color.length]).html(t.name + '(' + t.size + ')')));
                 });
@@ -195,6 +195,48 @@ define(function (require, exports, module) {
                     .append($('<div class="list-info"></div>').append($('<span class="datetime"></span>').html(p.date))));
             });
             $('#main').find('.wrapper').append(listWrapper);
+        },
+
+        initArchive: function () {
+            Init.loadData(function () {
+                var monthPost = Init.sortPostByMonth();
+                Init.displayPostByMonth(monthPost);
+            });
+        },
+
+        sortPostByMonth: function () {
+            var monthPost = {};
+            $.each(Post, function (i, p) {
+                var yearMonth = p.dateYMD.substring(0, 7);
+                if (!monthPost[yearMonth]) {
+                    monthPost[yearMonth] = [];
+                }
+                monthPost[yearMonth].push(p);
+            });
+            return monthPost;
+        },
+
+        displayPostByMonth: function (monthPost) {
+            var $archive = $('.archive');
+            $.each(monthPost, function (k, posts) {
+                var $month = $('<div class="month"></div>');
+                $month.append(
+                    $('<div class="node">')
+                        .append($('<span class="node_title"></span>').html(k.substring(2, 7)))
+                        .append($('<span class="node_circle"></span>'))
+                );
+                var $dates = $('<div class="dates"></div>');
+                $.each(posts, function (i, post) {
+                    $dates.append(
+                        $('<div class="date"></div>')
+                            .append($('<span></span>').html(post.dateYMD.substring(5, 10)))
+                            .append($('<a></a>').attr('href', post.url).html(post.title))
+                    );
+                });
+                $month.append($dates);
+                $archive.append($month);
+            });
+            $archive.append('<div class="month"><div class="node"><span class="node_circle" style="margin-left: 70px;"></span></div></div>');
         },
 
         getUrlParamValue: function (param) {

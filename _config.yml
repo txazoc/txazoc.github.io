@@ -38,7 +38,7 @@ rssxml: "/feed.xml"
 menu:
     首页: /
     标签: /tag.html
-    归档: /
+    归档: /archive.html
     关于: /about.html
 
 focus:
