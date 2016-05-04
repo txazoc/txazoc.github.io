@@ -2,7 +2,7 @@
 layout:     article
 categories: [java]
 title:      Java Set
-tags:       [java, 集合, set]
+tags:       [java, 集合]
 date:       2016-04-07
 ---
 

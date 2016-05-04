@@ -2,7 +2,7 @@
 layout:     article
 categories: [network]
 title:      DNS
-tags:       [dns, 域名解析]
+tags:       [dns]
 date:       2016-03-13
 ---
 

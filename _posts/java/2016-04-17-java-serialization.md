@@ -2,7 +2,7 @@
 layout:     article
 categories: [java]
 title:      序列化和反序列化
-tags:       [java, 序列化, 反序列化]
+tags:       [java, 序列化]
 date:       2016-04-17
 ---
 
