@@ -5,8 +5,32 @@
     padding: 10px 0 30px 0;
 }
 
+.list_tag {
+    margin-top: 30px;
+
+    h3 {
+        font-size: 20px;
+        float: left;
+        line-height: 1.4;
+    }
+
+    span {
+        float: left;
+        margin-left: 20px;
+        padding: 0 14px;
+        font-size: 14px;
+        line-height: 2;
+        color: #FFF;
+        text-shadow: 1px 1px 1px #ccc;
+        border-radius: 14px;
+        border-width: 0 !important;
+    }
+}
+
 // List
 .list {
+    clear: both;
+
     ul {
         list-style: outside none none;
 

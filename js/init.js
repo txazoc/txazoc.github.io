@@ -146,7 +146,7 @@ define(function (require, exports, module) {
                         }
                         lastColor = Color[Color.length - 1];
                     }
-                    $items.append($('<div class="item"></div>').append($('<a></a>').attr('href', '/tags.html?tag=' + t.name).addClass(Color[i % Color.length]).html(t.name + '(' + t.size + ')')));
+                    $items.append($('<div class="item"></div>').append($('<a></a>').attr('href', '/tags.html?tag=' + t.name + '&color=' + Color[i % Color.length]).addClass(Color[i % Color.length]).html(t.name + '(' + t.size + ')')));
                 });
                 $tags.show();
             });
@@ -160,9 +160,16 @@ define(function (require, exports, module) {
 
         initTags: function () {
             var tag = Init.getUrlParamValue('tag');
+            var color = Init.getUrlParamValue('color');
             if (tag == null || (tag = tag.trim()) == '') {
                 return;
             }
+
+            if (color == null) {
+                color = Color[Math.floor(Math.random() * Color.length)];
+            }
+
+            console.log(color);
 
             require.async('data', function () {
                 var postArray = [];
@@ -172,8 +179,13 @@ define(function (require, exports, module) {
                         postArray.push(p);
                     }
                 });
+                Init.displayTag(tag, postArray.length, color);
                 Init.displayPost(postArray);
             });
+        },
+
+        displayTag: function (tag, size, color) {
+            $('#main').find('.wrapper').html($('<div class="list_tag"></div>').append($('<h3>标签</h3>')).append($('<span></span>').addClass(color).html(tag + '(' + size + ')')));
         },
 
         displayPost: function (posts) {
@@ -185,7 +197,7 @@ define(function (require, exports, module) {
                     .append($('<div class="list-content"></div>').append($('<p></p>').html(p.content)))
                     .append($('<div class="list-info"></div>').append($('<span class="datetime"></span>').html(p.date))));
             });
-            $('#main').find('.wrapper').html('').append(listWrapper);
+            $('#main').find('.wrapper').append(listWrapper);
         },
 
         getUrlParamValue: function (param) {
