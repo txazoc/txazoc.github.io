@@ -20,8 +20,6 @@ define(function (require, exports, module) {
 
             // 代码高亮
             Init.initHighlight();
-
-            Share.shareToSinaWeibo('title', 'url', 'pic');
         },
 
         initEvent: function () {
