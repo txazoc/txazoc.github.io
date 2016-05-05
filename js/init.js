@@ -285,6 +285,20 @@ define(function (require, exports, module) {
         }
     };
 
+    var Share = {
+        shareToQQZone: function () {
+
+        },
+
+        shareToSinaWeibo: function () {
+
+        },
+
+        shareToWeixin: function () {
+
+        }
+    };
+
     exports.init = Init.init;
 
 });
