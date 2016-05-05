@@ -217,13 +217,14 @@ define(function (require, exports, module) {
         },
 
         displayPostByMonth: function (monthPost) {
+            var i = 0;
             var $archive = $('.archive');
             $.each(monthPost, function (k, posts) {
                 var $month = $('<div class="month"></div>');
                 $month.append(
                     $('<div class="node">')
                         .append($('<span class="node_title"></span>').html(k.substring(2, 7)))
-                        .append($('<span class="node_circle"></span>'))
+                        .append($('<div class="node_circle"></div>').append($('<img/>').attr('src', i++ % 2 == 0 ? '/images/clock.svg' : '/images/calendar.svg')))
                 );
                 var $dates = $('<div class="dates"></div>');
                 $.each(posts, function (i, post) {
@@ -236,7 +237,15 @@ define(function (require, exports, module) {
                 $month.append($dates);
                 $archive.append($month);
             });
-            $archive.append('<div class="month"><div class="node"><span class="node_circle" style="margin-left: 70px;"></span></div></div>');
+            $archive.append(
+                $('<div class="month"></div>').append(
+                    $('<div class="node">').append(
+                        $('<div class="node_circle"></div>').css('margin-left', '70px').append(
+                            $('<img/>').attr('src', i++ % 2 == 0 ? '/images/clock.svg' : '/images/calendar.svg')
+                        )
+                    )
+                )
+            );
         },
 
         getUrlParamValue: function (param) {
