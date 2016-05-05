@@ -2,6 +2,8 @@ define(function (require, exports, module) {
 
     var Color = ['color_red', 'color_yellow', 'color_olive', 'color_green', 'color_teal', 'color_blue', 'color_purple', 'color_pink'];
 
+    var LandScapeSvg = ['beach.svg', 'castle.svg', 'cityscape.svg', 'fields.svg', 'forest.svg', 'hills.svg', 'iceberg.svg', 'mill.svg', 'river.svg', 'spruce.svg', 'trees.svg', 'waterfall.svg', 'windmills.svg'];
+
     var Init = {
         init: function () {
             // 事件
@@ -224,7 +226,9 @@ define(function (require, exports, module) {
                 $month.append(
                     $('<div class="node">')
                         .append($('<span class="node_title"></span>').html(k.substring(2, 7)))
-                        .append($('<div class="node_circle"></div>').append($('<img/>').attr('src', i++ % 2 == 0 ? '/images/clock.svg' : '/images/calendar.svg')))
+                        .append($('<div class="node_circle"></div>').append(
+                            $('<img/>').attr('src', '/images/svg/landscape/' + LandScapeSvg[i++ % LandScapeSvg.length]))
+                        )
                 );
                 var $dates = $('<div class="dates"></div>');
                 $.each(posts, function (i, post) {
@@ -239,11 +243,13 @@ define(function (require, exports, module) {
             });
             $archive.append(
                 $('<div class="month"></div>').append(
-                    $('<div class="node">').append(
-                        $('<div class="node_circle"></div>').css('margin-left', '70px').append(
-                            $('<img/>').attr('src', i++ % 2 == 0 ? '/images/clock.svg' : '/images/calendar.svg')
+                    $('<div class="node">')
+                        .append($('<span class="node_title"></span>').html('...'))
+                        .append(
+                            $('<div class="node_circle"></div>').append(
+                                $('<img/>').attr('src', '/images/svg/landscape/' + LandScapeSvg[i++ % LandScapeSvg.length])
+                            )
                         )
-                    )
                 )
             );
         },
