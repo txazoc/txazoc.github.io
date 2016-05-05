@@ -4,6 +4,8 @@ define(function (require, exports, module) {
 
     var LandScapeSvg = ['beach.svg', 'castle.svg', 'cityscape.svg', 'fields.svg', 'forest.svg', 'hills.svg', 'iceberg.svg', 'mill.svg', 'river.svg', 'spruce.svg', 'trees.svg', 'waterfall.svg', 'windmills.svg'];
 
+    var Month = ['一', '二', '三', '四', '五', '六', '七', '八', '九', '十', '十一', '十二'];
+
     var Init = {
         init: function () {
             // 事件
@@ -240,7 +242,7 @@ define(function (require, exports, module) {
                         .append($('<div class="node_circle"></div>').append(
                             $('<img/>').attr('src', '/images/svg/landscape/' + LandScapeSvg[i++ % LandScapeSvg.length]))
                         )
-                        .append($('<span class="node_title"></span>').html(k.substring(2, 7)))
+                        .append($('<span class="node_title"></span>').html(Init.convertDate(k)))
                 );
                 var $dates = $('<div class="dates"></div>');
                 $.each(posts, function (i, post) {
@@ -261,7 +263,6 @@ define(function (require, exports, module) {
                                 $('<img/>').attr('src', '/images/svg/landscape/' + LandScapeSvg[i++ % LandScapeSvg.length])
                             )
                         )
-                        .append($('<span class="node_title"></span>').html('...'))
                 )
             );
             $archive.show();
@@ -294,18 +295,31 @@ define(function (require, exports, module) {
 
         redirectUrl: function (url) {
             window.location.href = url;
+        },
+
+        convertDate: function (yyyy_mm) {
+            return yyyy_mm.substring(2, 4) + '年' + Month[Init.parseToInt(yyyy_mm.substring(5, 7)) - 1] + '月';
+        },
+
+        parseToInt: function (mm) {
+            if (mm.substring(0, 1) == '0') {
+                return parseInt(mm.substring(1, 2));
+            }
+            return parseInt(mm.substring(0, 2));
         }
     };
 
     var Share = {
         shareToSina: function () {
-            var shareUrl = 'http://v.t.sina.com.cn/share/share.php?title=' + title + '&url=' + url + '&pic=' + pic;
-            window.open(shareUrl);
+            this.share(function (url, title, pic) {
+                var shareUrl = 'http://v.t.sina.com.cn/share/share.php?url=' + url + '&title=' + title + '&pic=';
+                window.open(shareUrl);
+            });
         },
 
         shareToQQZone: function (url, title) {
             this.share(function (url, title, pic) {
-                var shareUrl = 'http://sns.qzone.qq.com/cgi-bin/qzshare/cgi_qzshare_onekey?url=' + url + '&title=' + title + '&pics=' + pic;
+                var shareUrl = 'http://sns.qzone.qq.com/cgi-bin/qzshare/cgi_qzshare_onekey?url=' + url + '&summary=' + title + '&pics=' + pic;
                 window.open(shareUrl);
             });
         },
@@ -317,7 +331,7 @@ define(function (require, exports, module) {
         share: function (callback) {
             var url = window.location.href;
             var title = '【分享】' + document.title;
-            var pic = 'http://www.txazo.com/images/logo.png';
+            var pic = 'http://www.txazo.com/images/share.jpg';
             callback(encodeURIComponent(url), encodeURIComponent(title), encodeURIComponent(pic));
         }
     };
