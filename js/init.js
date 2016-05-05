@@ -225,10 +225,10 @@ define(function (require, exports, module) {
                 var $month = $('<div class="month"></div>');
                 $month.append(
                     $('<div class="node">')
-                        .append($('<span class="node_title"></span>').html(k.substring(2, 7)))
                         .append($('<div class="node_circle"></div>').append(
                             $('<img/>').attr('src', '/images/svg/landscape/' + LandScapeSvg[i++ % LandScapeSvg.length]))
                         )
+                        .append($('<span class="node_title"></span>').html(k.substring(2, 7)))
                 );
                 var $dates = $('<div class="dates"></div>');
                 $.each(posts, function (i, post) {
@@ -244,12 +244,12 @@ define(function (require, exports, module) {
             $archive.append(
                 $('<div class="month"></div>').append(
                     $('<div class="node">')
-                        .append($('<span class="node_title"></span>').html('...'))
                         .append(
                             $('<div class="node_circle"></div>').append(
                                 $('<img/>').attr('src', '/images/svg/landscape/' + LandScapeSvg[i++ % LandScapeSvg.length])
                             )
                         )
+                        .append($('<span class="node_title"></span>').html('...'))
                 )
             );
         },
