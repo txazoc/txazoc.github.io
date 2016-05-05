@@ -186,31 +186,24 @@
 
     .share {
         text-align: center;
-        margin-top: 20px;
+        margin: 20px 0 0 0;
+        padding: 30px 0 0 0;
+        border-top: 1px solid #e3F3F3;
 
         a {
             padding: 0 5px;
+            font-size: 36px;
 
-            i {
-                color: #666;
-                margin-top: 18px;
-                font-size: 36px;
+            &.icon-qq {
+                color: #56abe4;
+            }
 
-                &:hover {
-                    cursor: pointer;
-                }
+            &.icon-sina {
+                color: #eb4f38;
+            }
 
-                &.icon-qq:hover {
-                    color: #56abe4;
-                }
-
-                &.icon-sina:hover {
-                    color: #eb4f38;
-                }
-
-                &.icon-weixin:hover {
-                    color: #11cd6e;
-                }
+            &.icon-weixin {
+                color: #11cd6e;
             }
         }
     }

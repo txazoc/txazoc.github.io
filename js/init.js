@@ -28,6 +28,18 @@ define(function (require, exports, module) {
             $(window).resize(function () {
                 Init.resize();
             });
+
+            $('.icon-qq').on('click', function () {
+                Share.shareToQQZone();
+            });
+
+            $('.icon-sina').on('click', function () {
+                Share.shareToSina();
+            });
+
+            $('.icon-weixin').on('click', function () {
+                Share.shareToWeixin();
+            });
         },
 
         resize: function () {
@@ -286,17 +298,27 @@ define(function (require, exports, module) {
     };
 
     var Share = {
-        shareToSinaWeibo: function (title, url, pic) {
+        shareToSina: function () {
             var shareUrl = 'http://v.t.sina.com.cn/share/share.php?title=' + title + '&url=' + url + '&pic=' + pic;
             window.open(shareUrl);
         },
 
-        shareToQQZone: function () {
-
+        shareToQQZone: function (url, title) {
+            this.share(function (url, title, pic) {
+                var shareUrl = 'http://sns.qzone.qq.com/cgi-bin/qzshare/cgi_qzshare_onekey?url=' + url + '&title=' + title + '&pics=' + pic;
+                window.open(shareUrl);
+            });
         },
 
         shareToWeixin: function () {
 
+        },
+
+        share: function (callback) {
+            var url = window.location.href;
+            var title = '【分享】' + document.title;
+            var pic = 'http://www.txazo.com/images/logo.png';
+            callback(encodeURIComponent(url), encodeURIComponent(title), encodeURIComponent(pic));
         }
     };
 
