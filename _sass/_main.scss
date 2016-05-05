@@ -185,23 +185,33 @@
     }
 
     .share {
-        display: none;
         text-align: center;
         margin-top: 20px;
 
-        i {
-            font-size: 42px;
-            line-height: 100px;
-            margin: 10px 0;
-            color: #333;
-            -webkit-transition: font-size 0.25s ease-out 0s;
-            -moz-transition: font-size 0.25s ease-out 0s;
-            transition: font-size 0.25s ease-out 0s;
+        a {
+            padding: 0 5px;
 
-            &:hover {
-                color: #11cd6e;
+            i {
+                color: #666;
+                margin-top: 18px;
+                font-size: 36px;
+
+                &:hover {
+                    cursor: pointer;
+                }
+
+                &.icon-qq:hover {
+                    color: #56abe4;
+                }
+
+                &.icon-sina:hover {
+                    color: #eb4f38;
+                }
+
+                &.icon-weixin:hover {
+                    color: #11cd6e;
+                }
             }
         }
     }
 }
-
