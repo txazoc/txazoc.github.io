@@ -252,6 +252,7 @@ define(function (require, exports, module) {
                         .append($('<span class="node_title"></span>').html('...'))
                 )
             );
+            $archive.show();
         },
 
         getUrlParamValue: function (param) {
