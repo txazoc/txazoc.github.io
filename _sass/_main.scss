@@ -192,17 +192,18 @@
 
         a {
             padding: 0 5px;
+            color: #272636;
             font-size: 36px;
 
-            &.icon-qq {
+            &.icon-qq:hover {
                 color: #56abe4;
             }
 
-            &.icon-sina {
+            &.icon-sina:hover {
                 color: #eb4f38;
             }
 
-            &.icon-weixin {
+            &.icon-weixin:hover {
                 color: #11cd6e;
             }
         }
