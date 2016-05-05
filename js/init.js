@@ -20,6 +20,8 @@ define(function (require, exports, module) {
 
             // 代码高亮
             Init.initHighlight();
+
+            Share.shareToSinaWeibo('title', 'url', 'pic');
         },
 
         initEvent: function () {
@@ -286,11 +288,12 @@ define(function (require, exports, module) {
     };
 
     var Share = {
-        shareToQQZone: function () {
-
+        shareToSinaWeibo: function (title, url, pic) {
+            var shareUrl = 'http://v.t.sina.com.cn/share/share.php?title=' + title + '&url=' + url + '&pic=' + pic;
+            window.open(shareUrl);
         },
 
-        shareToSinaWeibo: function () {
+        shareToQQZone: function () {
 
         },
 
