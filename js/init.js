@@ -17,8 +17,8 @@ define(function (require, exports, module) {
             // 分页
             Init.initPagination();
 
-            // 微信
-            Init.initWeiXin();
+            // 浏览器
+            Init.initBrowser();
 
             // 代码高亮
             Init.initHighlight();
@@ -66,8 +66,8 @@ define(function (require, exports, module) {
             }
         },
 
-        initWeiXin: function () {
-            if (Init.isWeiXin()) {
+        initBrowser: function () {
+            if (Init.isWeiXin() || this.isQQ()) {
                 $('#header .navbar-nav').find('li a').each(function (i, e) {
                     var content = '';
                     var text = $(this).html();
@@ -79,7 +79,9 @@ define(function (require, exports, module) {
                     }
                     $(this).html(content);
                 });
+            }
 
+            if (Init.isWeiXin()) {
                 var $about = $('.about');
                 if ($about.length > 0) {
                     var $email = $about.find('.email');
@@ -89,9 +91,24 @@ define(function (require, exports, module) {
             }
         },
 
+        getUserAgent: function () {
+            return window.navigator.userAgent.toLowerCase();
+        },
+
         isWeiXin: function () {
-            var userAgent = window.navigator.userAgent.toLowerCase();
-            return userAgent.match(/MicroMessenger/i) == "micromessenger";
+            return this.getUserAgent().match(/MicroMessenger/i) == "micromessenger";
+        },
+
+        isUC: function () {
+            return this.getUserAgent().indexOf('ucweb') > -1;
+        },
+
+        isQQBrowser: function () {
+            return this.getUserAgent().indexOf('mqqbrowser') > -1;
+        },
+
+        isQQ: function () {
+            return this.isQQBrowser() && this.getUserAgent().indexOf(' qq/') > -1;
         },
 
         initPagination: function () {
