@@ -329,7 +329,7 @@ define(function (require, exports, module) {
     var Share = {
         shareToSina: function () {
             this.share(function (url, title, pic) {
-                var shareUrl = 'http://v.t.sina.com.cn/share/share.php?url=' + url + '&title=' + title + '&pic=';
+                var shareUrl = 'http://service.weibo.com/share/share.php?url=' + url + '&title=' + title + '&pic=';
                 window.open(shareUrl);
             });
         },
