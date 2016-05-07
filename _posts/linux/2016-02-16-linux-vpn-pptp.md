@@ -1,10 +1,8 @@
 ---
 layout:     article
-published:  true
-title:      Centos 6.5搭建PPTP VPN
-date:       2016-02-16
-categories: [linux]
+title:      Centos安装VPN
 tags:       [linux, vpn]
+date:       2016-02-16
 ---
 
 ## 安装PPTP

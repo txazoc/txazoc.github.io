@@ -14,6 +14,21 @@ date:       2016-03-10
 
 HTTP底层基于TCP, 请求响应模型, 具体过程为客户端向服务器发送一个请求, 服务器接受请求并进行处理, 处理完成后, 发送一个响应给客户端.
 
+#### Request
+
+Method SP Request-URI SP HTTP-Version CRLF
+
+GET /index.html HTTP/1.1
+
+响应状态码
+
+200 OK
+304 Not Modified
+403 Forbidden
+404 Not Found
+500 Internal Server Error
+503 Service Unavailable
+
 #### HTTP请求格式
 
 #### HTTP响应格式
