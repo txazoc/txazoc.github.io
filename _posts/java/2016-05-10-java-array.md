@@ -6,19 +6,70 @@ tags:       [java, 数组]
 date:       2016-05-10
 ---
 
+> 数组，相同数据类型的元素的顺序集合。
+
+
+
 Java中，数组也是对象。
 
 数组也有自己的Class，由JVM运行时动态创建，T[]。
 
-数组继承自Object。
+数组继承自Object，可以被赋值给Object，拥有Object的所有方法。
 
-数组通过下标引用，`array[i]`，0～array.length - 1。
+数组长度在初始化的时候指定，不能被改变。
+
+数组中元素通过数组下标访问，`array[index]`，index为0到n - 1的整数，超出n则抛出ArrayIndexOutOfBoundsException。
+
+数组中元素有相同的类型，数组元素类型，例如，数组元素类型为T，则数组类型为T[]，数组元素类型可以是对象类型或数组类型。
+
+数组Class，数组Class没有属性，只有继承自Object的方法。
+
+数组Class的表示，维度加元素类型，维度用`[`表示，几维就加几个`[`，元素类型表示如下：
+
+* boolean，Z
+* byte，B
+* char，C
+* short，S
+* int，I
+* long，J
+* float，F
+* double，D
+* class or interface，L{classname};
+
+例如，int[]的表示为`[I`，Integer[][][]的表示为`[[[Ljava.lang.Integer;`。
+
+array.length，length不是数组的属性，编译时，会转换为相应的jvm指令。
+
+数组Class继承自Object，在数组对象上可以调用Object的所有方法，并实现接口`java.lang.Cloneable`和`java.io.Serializable`，标识数组支持克隆和序列化。
+
+```java
+System.out.println(int[].class.getSuperclass());
+for (Class c : int[].class.getInterfaces()) {
+    System.out.println(c);
+}
+```
+
+```console
+class java.lang.Object
+interface java.lang.Cloneable
+interface java.io.Serializable
+```
 
 #### 数组创建
 
 #### 数组指令
 
-`newarray`，创建一维基本数据类型数组
+#### 数组遍历
+
+#### 数组在内存中的结构
+
+#### 数组方法
+
+* clone，浅克隆，唯一不从Object继承的方法
+
+for实现原理
+
+`newarray`，创建一维基本数据类型数组。
 
 ```java
 int[] i = new int[5];
@@ -30,7 +81,7 @@ int[] i = new int[5];
 3: astore_1
 ```
 
-`anewarray`，创建一维引用类型数组
+`anewarray`，创建一维引用类型数组，其中，引用类型可以为对象类型或数组类型。
 
 ```java
 Integer[] i = new Integer[5];
