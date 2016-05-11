@@ -32,4 +32,22 @@ int[] i = new int[5];
 
 `anewarray`，创建一维引用类型数组
 
+```java
+Integer[] i = new Integer[5];
+```
+
+```java
+0: iconst_5      
+1: anewarray     #2                  // class java/lang/Integer
+4: astore_2
+```
+
+```java
+
+```
+
 `multianewarray`，创建多维数组(包括基本数据类型和引用数据类型)
+
+```java
+int[][] i = new int[2][];
+```
