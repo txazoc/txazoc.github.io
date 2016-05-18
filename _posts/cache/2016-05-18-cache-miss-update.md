@@ -3,7 +3,7 @@ layout:     article
 categories: [cache]
 title:      缓存失效更新机制
 tags:       [缓存, memcached, 失效]
-date:       2016-04-14
+date:       2016-05-18
 ---
 
 缓存失效，从数据库查询，然后重新填充缓存。
