@@ -6,7 +6,7 @@ tags:       [java]
 date:       2016-07-18
 ---
 
-定义一个注解。
+先来定义一个注解，关键字`@interface`。
 
 ```java
 @Target({ElementType.TYPE})
@@ -26,15 +26,18 @@ public class IPhone {
 }
 ```
 
-`javap -c Client.class`
+反编译注解类，`javap -c Client.class`。
 
 ```java
-public interface org.txazo.java.annotation.Client extends java.lang.annotation.Annotation {
+Compiled from "Client.java"
+public interface Client extends java.lang.annotation.Annotation {
   public abstract java.lang.String type();
 }
 ```
 
-注解也是一个接口，继承自`java.lang.annotation.Annotation`。然后，看下`Annotation`接口的代码。
+可以看到，注解本质是一个接口，继承自`java.lang.annotation.Annotation`。
+
+`java.lang.annotation.Annotation`接口的源码。
 
 ```java
 public interface Annotation {
@@ -45,16 +48,17 @@ public interface Annotation {
 
     String toString();
 
+    // 注解类型
     Class<? extends Annotation> annotationType();
 
 }
 ```
 
-`Annotation`定义了`equals`、`hashCode`、`toString`、`annotationType`四个方法，所以注解也有这四个通用的方法。
+`Annotation`接口定义了`equals()`、`hashCode()`、`toString()`、`annotationType()`四个方法。所以，注解除了自定义的方法外，还要实现`Annotation`的四个方法。
 
-注解是一个接口，那么，它的实现类是什么呢？
+那么，注解的实现类是什么呢？
 
-通过跟踪`Class.getAnnotation()`的代码，可以发现，注解是通过`sun.reflect.annotation.AnnotationParser.annotationForMap()`方法完成实例化的，可以看出，注解的实现原理是动态代理。
+通过跟踪`Class.getAnnotation()`的源码，可以发现，注解是通过`sun.reflect.annotation.AnnotationParser.annotationForMap()`方法完成实例化的。
 
 ```java
 public class AnnotationParser {
@@ -66,7 +70,9 @@ public class AnnotationParser {
 }
 ```
 
-接下来看`AnnotationInvocationHandler`。
+通过`annotationForMap()`方法的实现，可以看出，注解是通过JDK的动态代理来实例化的。
+
+接下来，看下`AnnotationInvocationHandler`的源码实现。
 
 ```java
 class AnnotationInvocationHandler implements InvocationHandler, Serializable {
@@ -95,29 +101,30 @@ class AnnotationInvocationHandler implements InvocationHandler, Serializable {
         String member = method.getName();
         // 方法参数
         Class<?>[] paramTypes = method.getParameterTypes();
-        // equals方法
+        // equals()方法
         if (member.equals("equals") && paramTypes.length == 1 && paramTypes[0] == Object.class) {
             return equalsImpl(args[0]);
         }
-        // 除equals外, 注解的其它方法都不带参数
+        // 除equals()外, 注解的其它方法都不带参数
         if (paramTypes.length != 0) {
             throw new AssertionError("Too many parameters for an annotation method");
         }
-        // toString方法
+        // toString()方法
         if (member.equals("toString")) {
             return toStringImpl();
         }
-        // hashCode方法
+        // hashCode()方法
         if (member.equals("hashCode")) {
             return hashCodeImpl();
         }
-        // annotationType方法
+        // annotationType()方法
         if (member.equals("annotationType")) {
             return type;
         }
+        // 以下是注解自定义的方法
         // 注解方法的返回值
         Object result = memberValues.get(member);
-        // 注解方法的返回值不可为null
+        // 注解方法的返回值为null, 抛出异常
         if (result == null) {
             throw new IncompleteAnnotationException(type, member);
         }
@@ -135,3 +142,5 @@ class AnnotationInvocationHandler implements InvocationHandler, Serializable {
 
 }
 ```
+
+`AnnotationInvocationHandler`中，`memberValues`为注解方法的返回值集合，对应的`key`为注解的方法名，`value`为方法的返回值。
