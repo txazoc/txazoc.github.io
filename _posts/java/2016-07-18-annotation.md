@@ -6,6 +6,8 @@ tags:       [java]
 date:       2016-07-18
 ---
 
+> 注解，JDK1.5引入的新特性。
+
 先来定义一个注解，关键字`@interface`。
 
 ```java
