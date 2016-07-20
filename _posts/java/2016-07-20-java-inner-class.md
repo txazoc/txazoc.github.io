@@ -103,9 +103,9 @@ public class OutterClass$InnerClass {
 
 ```java
 public static void main(String[] args) {
-      OutterClass outterClass = new OutterClass();
-      OutterClass.InnerClass innerClass = outterClass.new InnerClass();
-  }
+    OutterClass outterClass = new OutterClass();
+    OutterClass.InnerClass innerClass = outterClass.new InnerClass();
+}
 ```
 
 反编译字节码。
