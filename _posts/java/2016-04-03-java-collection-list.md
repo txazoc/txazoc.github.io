@@ -14,24 +14,27 @@ List继承自`java.util.Collection`，常见的实现类有`ArrayList`、`Linked
 
 #### ArrayList
 
-ArrayList是数组实现的List，是线程不安全的。
-
-ArrayList的数据结构如下：
+ArrayList的数据结构:
 
 ```java
 public class ArrayList<E> {
 
+    // 大小
     private int size;
+    // 元素数组
     private transient Object[] elementData;
 
 }
 ```
 
-ArrayList主要有size和elementData两个属性，size代表list的实际大小，elementData是一个对象数组，存放list的元素。
+ArrayList特点:
 
-ArrayList的elementData默认大小为10，可以在初始化时指定。当size大小达到elementData的长度时，就会对elementData进行扩容，每次扩容1/2。扩容时，分配一块新的数组空间，并将原始数组复制到新的数组中。初始化时指定合适的大小，避免频繁扩容。
-
-ArrayList基于数组实现，而数组在内存中是一块连续的内存空间。
+* 线程不安全
+* 基于数组实现，数组在内存中是一块连续的内存空间，随机访问效率高
+* 默认大小为10，当大小大于elementData的长度时，就会对elementData进行扩容，每次扩容1/2。扩容时，分配一块新的数组空间，并将原始数组复制到新的数组中。初始化时指定合适的大小，可以避免频繁扩容
+* get(int index)，数组下标访问，效率高
+* add(E e)，顺序添加，效率高，有可能扩容
+* add(int index, E e)，下标添加，数组copy操作，有可能扩容
 
 #### LinkedList
 
