@@ -127,7 +127,7 @@ public class org.txazo.java.innerclass.local.OuterClass {
 }
 ```
 
-通过对比反编译后的字节码，编译后的`OuterClass`和下面的`OuterClass`是等价的。
+反编译后的外部类`OuterClass`。
 
 ```java
 public class OuterClass {
@@ -168,7 +168,7 @@ public class OuterClass {
 }
 ```
 
-反编译后的局部内部类。
+反编译后的局部内部类`OuterClass$1LocalInnerClass`。
 
 ```java
 class OuterClass$1LocalInnerClass {
@@ -176,7 +176,7 @@ class OuterClass$1LocalInnerClass {
     final OuterClass this$0;
     final Object val$localField;
 
-    public OuterClass$1LocalInnerClass(OuterClass this$0, Object val$localField) {
+    OuterClass$1LocalInnerClass(OuterClass this$0, Object val$localField) {
         this.this$0 = this$0;
         this.val$localField = val$localField;
     }
@@ -191,7 +191,48 @@ class OuterClass$1LocalInnerClass {
 }
 ```
 
-下面来总结下局部内部类的实现。
+测试代码。
+
+```java
+@Test
+public void test() throws ClassNotFoundException {
+    Class<?> innerClass = Class.forName("org.txazo.java.innerclass.local.OuterClass$1LocalInnerClass");
+    Assert.assertNotNull(innerClass);
+
+    Field[] fields = innerClass.getDeclaredFields();
+    for (Field field : fields) {
+        System.out.println("内部类变量: " + Modifier.toString(field.getModifiers()) + " " + field.getType().getName() + " " + field.getName());
+    }
+
+    Constructor[] constructors = innerClass.getDeclaredConstructors();
+    for (Constructor constructor : constructors) {
+        System.out.println("内部类构造方法: " + Modifier.toString(constructor.getModifiers()) + " " + constructor.getName() + Arrays.asList(constructor.getParameterTypes()).toString().replace("[", "(").replace("]", ")").replace("class ", ""));
+    }
+
+    Method[] methods = OuterClass.class.getDeclaredMethods();
+    for (Method method : methods) {
+        System.out.println("外部类方法: " + Modifier.toString(method.getModifiers()) + " " + method.getReturnType().getName() + " " + method.getName() + Arrays.asList(method.getParameterTypes()).toString().replace("[", "(").replace("]", ")").replace("class ", ""));
+    }
+}
+```
+
+测试结果。
+
+```console
+内部类变量: final java.lang.Object val$localField
+内部类变量: final org.txazo.java.innerclass.local.OuterClass this$0
+内部类构造方法:  org.txazo.java.innerclass.local.OuterClass$1LocalInnerClass(org.txazo.java.innerclass.local.OuterClass, java.lang.Object)
+外部类方法: static java.lang.Object access$100()
+外部类方法: static java.lang.Object access$200(org.txazo.java.innerclass.local.OuterClass)
+外部类方法: static java.lang.Object access$300()
+外部类方法: static java.lang.Object access$002(org.txazo.java.innerclass.local.OuterClass, java.lang.Object)
+外部类方法: public void test()
+外部类方法: private java.lang.Object getInstanceField()
+外部类方法: private static java.lang.Object getStaticField()
+外部类方法: public void outerMethod()
+```
+
+通过分析上面反编译后的字节码和Java代码，来总结下内部类的实现原理。
 
 * javac编译器会把内部类从外部类中剥离出来，编译为一个单独的class文件，例如上面的`OuterClass$1LocalInnerClass.class`
 * 非静态内部类持有外部类实例的引用`this$0`，这是在实例化内部类时，从构造函数传入的
