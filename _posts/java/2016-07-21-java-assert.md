@@ -14,7 +14,7 @@ date:       2016-07-21
 assert condition;
 ```
 
-`condition`为`true`，继续执行，为`false`，抛出`AssertionError`异常。
+`condition`为`true`，继续执行，为`false`，抛出`AssertionError`错误。
 
 断言语法格式二:
 
@@ -22,11 +22,12 @@ assert condition;
 assert condition : message;
 ```
 
-`condition`为`true`，继续执行，为`false`，抛出`AssertionError(message)`异常。
+`condition`为`true`，继续执行，为`false`，抛出`AssertionError(message)`错误。
 
-> `注`: `condition`为boolean表达式, `message`为值表达式
+> `condition`为boolean表达式
+> `message`为值表达式
 
-给出一个断言的例子。
+先给出一个断言的例子。
 
 ```java
 public class AssertTest {
@@ -93,7 +94,7 @@ public class AssertTest {
         if (!$assertionsDisabled) {
             // 断言开启
             if (!condition) {
-                // 断言为false, 抛出异常
+                // 断言为false, 抛出错误
                 throw new AssertionError(message);
             }
         }
@@ -102,7 +103,7 @@ public class AssertTest {
 }
 ```
 
-编译器在编译包含`assert`的类时，添加了`$assertionsDisabled`静态变量，该变量代表是否开启断言，并通过`Class.desiredAssertionStatus()`方法进行初始化，`Class.desiredAssertionStatus()`方法会调用`native`的`desiredAssertionStatus0()`方法。
+编译器在编译包含断言的类时，添加了静态变量`$assertionsDisabled`，该变量代表是否开启断言，并通过`Class.desiredAssertionStatus()`方法进行初始化，`Class.desiredAssertionStatus()`方法会调用`native`的`desiredAssertionStatus0()`方法。
 
 跟踪`desiredAssertionStatus0()`方法，最终执行的是下面的`JavaAssertions::enabled()`方法。
 
