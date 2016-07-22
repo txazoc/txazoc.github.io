@@ -6,11 +6,9 @@ tags:       [java]
 date:       2016-07-21
 ---
 
-断言是JDK1.5提供的新特性。
+断言是jdk1.4引入的，`assert`为断言关键字。
 
-`assert`为断言关键字
-
-断言格式一:
+断言语法格式一:
 
 ```java
 assert condition;
@@ -18,7 +16,7 @@ assert condition;
 
 `condition`为`true`，继续执行，为`false`，抛出`AssertionError`异常。
 
-断言格式二:
+断言语法格式二:
 
 ```java
 assert condition : message;
@@ -27,6 +25,8 @@ assert condition : message;
 `condition`为`true`，继续执行，为`false`，抛出`AssertionError(message)`异常。
 
 > `注`: `condition`为boolean表达式, `message`为值表达式
+
+给出一个断言的例子。
 
 ```java
 public class AssertTest {
@@ -102,7 +102,7 @@ public class AssertTest {
 }
 ```
 
-是否禁用断言是根据`Class.desiredAssertionStatus()`判断的，里面会调用`native`的`desiredAssertionStatus0()`方法。
+编译器在编译包含`assert`的类时，添加了`$assertionsDisabled`静态变量，该变量代表是否开启断言，并通过`Class.desiredAssertionStatus()`方法进行初始化，`Class.desiredAssertionStatus()`方法会调用`native`的`desiredAssertionStatus0()`方法。
 
 跟踪`desiredAssertionStatus0()`方法，最终执行的是下面的`JavaAssertions::enabled()`方法。
 
@@ -113,18 +113,21 @@ public class AssertTest {
 bool JavaAssertions::enabled(const char *classname, bool systemClass) {
     OptionList *p;
     if (p = match_class(classname)) {
+        // 开启用户类断言
         return p->enabled();
     }
 
     if (p = match_package(classname)) {
+        // 开启用户包断言
         return p->enabled();
     }
 
+    // 返回默认的系统类断言或用户类断言
     return systemClass ? systemClassDefault() : userClassDefault();
 }
 ```
 
-下面是jvm启动时jvm参数的处理。
+下面是jvm启动时对断言参数的处理。
 
 `hotspot/src/share/vm/runtime/arguments.cpp`
 
@@ -170,3 +173,5 @@ if (match_option(option, system_assertion_options, &tail, false)) {
 * `java -ea:org.txazo.jvm.Test`，类
 * `java -ea`，用户类
 * `java -esa`，系统类
+
+`java -dsa -ea -da:org.txazo.jvm... -ea:org.txazo.jvm.Test`
