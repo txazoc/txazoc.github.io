@@ -24,8 +24,7 @@ assert condition : message;
 
 `condition`为`true`，继续执行，为`false`，抛出`AssertionError(message)`错误。
 
-> `condition`为boolean表达式
-> `message`为值表达式
+> `condition`为boolean表达式, `message`为值表达式
 
 先给出一个断言的例子。
 

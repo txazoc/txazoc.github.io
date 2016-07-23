@@ -24,10 +24,11 @@
     // 段落
     p {
         text-indent: 28px;
+        margin: 10px auto;
 
-        + p {
-            margin: 10px auto;
-        }
+        //+ p {
+        //    margin: 10px auto;
+        //}
 
         // 代码块
         code {

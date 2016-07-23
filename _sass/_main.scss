@@ -171,6 +171,7 @@
 
         .publish {
             display: inline-block;
+            font-weight: bold;
             font-size: 14px;
             color: #3c9;
             white-space: nowrap;
@@ -188,7 +189,7 @@
         text-align: center;
         margin: 20px 0 0 0;
         padding: 30px 0 0 0;
-        border-top: 1px solid #e3F3F3;
+        //border-top: 1px solid #e3F3F3;
 
         a {
             padding: 0 5px;
