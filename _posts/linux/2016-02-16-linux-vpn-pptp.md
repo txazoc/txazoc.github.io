@@ -1,9 +1,13 @@
 ---
 layout:     article
-title:      Centos安装VPN
+title:      CentOS搭建VPN
 tags:       [linux, vpn]
 date:       2016-02-16
 ---
+
+最近，在阿里云上买了一台美国的云服务器ECS，并在上面搭建了VPN服务器，然后可以使用VPN可以访问Google了。
+
+下面，介绍下CentOS下VPN的完整搭建流程。
 
 ## 安装PPTP
 
@@ -19,7 +23,7 @@ chkconfig iptables on
 
 #### 1. 设置VPN的IP地址
 
-/etc/pptpd.conf末尾添加如下两行，localip代表VPN主机的地址，remoteip代表给连接VPN的远程主机分配的IP地址。
+`/etc/pptpd.conf`文件末尾添加下面两行，`localip`代表VPN主机的IP地址，`remoteip`代表给连接VPN的远程主机分配的IP地址。
 
 ```bash
 localip 192.168.0.1
@@ -28,7 +32,7 @@ remoteip 192.168.0.2-254
 
 #### 2. 配置主备DNS
 
-/etc/ppp/options.pptpd中取消ms-dns前后的注释并修改如下，ms-dns代表的是VPN主机使用的DNS服务器地址
+`/etc/ppp/options.pptpd`文件中取消ms-dns前后的注释并修改如下，`ms-dns`代表的是VPN主机使用的DNS服务器的IP地址。
 
 ```bash
 ms-dns 8.8.8.8
@@ -37,19 +41,21 @@ ms-dns 8.8.4.4
 
 #### 3. 设置VPN账号和密码
 
-/etc/ppp/chap-secrets末尾加入一行, user为用户名，passwd为密码，*代表所有主机都可以连接
+`/etc/ppp/chap-secrets`文件末尾加入下面一行, `user`为用户名，`passwd`为密码，`*`代表所有主机都可以连接。
 
 ```bash
 user pptpd passwd *
 ```
 
-#### 4. 开启转发
+#### 4. 开启IP转发
 
-/etc/sysctl.conf中net.ipv4.ip_forward设置为1，开启IP转发功能。
+`/etc/sysctl.conf`文件中`net.ipv4.ip_forward`设置为1，开启IP转发功能。
 
 ```bash
 net.ipv4.ip_forward = 1
 ```
+
+执行`sysctl -p`，使修改的配置生效。
 
 ```bash
 sysctl -p
@@ -57,11 +63,15 @@ sysctl -p
 
 #### 5. 设置防火墙转发规则
 
+`iptables`添加防火墙转发规则。
+
 ```bash
 iptables -t nat -F
 iptables -t nat -A POSTROUTING -s 192.168.0.0/24 -j MASQUERADE
 iptables -t nat -A POSTROUTING -s 192.168.0.0/24 -j SNAT --to-source 112.124.6.220
 ```
+
+重启，使配置生效。
 
 ```bash
 /etc/init.d/iptables save
