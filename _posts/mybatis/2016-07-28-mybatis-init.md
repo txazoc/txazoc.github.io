@@ -6,7 +6,9 @@ tags:       [mybatis]
 date:       2016-07-28
 ---
 
-MyBatis的初始化就是构建`SqlSessionFactory`的过程。
+MyBatis的初始化过程就是构建`SqlSessionFactory`的过程。
+
+下面是常见创建`SqlSessionFactory`的代码。
 
 ```java
 public static void main(String[] args) throws IOException {
