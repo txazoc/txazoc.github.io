@@ -142,11 +142,12 @@
         border-radius: 5px;
         border-collapse: separate;
         border-spacing: 0;
+        font-size: 90%;
 
         thead {
             tr {
                 th {
-                    padding: 7px;
+                    padding: 6px;
                     background: #F9FAFB;
                     font-weight: bold;
                     border-left: 1px solid #ccc;
@@ -174,7 +175,7 @@
         tbody {
             tr {
                 td {
-                    padding: 5px;
+                    padding: 4px;
                     border-top: 1px solid #ccc;
                     border-left: 1px solid #ccc;
                     text-align: center !important;
@@ -186,6 +187,10 @@
 
                 &:hover {
                     background: #f6f6f6;
+                }
+
+                &:nth-child(2n) {
+                    background: #F9FAFB;
                 }
             }
         }
