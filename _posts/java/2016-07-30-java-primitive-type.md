@@ -251,14 +251,14 @@ Code:
 
 | 类型 | 装箱 | 拆箱 |
 | --- | --- | --- |
-| byte    | Byte.valueOf(byte)       | Byte.byteValue() |
-| short   | Short.valueOf(short)     | Short.shortValue() |
-| int     | Integer.valueOf(int)     | Integer.intValue() |
-| long    | Long.valueOf(long)       | Long.longValue() |
-| char    | Character.valueOf(char)  | Character.charValue() |
-| float   | Float.valueOf(float)     | Float.floatValue() |
-| double  | Double.valueOf(double)   | Double.doubleValue() |
-| boolean | Boolean.valueOf(boolean) | Boolean.booleanValue() |
+| byte    | valueOf(byte)    | byteValue() |
+| short   | valueOf(short)   | shortValue() |
+| int     | valueOf(int)     | intValue() |
+| long    | valueOf(long)    | longValue() |
+| char    | valueOf(char)    | charValue() |
+| float   | valueOf(float)   | floatValue() |
+| double  | valueOf(double)  | doubleValue() |
+| boolean | valueOf(boolean) | booleanValue() |
 
 说到这里，或许能理解包装类的缓存内部类的意义，在实际编码中，我们更倾向于使用基本数据类型，即使变量或参数的类型为包装类型，然后Java通过自动装箱将基本数据类型转换为包装类型，而数值`-127` ~ `128`使用得比较频繁，为避免频繁创建包装类的对象，于是缓存内部类就诞生了。至于为何`Integer`缓存的上界可以配置，应该是考虑到`int`是基本数据类型中使用**最多**的类型。
 
