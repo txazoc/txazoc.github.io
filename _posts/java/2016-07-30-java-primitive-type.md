@@ -13,6 +13,8 @@ Java有8种基本数据类型: `byte`、`short`、`int`、`long`、`char`、`flo
 * **布尔类型**: boolean
 * **数值类型**: 包括整数类型和浮点类型
 
+下面的表格列出8种基本数据类型的字节数和取值范围:
+
 | 类型 | 字节数 | 取值范围 |
 | ---       | ---   | ---  |
 | byte      | 1   | -2^7 ~ 2^7-1 |
@@ -37,13 +39,24 @@ byte、short、int、long为`有符号数`，char为`无符号数`。
 
 浮点类型分为单精度浮点数(对应Float)和双精度浮点数(对应Double)。
 
+浮点数的组成:
+
+* **阶符±**: 1位
+* **阶码e**: float为7位，double为10位
+* **数符±**:
+* **尾数m**:
+
+| 阶符± | 阶码e | 数符± | 尾数m |
+| ---   | ---  | ---   | ---  |
+| 1     | 7    | 1     | 23   |
+
 #### 布尔类型
 
 boolean只有两种值: `true`和`false`，对应整数的1和0。
 
 #### 包装类型
 
-Java中的基本数据类型都有对应的包装类型，分别为`Byte`、`Short`、`Integer`、`Long`、`Char`、`Float`、`Double`、`Boolean`。
+Java中的基本数据类型都有对应的包装类型，分别为`Byte`、`Short`、`Integer`、`Long`、`Character`、`Float`、`Double`、`Boolean`。
 
 Byte、Short、Integer、Long、Float、Double都继承自`Number`，Number定义了6个方法，分别用来将包装类型转换为基本数据类型byte、short、int、long、float、double。
 
@@ -130,17 +143,28 @@ public final class Byte extends Number implements Comparable<Byte> {
         return (double) value;
     }
 
+    public int compareTo(Byte anotherByte) {
+        return compare(this.value, anotherByte.value);
+    }
+
+    public static int compare(byte x, byte y) {
+        return x - y;
+    }
+
 }
 ```
 
 包装类的共同点:
 
 * 包装类都为`final`类型，不可被继承
-* 包装类都实现接口`Serializable`，可被序列化
+* 包装类都实现了`Serializable`接口，可被序列化
+* 包装类都实现了`Comparable`接口的`compareTo()`方法，用于包装类对象间的大小比较
 * Byte、Short、Integer、Long、Float、Double都继承自`Number`，
 * 除Boolean外，其它包装类都有静态变量`MAX_VALUE`和`MIN_VALUE`，代表该包装类型对应的基本数据类型的最大值和最小值
 * 包装类都有静态变量`TYPE`，为该包装类型对应的基本数据类型的Class
 * 包装类都有静态的`R valueOf(V v)`方法，用来讲基本数据类型转换为对应的包装类型，其中参数`V`为基本数据类型，返回类型`R`为包装类型
+
+关于`compareTo()`方法，整数类型和布尔类型没什么好说的。
 
 关于`valueOf()`方法的实现，Byte、Short、Integer、Long、Character都有对应的缓存内部类，类似上面`Byte`的`ByteCache`，Boolean由于只有true和false两个值，直接返回静态的`TRUE`和`FALSE`。
 
@@ -215,6 +239,68 @@ void Arguments::set_aggressive_opts_flags() {
 当`-XX:+AggressiveOpts`开启，且`AutoBoxCacheMax`为默认值时，会将`AutoBoxCacheMax`修改为`20000`，然后如果`AutoBoxCacheMax`不为默认值`128`或修改为`20000`，用`AutoBoxCacheMax`的值来重写`java.lang.Integer.IntegerCache.high`参数。
 
 `high`设置的优先级为: `-XX:AutoBoxCacheMax` > `-XX:+AggressiveOpts` > `-Djava.lang.Integer.IntegerCache.high` > 默认值127
+
+#### 浮点数的比较
+
+```java
+public final class Float {
+
+    public int compareTo(Float anotherFloat) {
+        return Float.compare(value, anotherFloat.value);
+    }
+
+    public static int compare(float f1, float f2) {
+        if (f1 < f2) {
+            return -1;   // Neither val is NaN, thisVal is smaller
+        }
+        if (f1 > f2) {
+            return 1;    // Neither val is NaN, thisVal is larger
+        }
+
+        // Cannot use floatToRawIntBits because of possibility of NaNs.
+        int thisBits = Float.floatToIntBits(f1);
+        int anotherBits = Float.floatToIntBits(f2);
+        return (thisBits == anotherBits ? 0 :   // Values are equal
+                (thisBits < anotherBits ? -1 :  // (-0.0, 0.0) or (!NaN, NaN)
+                        1));                    // (0.0, -0.0) or (NaN, !NaN)
+    }
+
+}
+```
+
+反编译`compare()`方法中f1和f2比较的字节码。
+
+```java
+Code:
+   0: fload_0       
+   1: fload_1       
+   2: fcmpg         
+   3: ifge          8
+   6: iconst_m1     
+   7: ireturn       
+   8: fload_0       
+   9: fload_1       
+  10: fcmpl         
+  11: ifle          16
+  14: iconst_1      
+  15: ireturn
+```
+
+float的小于和大于比较运算对应的jvm指令为`fcmpg`和`fcmpl`。
+
+| 指令 | fcmp / fcml |
+| --- | --- |
+| 入栈 | ..., value1, value2 → |
+| 出栈 | ..., result |
+
+* value1大于value2，result = 1
+* value1等于value2，result = 0
+* value1小于value2，result = －1
+* value1、value2两者至少有一个为NaN，大小比较失败，`fcmpg`指令返回result = 1，`fcmpl`指令返回result = -1
+
+根据`IEEE 754 标准`，`NaN`是无序的，除`NaN`外的浮点数都是有序的，`负无穷大`小于所有有限值，`正无穷大`大于所有有限值，`正0`和`负0`是相等的。
+
+什么是NaN呢？`NaN`是`Not a Number`的缩写，在`IEEE 754 标准`中，用来表示一些特殊数值。
 
 #### 自动装箱拆箱
 
