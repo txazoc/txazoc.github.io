@@ -21,20 +21,20 @@ make -version
 ```sh
 export LANG=C
 export ALT_BOOTDIR=`/usr/libexec/java_home -v 1.6.0`
-export ALT_CUPS_HEADERS_PATH="/usr/local/cups-2.1.4/include"
+export ALT_CUPS_HEADERS_PATH="/usr/local/cups/include"
 export ALLOW_DOWNLOADS=true
+export SKIP_DEBUG_BUILD=false
+export SKIP_FASTDEBUG_BUILD=true
+export DEBUG_NAME=debug
 export USE_PRECOMPILED_HEADER=true
 unset CLASSPATH
 unset JAVA_HOME
-
-#export SKIP_DEBUG_BUILD=false
-#export SKIP_FASTDEBUG_BUILD=true
-#export DEBUG_NAME=debug
 
 export ALT_FREETYPE_LIB_PATH=/usr/local/freetype/lib
 export ALT_FREETYPE_HEADERS_PATH=/usr/local/freetype/include/freetype2
 
 sudo ln -s /usr/bin/llvm-gcc /Applications/Xcode.app/Contents/Developer/usr/bin/llvm-gcc
+sudo ln -s /usr/bin/llvm-g++ /Applications/Xcode.app/Contents/Developer/usr/bin/llvm-g++
 sudo ln -s /usr/local/cups-2.1.4/include /usr/include/cups
 
 make sanity
