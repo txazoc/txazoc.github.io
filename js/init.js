@@ -55,13 +55,11 @@ define(function (require, exports, module) {
         initHighlight: function () {
             var preCode = $('pre > code');
             if (preCode.length > 0) {
-                require.async('highlight', function () {
-                    preCode.each(function (i, e) {
-                        var language = $(this).attr('class').trim();
-                        $(this).removeClass(language).addClass('language-' + language);
-                        hljs.highlightBlock(e);
-                        $(this).parent().addClass('hljs-dark').show();
-                    });
+                preCode.each(function (i, e) {
+                    var language = $(this).attr('class').trim();
+                    $(this).removeClass(language).addClass('language-' + language);
+                    hljs.highlightBlock(e);
+                    $(this).parent().addClass('hljs-dark').show();
                 });
             }
         },
