@@ -6,7 +6,7 @@ tags:       [openjdk]
 date:       2016-08-02
 ---
 
-系统版本:
+#### 系统环境
 
 * Mac OS X YoseMite 10.10.2
 * JDK 1.6.0
@@ -14,6 +14,7 @@ date:       2016-08-02
 * XQuartz 2.7.9
 * CUPS 2.1.4
 * GNU Make 3.81
+* Ant 1.9.5
 
 #### 下载OpenJDK源码
 
@@ -45,7 +46,7 @@ Mac版的`jdk 1.6`下载地址: [https://support.apple.com/kb/DL1572](https://su
 xcode-select --install
 ```
 
-创建软链接:
+创建`LLVM`的软链接:
 
 ```c
 sudo ln -s /usr/bin/llvm-gcc /Applications/Xcode.app/Contents/Developer/usr/bin/llvm-gcc
@@ -61,9 +62,9 @@ sudo ln -s /usr/X11/include/X11 /usr/include/X11
 sudo ln -s /usr/X11/include/freetype2/freetype/ /usr/X11/include/freetype
 ```
 
-XQuartz中包含`X11`和`freetype`。
-
 #### 安装CUPS
+
+下载并安装`CUPS`:
 
 ```sh
 wget https://github.com/apple/cups/releases/download/release-2.1.4/cups-2.1.4-source.tar.gz
@@ -74,7 +75,9 @@ make
 make install
 ```
 
-#### 配置环境变量
+#### 环境变量
+
+设置编译的环境变量:
 
 ```sh
 export LANG=C
@@ -83,7 +86,7 @@ export ALT_CUPS_HEADERS_PATH="/usr/local/cups/include"
 export ALLOW_DOWNLOADS=true
 export USE_PRECOMPILED_HEADER=true
 export SKIP_DEBUG_BUILD=false
-export SKIP_FASTDEBUG_BUILD=false
+export SKIP_FASTDEBUG_BUILD=true
 export DEBUG_NAME=debug
 unset CLASSPATH
 unset JAVA_HOME
@@ -97,7 +100,7 @@ unset JAVA_HOME
 make sanity
 ```
 
-编译检查通过，输出如下:
+若编译检查通过，输出如下:
 
 ```console
 Sanity check passed.
@@ -108,10 +111,10 @@ Sanity check passed.
 运行下面的命令开始编译:
 
 ```sh
-sudo make CC=clang COMPILER_WARNINGS_FATAL=false LFLAGS='-Xlinker -lstdc++' USE_CLANG=true LANG=C LP64=1 ARCH_DATA_MODEL=64 HOTSPOT_BUILD_JOBS=8 ALT_BOOTDIR=/Library/Java/Home _JAVA_OPTIONS=-Dfile.encoding=ASCII fastdebug_build
+make CC=clang COMPILER_WARNINGS_FATAL=false LFLAGS='-Xlinker -lstdc++' USE_CLANG=true LANG=C LP64=1 ARCH_DATA_MODEL=64 HOTSPOT_BUILD_JOBS=8 ALT_BOOTDIR=/Library/Java/Home _JAVA_OPTIONS=-Dfile.encoding=ASCII fastdebug_build
 ```
 
-编译过程中可能会遇到下面的报错:
+编译过程中可能会遇到下面的错误:
 
 ```error
 clang: error: unknown argument: '-fpch-deps'
@@ -148,40 +151,37 @@ inline relocInfo prefix_relocInfo(int datalen = 0) {
 
 #### 编译完成
 
-编译完成，输出如下:
+编译成功后，输出如下:
 
 ```console
 ########################################################################
 ##### Leaving jdk for target(s) sanity all  images                 #####
 ########################################################################
-##### Build time 00:09:16 jdk for target(s) sanity all  images     #####
+##### Build time 00:16:10 jdk for target(s) sanity all  images     #####
 ########################################################################
 
 #-- Build times ----------
 Target fastdebug_build
-Start 2016-08-02 23:40:44
-End   2016-08-02 23:50:33
-00:00:11 corba
-00:00:14 hotspot
-00:00:02 jaxp
-00:00:03 jaxws
-00:09:16 jdk
-00:00:03 langtools
-00:09:49 TOTAL
+Start 2016-08-03 21:45:33
+End   2016-08-03 22:10:56
+00:01:46 corba
+00:06:36 hotspot
+00:00:13 jaxp
+00:00:16 jaxws
+00:16:10 jdk
+00:00:22 langtools
+00:25:23 TOTAL
 -------------------------
 ```
 
-编译结果: `build/macosx-x86_64`目录，目录的结构如下:
+编译结果: `build/macosx-x86_64`、`build/macosx-x86_64-fastdebug`。
 
-* **bin/**: 二进制文件
-* **hotspot/**: jvm
-
-运行编译的jdk:
+运行编译好的jdk:
 
 ```console
+$ cd build/macosx-x86_64-fastdebug
 $ bin/java -version
-
-openjdk version "1.7.0-internal"
-OpenJDK Runtime Environment (build 1.7.0-internal-root_2016_08_02_16_51-b00)
-OpenJDK 64-Bit Server VM (build 24.95-b01, mixed mode)
+openjdk version "1.7.0-internal-fastdebug"
+OpenJDK Runtime Environment (build 1.7.0-internal-fastdebug-root_2016_08_03_21_45-b00)
+OpenJDK 64-Bit Server VM (build 24.95-b01-fastdebug, mixed mode)
 ```
