@@ -174,11 +174,14 @@ End   2016-08-03 22:10:56
 -------------------------
 ```
 
-编译结果: `build/macosx-x86_64`、`build/macosx-x86_64-fastdebug`。
+编译结果: 
+
+* **build/macosx-x86_64**
+* **build/macosx-x86_64-fastdebug**
 
 运行编译好的jdk:
 
-```console
+```linux
 $ cd build/macosx-x86_64-fastdebug
 $ bin/java -version
 openjdk version "1.7.0-internal-fastdebug"
