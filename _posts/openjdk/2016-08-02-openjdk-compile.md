@@ -85,8 +85,8 @@ export ALT_BOOTDIR=`/usr/libexec/java_home -v 1.6.0`
 export ALT_CUPS_HEADERS_PATH="/usr/local/cups/include"
 export ALLOW_DOWNLOADS=true
 export USE_PRECOMPILED_HEADER=true
-export SKIP_DEBUG_BUILD=false
-export SKIP_FASTDEBUG_BUILD=true
+export SKIP_DEBUG_BUILD=true
+export SKIP_FASTDEBUG_BUILD=false
 export DEBUG_NAME=debug
 unset CLASSPATH
 unset JAVA_HOME

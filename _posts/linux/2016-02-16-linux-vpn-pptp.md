@@ -5,7 +5,7 @@ tags:       [linux, vpn]
 date:       2016-02-16
 ---
 
-最近，在阿里云上买了一台美国的云服务器ECS，并在上面搭建了VPN服务器，然后可以使用VPN可以访问Google了。
+最近，在阿里云上买了一台美国的云服务器ECS，并在上面搭建了VPN服务器，然后就可以使用VPN可以访问Google了。
 
 下面，介绍下CentOS下VPN的完整搭建流程。
 
@@ -63,7 +63,7 @@ sysctl -p
 
 #### 5. 设置防火墙转发规则
 
-`iptables`添加防火墙转发规则。
+添加防火墙转发规则。
 
 ```bash
 iptables -t nat -F
@@ -71,7 +71,7 @@ iptables -t nat -A POSTROUTING -s 192.168.0.0/24 -j MASQUERADE
 iptables -t nat -A POSTROUTING -s 192.168.0.0/24 -j SNAT --to-source 112.124.6.220
 ```
 
-重启，使配置生效。
+重启`iptables`，使配置生效。
 
 ```bash
 /etc/init.d/iptables save
