@@ -6,6 +6,8 @@ tags:       [jvm, openjdk]
 date:       2016-08-09
 ---
 
+JVM的启动入口:
+
 ```c
 // openjdk7u/jdk/src/share/bin/main.c
 
@@ -14,15 +16,14 @@ int main(int argc, char **argv) {
 }
 ```
 
+直接调用`JLI_Launch()`方法:
+
 ```c
 // openjdk7u/jdk/src/share/bin/java.c
 
 int JLI_Launch(...) {
     // 启动初始化
     InitLauncher(javaw);
-
-    // 输出状态
-    DumpState();
 
     // 选择jre版本
     SelectVersion(argc, argv, &main_class);
@@ -70,11 +71,13 @@ int JLI_Launch(...) {
 }
 ```
 
+`InitLauncher()`方法:
+
 ```c
 // openjdk7u/jdk/src/solaris/bin/java_md_common.c
 
 void InitLauncher(jboolean javaw) {
-    // 环境变量_JAVA_LAUNCHER_DEBUG决定是否打印debug信息
+    // 读取环境变量_JAVA_LAUNCHER_DEBUG, 来判断是否打印debug信息
     JLI_SetTraceLauncher();
 }
 ```
@@ -85,11 +88,11 @@ void InitLauncher(jboolean javaw) {
 jboolean LoadJavaVM(const char *jvmpath, InvocationFunctions *ifn) {
     // 装载动态链接库
     libjvm = dlopen(jvmpath, RTLD_NOW + RTLD_GLOBAL);
-    // 导出函数JNI_CreateJavaVM
+    // 导出函数JNI_CreateJavaVM, 挂载到ifn
     ifn->CreateJavaVM = (CreateJavaVM_t) dlsym(libjvm, "JNI_CreateJavaVM");
-    // 导出函数JNI_GetDefaultJavaVMInitArgs
+    // 导出函数JNI_GetDefaultJavaVMInitArgs, 挂载到ifn
     ifn->GetDefaultJavaVMInitArgs = (GetDefaultJavaVMInitArgs_t) dlsym(libjvm, "JNI_GetDefaultJavaVMInitArgs");
-    // 导出函数JNI_GetCreatedJavaVMs
+    // 导出函数JNI_GetCreatedJavaVMs, 挂载到ifn
     ifn->GetCreatedJavaVMs = (GetCreatedJavaVMs_t) dlsym(libjvm, "JNI_GetCreatedJavaVMs");
     return JNI_TRUE;
 }
@@ -109,7 +112,7 @@ int JVMInit(...) {
 
 int ContinueInNewThread(InvocationFunctions *ifn, jlong threadStackSize, ...) {
     {
-        //创建一个新的线程, 用来创建虚拟机和调用main方法
+        //创建一个新的线程, 执行JavaMain
         rslt = ContinueInNewThread0(JavaMain, threadStackSize, (void *) &args);
     }
 }
@@ -169,7 +172,7 @@ public enum LauncherHelper {
      *
      * @param useStdErr 是否使用标准错误输出
      * @param mode      模式, 对应LM_UNKNOWN, LM_CLASS, LM_JAR
-     * @param className 主类名
+     * @param name 主类名
      * @return
      */
     public static Class<?> checkAndLoadMain(boolean useStdErr, int mode, String name) {
@@ -181,7 +184,7 @@ public enum LauncherHelper {
                 className = name;
                 break;
             case 2:
-                // 通过jar包中MANIFEST.MF文件的Main-Class获取主类
+                // 通过jar包中MANIFEST.MF文件的Main-Class获取主类名
                 className = getMainClassFromJar(printStream, name);
                 break;
             default:
