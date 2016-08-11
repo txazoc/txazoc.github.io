@@ -13,6 +13,12 @@ jvm的启动入口`main()`:
 ```c
 // openjdk7u/jdk/src/share/bin/main.c
 
+/**
+ * main方法
+ *
+ * argc 参数个数
+ * argv 参数数组
+ */
 int main(int argc, char **argv) {
     return JLI_Launch(...);
 }
@@ -84,6 +90,33 @@ void InitLauncher(jboolean javaw) {
 }
 ```
 
+`JLI_SetTraceLauncher()`方法:
+
+```c
+// openjdk7u/jdk/src/share/bin/jli_util.c
+
+// 是否开启debug模式
+static jboolean _launcher_debug = JNI_FALSE;
+
+void JLI_SetTraceLauncher() {
+    if (getenv(JLDEBUG_ENV_ENTRY) != 0) {
+        _launcher_debug = JNI_TRUE;
+        JLI_TraceLauncher("----%s----\n", JLDEBUG_ENV_ENTRY);
+    }
+}
+
+jboolean JLI_IsTraceLauncher() {
+    return _launcher_debug;
+}
+
+void JLI_TraceLauncher(const char *fmt, ...) {
+    if (_launcher_debug != JNI_TRUE) return;
+    vprintf(fmt, vl);
+}
+```
+
+后续会调用`JLI_IsTraceLauncher()`和`JLI_TraceLauncher()`方法输出debug信息。
+
 `LoadJavaVM()`方法:
 
 ```c
@@ -92,11 +125,11 @@ void InitLauncher(jboolean javaw) {
 jboolean LoadJavaVM(const char *jvmpath, InvocationFunctions *ifn) {
     // 装载动态链接库
     libjvm = dlopen(jvmpath, RTLD_NOW + RTLD_GLOBAL);
-    // 导出函数JNI_CreateJavaVM, 挂载到ifn
+    // 导出动态链接库函数JNI_CreateJavaVM, 挂载到ifn
     ifn->CreateJavaVM = (CreateJavaVM_t) dlsym(libjvm, "JNI_CreateJavaVM");
-    // 导出函数JNI_GetDefaultJavaVMInitArgs, 挂载到ifn
+    // 导出动态链接库函数JNI_GetDefaultJavaVMInitArgs, 挂载到ifn
     ifn->GetDefaultJavaVMInitArgs = (GetDefaultJavaVMInitArgs_t) dlsym(libjvm, "JNI_GetDefaultJavaVMInitArgs");
-    // 导出函数JNI_GetCreatedJavaVMs, 挂载到ifn
+    // 导出动态链接库函数JNI_GetCreatedJavaVMs, 挂载到ifn
     ifn->GetCreatedJavaVMs = (GetCreatedJavaVMs_t) dlsym(libjvm, "JNI_GetCreatedJavaVMs");
     return JNI_TRUE;
 }
@@ -156,6 +189,11 @@ int JNICALL JavaMain(void *_args) {
     LEAVE();
 }
 
+static jboolean InitializeJVM(JavaVM **pvm, JNIEnv **penv, InvocationFunctions *ifn) {
+    r = ifn->CreateJavaVM(pvm, (void **) penv, &args);
+    return r == JNI_OK;
+}
+
 static jclass LoadMainClass(JNIEnv *env, int mode, char *name) {
     // 获取sun.launcher.LauncherHelper类
     jclass cls = GetLauncherHelperClass(env);
@@ -163,7 +201,7 @@ static jclass LoadMainClass(JNIEnv *env, int mode, char *name) {
     // 获取LauncherHelper类的checkAndLoadMain()方法id
     mid = (*env)->GetStaticMethodID(env, cls, "checkAndLoadMain", "(ZILjava/lang/String;)Ljava/lang/Class;");
 
-    // 调用LauncherHelper类的checkAndLoadMain()方法来检查并加载主类
+    // 调用LauncherHelper类的checkAndLoadMain()方法检查并加载主类
     result = (*env)->CallStaticObjectMethod(env, cls, mid, USE_STDERR, mode, str);
 
     return (jclass) result;
@@ -173,6 +211,8 @@ jclass GetLauncherHelperClass(JNIEnv *env) {
     return FindBootStrapClass(env, "sun/launcher/LauncherHelper");
 }
 ```
+
+`InitializeJVM()`方法调用前面挂载的`CreateJavaVM()`方法，也就是`JNI_CreateJavaVM()`方法。
 
 `sun.launcher.LauncherHelper`的`checkAndLoadMain()`方法检查并加载主类过程:
 
@@ -189,7 +229,7 @@ public enum LauncherHelper {
      * @param useStdErr 是否使用标准错误输出
      * @param mode      模式, 对应LM_UNKNOWN、LM_CLASS、LM_JAR
      * @param name      主类名
-     * @return          main class
+     * @return          主类Class
      */
     public static Class<?> checkAndLoadMain(boolean useStdErr, int mode, String name) {
         PrintStream printStream = useStdErr ? System.err : System.out;
@@ -228,7 +268,7 @@ public enum LauncherHelper {
 }
 ```
 
-java的启动模式如下:
+jvm的启动模式:
 
-* class启动模式: `java org.txazo.test.Main`
 * jar启动模式: `java -jar main.jar`
+* class启动模式: `java org.txazo.test.Main`
