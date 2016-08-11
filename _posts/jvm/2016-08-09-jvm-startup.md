@@ -272,3 +272,11 @@ jvm的启动模式:
 
 * jar启动模式: `java -jar main.jar`
 * class启动模式: `java org.txazo.test.Main`
+
+jvm的整体启动流程:
+
+* 准备工作，包括查找jre、jvm
+* 装载动态链接库
+* 解析jvm参数
+* 启动虚拟机
+* 加载主类，并调用主类的main()方法
