@@ -6,7 +6,7 @@ tags:       [jvm, openjdk]
 date:       2016-08-09
 ---
 
-通过openjdk的源码来分析jvm的启动过程。
+通过openjdk的源码来分析jvm的启动过程，针对linux系统。
 
 jvm的启动入口`main()`:
 
@@ -123,7 +123,7 @@ void JLI_TraceLauncher(const char *fmt, ...) {
 // openjdk7u/jdk/src/solaris/bin/java_md_solinux.c
 
 jboolean LoadJavaVM(const char *jvmpath, InvocationFunctions *ifn) {
-    // 装载动态链接库
+    // 装载动态链接库, jre/lib/libjvm.so
     libjvm = dlopen(jvmpath, RTLD_NOW + RTLD_GLOBAL);
     // 导出动态链接库函数JNI_CreateJavaVM, 挂载到ifn
     ifn->CreateJavaVM = (CreateJavaVM_t) dlsym(libjvm, "JNI_CreateJavaVM");
