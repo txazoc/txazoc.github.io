@@ -6,6 +6,8 @@ tags:       [spring]
 date:       2016-08-18
 ---
 
+Spring启动时，会解析xml配置文件，然后解析xml文件中的标签，本文通过源码的方式来分析Spring解析标签的过程。
+
 ```java
 public static void main(String[] args) throws IOException {
     String[] configLocations = {"spring.xml"};
