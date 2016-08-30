@@ -1,5 +1,6 @@
 ---
 layout:     article
+published:  false
 categories: [分布式]
 title:      任务调度
 tags:       [quartz, spring]

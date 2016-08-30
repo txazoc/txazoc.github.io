@@ -1,5 +1,6 @@
 ---
 layout:     article
+published:  false
 categories: [cache]
 title:      Memcached
 tags:       [缓存, memcached]

@@ -1,5 +1,6 @@
 ---
 layout:     article
+published:  false
 categories: [jvm]
 title:      Java虚拟机
 tags:       [jvm, 虚拟机]

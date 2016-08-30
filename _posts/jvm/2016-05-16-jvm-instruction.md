@@ -1,5 +1,6 @@
 ---
 layout:     article
+published:  false
 categories: [jvm]
 title:      Java虚拟机指令
 tags:       [jvm, 指令]

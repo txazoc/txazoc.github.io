@@ -3,7 +3,7 @@ layout:     article
 categories: [spring]
 title:      Spring源码 - 标签
 tags:       [spring]
-date:       2016-08-18
+date:       2016-08-29
 ---
 
 本文主要分析Spring的xml配置文件中标签的`验证`和`解析`过程。

@@ -1,5 +1,6 @@
 ---
 layout:     article
+published:  false
 categories: [jvm]
 title:      JVM学习
 tags:       [jvm, 虚拟机]
