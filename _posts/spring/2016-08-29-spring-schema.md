@@ -371,4 +371,90 @@ public class ContextNamespaceHandler extends NamespaceHandlerSupport {
 }
 ```
 
-初始化
+先实例化ContextNamespaceHandler，并调用`init()`方法完成初始化。然后，在解析`context`的标签节点时，调用`parse()`解析标签节点。
+
+#### 自定义标签
+
+* 1.自定义xsd
+
+```xml
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<xsd:schema xmlns="http://www.txazo.com/schema/txazo"
+            xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+            xmlns:beans="http://www.springframework.org/schema/beans"
+            targetNamespace="http://www.txazo.com/schema/txazo">
+
+    <xsd:import namespace="http://www.w3.org/XML/1998/namespace" />
+    <xsd:import namespace="http://www.springframework.org/schema/beans" />
+
+    <xsd:element name="config">
+        <xsd:complexType>
+            <xsd:attribute name="init" type="xsd:boolean" default="true" />
+        </xsd:complexType>
+    </xsd:element>
+
+</xsd:schema>
+```
+
+* 2.xml文件中使用自定义标签
+
+```xml
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:txazo="http://www.txazo.com/schema/txazo"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+       http://www.txazo.com/schema/txazo http://www.txazo.com/schema/txazo/txazo.xsd">
+
+    <txazo:config init="true" />
+
+</beans>
+```
+
+* 3.自定义标签处理类，继承自`NamespaceHandlerSupport`
+
+```java
+public class TxazoNamespaceHandler extends NamespaceHandlerSupport {
+
+    @Override
+    public void init() {
+        registerBeanDefinitionParser("config", new TxazoBeanDefinitionParser(TxazoConfig.class));
+    }
+
+}
+
+public class TxazoBeanDefinitionParser implements BeanDefinitionParser {
+
+    private final Class<?> beanClass;
+
+    public TxazoBeanDefinitionParser(Class<?> beanClass) {
+        this.beanClass = beanClass;
+    }
+
+    @Override
+    public BeanDefinition parse(Element element, ParserContext parserContext) {
+        RootBeanDefinition beanDefinition = new RootBeanDefinition();
+        beanDefinition.setBeanClass(beanClass);
+        beanDefinition.setLazyInit(false);
+        if (!parserContext.getRegistry().containsBeanDefinition("txazo-config")) {
+            parserContext.getRegistry().registerBeanDefinition("txazo-config", beanDefinition);
+        }
+        return beanDefinition;
+    }
+
+}
+```
+
+* 4.配置`spring.schemas`和`spring.handlers`
+
+`spring.schemas`
+
+```console
+http\://www.txazo.com/schema/txazo/txazo.xsd=META-INF/txazo.xsd
+```
+
+`spring.handlers`
+
+```console
+http\://www.txazo.com/schema/txazo=org.txazo.config.spring.schema.TxazoNamespaceHandler
+```
