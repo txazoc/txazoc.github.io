@@ -162,6 +162,16 @@ public static byte[] generateProxyClass(final String var0, Class[] var1) {
 继续分析，查看生成class字节码的过程。
 
 ```java
+static {
+    try {
+        hashCodeMethod = Object.class.getMethod("hashCode", new Class[0]);
+        equalsMethod = Object.class.getMethod("equals", new Class[]{Object.class});
+        toStringMethod = Object.class.getMethod("toString", new Class[0]);
+    } catch (NoSuchMethodException var1) {
+        throw new NoSuchMethodError(var1.getMessage());
+    }
+}
+
 private byte[] generateClassFile() {
     // 添加Object的hashCode(), equals(), toString()方法
     this.addProxyMethod(hashCodeMethod, Object.class);
