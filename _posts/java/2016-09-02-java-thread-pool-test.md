@@ -6,7 +6,7 @@ tags:       [java, 线程池]
 date:       2016-09-02
 ---
 
-写了简单的测试代码, JDK的线程池`ThreadPoolExecutor`的.
+写了个简单的测试代码，用来测试JDK的线程池`ThreadPoolExecutor`。
 
 ```java
 public class ThreadPoolExecutorTest {
@@ -17,7 +17,7 @@ public class ThreadPoolExecutorTest {
 
             @Override
             public void rejectedExecution(Runnable r, ThreadPoolExecutor e) {
-                System.out.println(getTime() + " " + r.toString() + " rejected");
+                System.out.println("[" + getTime() + "]\t" + r.toString() + " rejected");
             }
 
         }));
@@ -127,7 +127,7 @@ public class ThreadPoolExecutorTest {
 }
 ```
 
-执行的结果如下.
+测试结果如下。
 
 ```console
 // 过程一
@@ -153,15 +153,15 @@ public class ThreadPoolExecutorTest {
 
 // 过程四
 [2016-09-02 17:13:43]	corePoolSize 5	maximumPoolSize 10	workerCount 10	workQueueSize 5
-2016-09-02 17:13:43 java.util.concurrent.FutureTask@2c12e42b rejected
+[2016-09-02 17:13:43]   java.util.concurrent.FutureTask@2c12e42b rejected
 [2016-09-02 17:13:44]	corePoolSize 5	maximumPoolSize 10	workerCount 10	workQueueSize 5
-2016-09-02 17:13:44 java.util.concurrent.FutureTask@c41d9a8c rejected
+[2016-09-02 17:13:44]   java.util.concurrent.FutureTask@c41d9a8c rejected
 [2016-09-02 17:13:45]	corePoolSize 5	maximumPoolSize 10	workerCount 10	workQueueSize 5
-2016-09-02 17:13:45 java.util.concurrent.FutureTask@3738aae1 rejected
+[2016-09-02 17:13:45]   java.util.concurrent.FutureTask@3738aae1 rejected
 [2016-09-02 17:13:46]	corePoolSize 5	maximumPoolSize 10	workerCount 10	workQueueSize 5
-2016-09-02 17:13:46 java.util.concurrent.FutureTask@695ab619 rejected
+[2016-09-02 17:13:46]   java.util.concurrent.FutureTask@695ab619 rejected
 [2016-09-02 17:13:47]	corePoolSize 5	maximumPoolSize 10	workerCount 10	workQueueSize 5
-2016-09-02 17:13:47 java.util.concurrent.FutureTask@42695958 rejected
+[2016-09-02 17:13:47]   java.util.concurrent.FutureTask@42695958 rejected
 
 // 过程五
 [2016-09-02 17:13:48]	corePoolSize 5	maximumPoolSize 10	workerCount 10	workQueueSize 4
