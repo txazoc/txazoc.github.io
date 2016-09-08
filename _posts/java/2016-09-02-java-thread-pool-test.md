@@ -32,9 +32,7 @@ public class ThreadPoolExecutorTest {
                 @Override
                 public void run() {
                     try {
-                        if (threadSleepTime > 0) {
-                            Thread.sleep(threadSleepTime);
-                        }
+                        Thread.sleep(threadSleepTime);
                     } catch (InterruptedException e) {
                         e.printStackTrace();
                     }
@@ -42,9 +40,7 @@ public class ThreadPoolExecutorTest {
 
             });
 
-            if (threadIntervalTime > 0) {
-                Thread.sleep(threadIntervalTime);
-            }
+            Thread.sleep(threadIntervalTime);
         }
 
         System.in.read();
@@ -190,25 +186,35 @@ public class ThreadPoolExecutorTest {
 [2016-09-02 17:14:05]	corePoolSize 5	maximumPoolSize 10	workerCount 5	workQueueSize 0
 [2016-09-02 17:14:06]	corePoolSize 5	maximumPoolSize 10	workerCount 5	workQueueSize 0
 [2016-09-02 17:14:07]	corePoolSize 5	maximumPoolSize 10	workerCount 5	workQueueSize 0
+
+// 过程九
+[2016-09-02 17:14:03]   corePoolSize 5  maximumPoolSize 10  workerCount 5   workQueueSize 0
+[2016-09-02 17:14:04]   corePoolSize 5  maximumPoolSize 10  workerCount 5   workQueueSize 0
+[2016-09-02 17:14:05]   corePoolSize 5  maximumPoolSize 10  workerCount 5   workQueueSize 0
+[2016-09-02 17:14:06]   corePoolSize 5  maximumPoolSize 10  workerCount 5   workQueueSize 0
+[2016-09-02 17:14:07]   corePoolSize 5  maximumPoolSize 10  workerCount 5   workQueueSize 0
 ```
 
-解释:
+输出结果中的关键词解释:
 
 * `corePoolSize`: 核心线程池大小
 * `maximumPoolSize`: 最大线程池大小
 * `workerCount`: 工作线程数
-* `workQueueSize`: 等待队列中的线程数
+* `workQueueSize`: 等待队列中的任务数
 
-解释:
+测试结果中的过程说明:
 
 * **过程一**: `workerCount` < `corePoolSize`，创建新的工作线程执行任务
 * **过程二**: `workerCount` >= `corePoolSize`，等待队列未满，任务添加到等待队列
 * **过程三**: `workerCount` >= `corePoolSize`，等待队列已满，`workerCount` < `maximumPoolSize`，创建新的工作线程执行任务
 * **过程四**: `workerCount` >= `corePoolSize`，等待队列已满，`workerCount`>= `maximumPoolSize`，执行拒绝策略
-* **过程五**: 工作线程执行完任务，从等待队列中获取任务执行
-* **过程六**: 工作线程执行任务中
-* **过程七**: 工作线程执行完任务，等待队列为空，且`workerCount` > `corePoolSize`，
-* **过程八**: 工作线程执行完任务，等待队列为空，`workerCount` == `corePoolSize`，等待从等待队列中获取任务
+* **过程五**: 过程一中创建的工作线程执行完任务，从等待队列中获取任务执行
+* **过程六**: 过程一和过程三中创建的工作线程执行任务中
+* **过程七**: 过程三中创建的工作线程执行完任务，等待队列为空，`workerCount` > `corePoolSize`，销毁工作线程
+* **过程八**: 过程一中创建的工作线程执行任务中
+* **过程九**: 过程一中创建的工作线程执行完任务，等待队列为空，`workerCount` == `corePoolSize`，进入阻塞状态，当等待队列中有新的任务时，从等待队列中获取任务继续执行
+
+参考`ThreadPoolExecutor`的源码。
 
 ```java
 public class ThreadPoolExecutor {
@@ -243,9 +249,9 @@ public class ThreadPoolExecutor {
     final void runWorker(Worker w) {
         Runnable task = w.firstTask;
         try {
-            // 对应过程五、八
+            // 对应过程五、九
             while (task != null || (task = getTask()) != null) {
-                // 对应过程六
+                // 对应过程六，八
                 task.run();
             }
         } finally {
