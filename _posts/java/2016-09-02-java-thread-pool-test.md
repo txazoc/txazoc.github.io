@@ -17,7 +17,7 @@ public class ThreadPoolExecutorTest {
 
             @Override
             public void rejectedExecution(Runnable r, ThreadPoolExecutor e) {
-                System.out.println("[" + getTime() + "]\t" + r.toString() + " rejected");
+                System.out.println("[" + getTime() + "] " + r.toString() + " rejected");
             }
 
         }));
@@ -55,7 +55,9 @@ public class ThreadPoolExecutorTest {
         private static long ctlOffset;
         private static long corePoolSizeOffset;
         private static long maximumPoolSizeOffset;
+        private static long workersOffset;
         private static long workQueueOffset;
+        private static long completedTaskCountOffset;
 
         private final int monitorIntervalTime;
         private final ThreadPoolExecutor threadPool;
@@ -67,7 +69,9 @@ public class ThreadPoolExecutorTest {
                 ctlOffset = UnsafeHolder.unsafe.objectFieldOffset(ThreadPoolExecutor.class.getDeclaredField("ctl"));
                 corePoolSizeOffset = UnsafeHolder.unsafe.objectFieldOffset(ThreadPoolExecutor.class.getDeclaredField("corePoolSize"));
                 maximumPoolSizeOffset = UnsafeHolder.unsafe.objectFieldOffset(ThreadPoolExecutor.class.getDeclaredField("maximumPoolSize"));
+                workersOffset = UnsafeHolder.unsafe.objectFieldOffset(ThreadPoolExecutor.class.getDeclaredField("workers"));
                 workQueueOffset = UnsafeHolder.unsafe.objectFieldOffset(ThreadPoolExecutor.class.getDeclaredField("workQueue"));
+                completedTaskCountOffset = UnsafeHolder.unsafe.objectFieldOffset(ThreadPoolExecutor.class.getDeclaredField("completedTaskCount"));
             } catch (NoSuchFieldException e) {
                 e.printStackTrace();
             }
@@ -82,14 +86,54 @@ public class ThreadPoolExecutorTest {
 
         @Override
         public void run() {
+            try {
+                Thread.sleep(50);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+
             while (true) {
-                System.out.println("[" + getTime() + "]\tcorePoolSize " + corePoolSize + "\tmaximumPoolSize " + maximumPoolSize + "\tworkerCount " + getWorkerCount() + "\tworkQueueSize " + getWorkQueueSize());
                 try {
+                    int activeWorkerCount = 0;
+                    int completedTaskCount = UnsafeHolder.unsafe.getInt(threadPool, completedTaskCountOffset);
+                    Set<?> workers = (Set<?>) UnsafeHolder.unsafe.getObject(threadPool, workersOffset);
+                    for (Object worker : workers) {
+                        Field field = worker.getClass().getDeclaredField("completedTasks");
+                        field.setAccessible(true);
+                        completedTaskCount += field.getLong(worker);
+
+                        Method method = worker.getClass().getDeclaredMethod("isLocked");
+                        method.setAccessible(true);
+                        if ((Boolean) method.invoke(worker)) {
+                            activeWorkerCount++;
+                        }
+                    }
+
+                    StringBuilder out = new StringBuilder();
+                    out.append("[").append(getTime()).append("] corePoolSize ");
+                    out.append(fillBlank(corePoolSize));
+                    out.append(" maximumPoolSize ");
+                    out.append(fillBlank(maximumPoolSize));
+                    out.append(" workerCount ");
+                    out.append(fillBlank(getWorkerCount()));
+                    out.append(" activeWorkerCount ");
+                    out.append(fillBlank(activeWorkerCount));
+                    out.append(" workQueueSize ");
+                    out.append(fillBlank(getWorkQueueSize()));
+                    out.append(" completedTaskCount ");
+                    out.append(fillBlank(completedTaskCount));
+
+                    System.out.println(out.toString());
+
                     Thread.sleep(monitorIntervalTime);
-                } catch (InterruptedException e) {
+                } catch (Exception e) {
                     e.printStackTrace();
                 }
             }
+        }
+
+        private static String fillBlank(int i) {
+            return i < 10 ? " " + i : String.valueOf(i);
         }
 
         private int getWorkerCount() {
@@ -127,94 +171,104 @@ public class ThreadPoolExecutorTest {
 
 ```console
 // 过程一
-[2016-09-02 17:13:28]	corePoolSize 5	maximumPoolSize 10	workerCount 1	workQueueSize 0
-[2016-09-02 17:13:29]	corePoolSize 5	maximumPoolSize 10	workerCount 2	workQueueSize 0
-[2016-09-02 17:13:30]	corePoolSize 5	maximumPoolSize 10	workerCount 3	workQueueSize 0
-[2016-09-02 17:13:31]	corePoolSize 5	maximumPoolSize 10	workerCount 4	workQueueSize 0
-[2016-09-02 17:13:32]	corePoolSize 5	maximumPoolSize 10	workerCount 5	workQueueSize 0
+[2016-09-08 17:20:07] corePoolSize  5 maximumPoolSize 10 workerCount  1 activeWorkerCount  1 workQueueSize  0 completedTaskCount  0
+[2016-09-08 17:20:08] corePoolSize  5 maximumPoolSize 10 workerCount  2 activeWorkerCount  2 workQueueSize  0 completedTaskCount  0
+[2016-09-08 17:20:09] corePoolSize  5 maximumPoolSize 10 workerCount  3 activeWorkerCount  3 workQueueSize  0 completedTaskCount  0
+[2016-09-08 17:20:10] corePoolSize  5 maximumPoolSize 10 workerCount  4 activeWorkerCount  4 workQueueSize  0 completedTaskCount  0
+[2016-09-08 17:20:11] corePoolSize  5 maximumPoolSize 10 workerCount  5 activeWorkerCount  5 workQueueSize  0 completedTaskCount  0
 
 // 过程二
-[2016-09-02 17:13:33]	corePoolSize 5	maximumPoolSize 10	workerCount 5	workQueueSize 1
-[2016-09-02 17:13:34]	corePoolSize 5	maximumPoolSize 10	workerCount 5	workQueueSize 2
-[2016-09-02 17:13:35]	corePoolSize 5	maximumPoolSize 10	workerCount 5	workQueueSize 3
-[2016-09-02 17:13:36]	corePoolSize 5	maximumPoolSize 10	workerCount 5	workQueueSize 4
-[2016-09-02 17:13:37]	corePoolSize 5	maximumPoolSize 10	workerCount 5	workQueueSize 5
+[2016-09-08 17:20:12] corePoolSize  5 maximumPoolSize 10 workerCount  5 activeWorkerCount  5 workQueueSize  1 completedTaskCount  0
+[2016-09-08 17:20:13] corePoolSize  5 maximumPoolSize 10 workerCount  5 activeWorkerCount  5 workQueueSize  2 completedTaskCount  0
+[2016-09-08 17:20:14] corePoolSize  5 maximumPoolSize 10 workerCount  5 activeWorkerCount  5 workQueueSize  3 completedTaskCount  0
+[2016-09-08 17:20:15] corePoolSize  5 maximumPoolSize 10 workerCount  5 activeWorkerCount  5 workQueueSize  4 completedTaskCount  0
+[2016-09-08 17:20:16] corePoolSize  5 maximumPoolSize 10 workerCount  5 activeWorkerCount  5 workQueueSize  5 completedTaskCount  0
 
 // 过程三
-[2016-09-02 17:13:38]	corePoolSize 5	maximumPoolSize 10	workerCount 6	workQueueSize 5
-[2016-09-02 17:13:39]	corePoolSize 5	maximumPoolSize 10	workerCount 7	workQueueSize 5
-[2016-09-02 17:13:40]	corePoolSize 5	maximumPoolSize 10	workerCount 8	workQueueSize 5
-[2016-09-02 17:13:41]	corePoolSize 5	maximumPoolSize 10	workerCount 9	workQueueSize 5
-[2016-09-02 17:13:42]	corePoolSize 5	maximumPoolSize 10	workerCount 10	workQueueSize 5
+[2016-09-08 17:20:17] corePoolSize  5 maximumPoolSize 10 workerCount  6 activeWorkerCount  6 workQueueSize  5 completedTaskCount  0
+[2016-09-08 17:20:18] corePoolSize  5 maximumPoolSize 10 workerCount  7 activeWorkerCount  7 workQueueSize  5 completedTaskCount  0
+[2016-09-08 17:20:19] corePoolSize  5 maximumPoolSize 10 workerCount  8 activeWorkerCount  8 workQueueSize  5 completedTaskCount  0
+[2016-09-08 17:20:20] corePoolSize  5 maximumPoolSize 10 workerCount  9 activeWorkerCount  9 workQueueSize  5 completedTaskCount  0
+[2016-09-08 17:20:21] corePoolSize  5 maximumPoolSize 10 workerCount 10 activeWorkerCount 10 workQueueSize  5 completedTaskCount  0
 
 // 过程四
-[2016-09-02 17:13:43]	corePoolSize 5	maximumPoolSize 10	workerCount 10	workQueueSize 5
-[2016-09-02 17:13:43]   java.util.concurrent.FutureTask@2c12e42b rejected
-[2016-09-02 17:13:44]	corePoolSize 5	maximumPoolSize 10	workerCount 10	workQueueSize 5
-[2016-09-02 17:13:44]   java.util.concurrent.FutureTask@c41d9a8c rejected
-[2016-09-02 17:13:45]	corePoolSize 5	maximumPoolSize 10	workerCount 10	workQueueSize 5
-[2016-09-02 17:13:45]   java.util.concurrent.FutureTask@3738aae1 rejected
-[2016-09-02 17:13:46]	corePoolSize 5	maximumPoolSize 10	workerCount 10	workQueueSize 5
-[2016-09-02 17:13:46]   java.util.concurrent.FutureTask@695ab619 rejected
-[2016-09-02 17:13:47]	corePoolSize 5	maximumPoolSize 10	workerCount 10	workQueueSize 5
-[2016-09-02 17:13:47]   java.util.concurrent.FutureTask@42695958 rejected
+[2016-09-08 17:20:22] corePoolSize  5 maximumPoolSize 10 workerCount 10 activeWorkerCount 10 workQueueSize  5 completedTaskCount  0
+[2016-09-08 17:20:22] java.util.concurrent.FutureTask@1bb75db9 rejected
+[2016-09-08 17:20:23] corePoolSize  5 maximumPoolSize 10 workerCount 10 activeWorkerCount 10 workQueueSize  5 completedTaskCount  0
+[2016-09-08 17:20:23] java.util.concurrent.FutureTask@236a2ae6 rejected
+[2016-09-08 17:20:24] corePoolSize  5 maximumPoolSize 10 workerCount 10 activeWorkerCount 10 workQueueSize  5 completedTaskCount  0
+[2016-09-08 17:20:24] java.util.concurrent.FutureTask@f267434c rejected
+[2016-09-08 17:20:25] corePoolSize  5 maximumPoolSize 10 workerCount 10 activeWorkerCount 10 workQueueSize  5 completedTaskCount  0
+[2016-09-08 17:20:25] java.util.concurrent.FutureTask@259709b1 rejected
+[2016-09-08 17:20:26] corePoolSize  5 maximumPoolSize 10 workerCount 10 activeWorkerCount 10 workQueueSize  5 completedTaskCount  0
+[2016-09-08 17:20:26] java.util.concurrent.FutureTask@5efd56be rejected
 
 // 过程五
-[2016-09-02 17:13:48]	corePoolSize 5	maximumPoolSize 10	workerCount 10	workQueueSize 4
-[2016-09-02 17:13:49]	corePoolSize 5	maximumPoolSize 10	workerCount 10	workQueueSize 3
-[2016-09-02 17:13:50]	corePoolSize 5	maximumPoolSize 10	workerCount 10	workQueueSize 2
-[2016-09-02 17:13:51]	corePoolSize 5	maximumPoolSize 10	workerCount 10	workQueueSize 1
-[2016-09-02 17:13:52]	corePoolSize 5	maximumPoolSize 10	workerCount 10	workQueueSize 0
+[2016-09-08 17:20:27] corePoolSize  5 maximumPoolSize 10 workerCount 10 activeWorkerCount 10 workQueueSize  4 completedTaskCount  1
+[2016-09-08 17:20:28] corePoolSize  5 maximumPoolSize 10 workerCount 10 activeWorkerCount 10 workQueueSize  3 completedTaskCount  2
+[2016-09-08 17:20:29] corePoolSize  5 maximumPoolSize 10 workerCount 10 activeWorkerCount 10 workQueueSize  2 completedTaskCount  3
+[2016-09-08 17:20:30] corePoolSize  5 maximumPoolSize 10 workerCount 10 activeWorkerCount 10 workQueueSize  1 completedTaskCount  4
+[2016-09-08 17:20:31] corePoolSize  5 maximumPoolSize 10 workerCount 10 activeWorkerCount 10 workQueueSize  0 completedTaskCount  5
 
 // 过程六
-[2016-09-02 17:13:53]	corePoolSize 5	maximumPoolSize 10	workerCount 10	workQueueSize 0
-[2016-09-02 17:13:54]	corePoolSize 5	maximumPoolSize 10	workerCount 10	workQueueSize 0
-[2016-09-02 17:13:55]	corePoolSize 5	maximumPoolSize 10	workerCount 10	workQueueSize 0
-[2016-09-02 17:13:56]	corePoolSize 5	maximumPoolSize 10	workerCount 10	workQueueSize 0
-[2016-09-02 17:13:57]	corePoolSize 5	maximumPoolSize 10	workerCount 10	workQueueSize 0
+[2016-09-08 17:20:32] corePoolSize  5 maximumPoolSize 10 workerCount 10 activeWorkerCount 10 workQueueSize  0 completedTaskCount  5
+[2016-09-08 17:20:33] corePoolSize  5 maximumPoolSize 10 workerCount 10 activeWorkerCount 10 workQueueSize  0 completedTaskCount  5
+[2016-09-08 17:20:34] corePoolSize  5 maximumPoolSize 10 workerCount 10 activeWorkerCount 10 workQueueSize  0 completedTaskCount  5
+[2016-09-08 17:20:35] corePoolSize  5 maximumPoolSize 10 workerCount 10 activeWorkerCount 10 workQueueSize  0 completedTaskCount  5
+[2016-09-08 17:20:36] corePoolSize  5 maximumPoolSize 10 workerCount 10 activeWorkerCount 10 workQueueSize  0 completedTaskCount  5
 
 // 过程七
-[2016-09-02 17:13:58]	corePoolSize 5	maximumPoolSize 10	workerCount 9	workQueueSize 0
-[2016-09-02 17:13:59]	corePoolSize 5	maximumPoolSize 10	workerCount 8	workQueueSize 0
-[2016-09-02 17:14:00]	corePoolSize 5	maximumPoolSize 10	workerCount 7	workQueueSize 0
-[2016-09-02 17:14:01]	corePoolSize 5	maximumPoolSize 10	workerCount 6	workQueueSize 0
-[2016-09-02 17:14:02]	corePoolSize 5	maximumPoolSize 10	workerCount 5	workQueueSize 0
+[2016-09-08 17:20:37] corePoolSize  5 maximumPoolSize 10 workerCount  9 activeWorkerCount  9 workQueueSize  0 completedTaskCount  6
+[2016-09-08 17:20:38] corePoolSize  5 maximumPoolSize 10 workerCount  8 activeWorkerCount  8 workQueueSize  0 completedTaskCount  7
+[2016-09-08 17:20:39] corePoolSize  5 maximumPoolSize 10 workerCount  7 activeWorkerCount  7 workQueueSize  0 completedTaskCount  8
+[2016-09-08 17:20:40] corePoolSize  5 maximumPoolSize 10 workerCount  6 activeWorkerCount  6 workQueueSize  0 completedTaskCount  9
+[2016-09-08 17:20:41] corePoolSize  5 maximumPoolSize 10 workerCount  5 activeWorkerCount  5 workQueueSize  0 completedTaskCount 10
 
 // 过程八
-[2016-09-02 17:14:03]	corePoolSize 5	maximumPoolSize 10	workerCount 5	workQueueSize 0
-[2016-09-02 17:14:04]	corePoolSize 5	maximumPoolSize 10	workerCount 5	workQueueSize 0
-[2016-09-02 17:14:05]	corePoolSize 5	maximumPoolSize 10	workerCount 5	workQueueSize 0
-[2016-09-02 17:14:06]	corePoolSize 5	maximumPoolSize 10	workerCount 5	workQueueSize 0
-[2016-09-02 17:14:07]	corePoolSize 5	maximumPoolSize 10	workerCount 5	workQueueSize 0
+[2016-09-08 17:20:42] corePoolSize  5 maximumPoolSize 10 workerCount  5 activeWorkerCount  5 workQueueSize  0 completedTaskCount 10
+[2016-09-08 17:20:43] corePoolSize  5 maximumPoolSize 10 workerCount  5 activeWorkerCount  5 workQueueSize  0 completedTaskCount 10
+[2016-09-08 17:20:44] corePoolSize  5 maximumPoolSize 10 workerCount  5 activeWorkerCount  5 workQueueSize  0 completedTaskCount 10
+[2016-09-08 17:20:45] corePoolSize  5 maximumPoolSize 10 workerCount  5 activeWorkerCount  5 workQueueSize  0 completedTaskCount 10
+[2016-09-08 17:20:46] corePoolSize  5 maximumPoolSize 10 workerCount  5 activeWorkerCount  5 workQueueSize  0 completedTaskCount 10
 
 // 过程九
-[2016-09-02 17:14:03]   corePoolSize 5  maximumPoolSize 10  workerCount 5   workQueueSize 0
-[2016-09-02 17:14:04]   corePoolSize 5  maximumPoolSize 10  workerCount 5   workQueueSize 0
-[2016-09-02 17:14:05]   corePoolSize 5  maximumPoolSize 10  workerCount 5   workQueueSize 0
-[2016-09-02 17:14:06]   corePoolSize 5  maximumPoolSize 10  workerCount 5   workQueueSize 0
-[2016-09-02 17:14:07]   corePoolSize 5  maximumPoolSize 10  workerCount 5   workQueueSize 0
+[2016-09-08 17:20:47] corePoolSize  5 maximumPoolSize 10 workerCount  5 activeWorkerCount  4 workQueueSize  0 completedTaskCount 11
+[2016-09-08 17:20:48] corePoolSize  5 maximumPoolSize 10 workerCount  5 activeWorkerCount  3 workQueueSize  0 completedTaskCount 12
+[2016-09-08 17:20:49] corePoolSize  5 maximumPoolSize 10 workerCount  5 activeWorkerCount  2 workQueueSize  0 completedTaskCount 13
+[2016-09-08 17:20:50] corePoolSize  5 maximumPoolSize 10 workerCount  5 activeWorkerCount  1 workQueueSize  0 completedTaskCount 14
+[2016-09-08 17:20:51] corePoolSize  5 maximumPoolSize 10 workerCount  5 activeWorkerCount  0 workQueueSize  0 completedTaskCount 15
+
+// 过程十
+[2016-09-08 17:20:52] corePoolSize  5 maximumPoolSize 10 workerCount  5 activeWorkerCount  0 workQueueSize  0 completedTaskCount 15
+[2016-09-08 17:20:53] corePoolSize  5 maximumPoolSize 10 workerCount  5 activeWorkerCount  0 workQueueSize  0 completedTaskCount 15
+[2016-09-08 17:20:54] corePoolSize  5 maximumPoolSize 10 workerCount  5 activeWorkerCount  0 workQueueSize  0 completedTaskCount 15
+[2016-09-08 17:20:55] corePoolSize  5 maximumPoolSize 10 workerCount  5 activeWorkerCount  0 workQueueSize  0 completedTaskCount 15
+[2016-09-08 17:20:56] corePoolSize  5 maximumPoolSize 10 workerCount  5 activeWorkerCount  0 workQueueSize  0 completedTaskCount 15
 ```
 
-输出结果中的关键词解释:
+输出结果中的名词解释:
 
 * `corePoolSize`: 核心线程池大小
 * `maximumPoolSize`: 最大线程池大小
 * `workerCount`: 工作线程数
+* `activeWorkerCount`: 活动的工作线程数
 * `workQueueSize`: 等待队列中的任务数
+* `completedTaskCount`: 已完成的任务数
 
-测试结果中的过程说明:
+测试结果的过程说明:
 
 * **过程一**: `workerCount` < `corePoolSize`，创建新的工作线程执行任务
 * **过程二**: `workerCount` >= `corePoolSize`，等待队列未满，任务添加到等待队列
 * **过程三**: `workerCount` >= `corePoolSize`，等待队列已满，`workerCount` < `maximumPoolSize`，创建新的工作线程执行任务
 * **过程四**: `workerCount` >= `corePoolSize`，等待队列已满，`workerCount`>= `maximumPoolSize`，执行拒绝策略
-* **过程五**: 过程一中创建的工作线程执行完任务，从等待队列中获取任务执行
+* **过程五**: 过程一中创建的工作线程执行完任务，从等待队列中获取任务继续执行
 * **过程六**: 过程一和过程三中创建的工作线程执行任务中
 * **过程七**: 过程三中创建的工作线程执行完任务，等待队列为空，`workerCount` > `corePoolSize`，销毁工作线程
 * **过程八**: 过程一中创建的工作线程执行任务中
 * **过程九**: 过程一中创建的工作线程执行完任务，等待队列为空，`workerCount` == `corePoolSize`，进入阻塞状态，当等待队列中有新的任务时，从等待队列中获取任务继续执行
+* **过程十**: 所有任务执行完，无活动的工作线程
 
-参考`ThreadPoolExecutor`的源码。
+参考`ThreadPoolExecutor`的源码来对比上面的过程。
 
 ```java
 public class ThreadPoolExecutor {
