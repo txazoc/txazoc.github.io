@@ -108,6 +108,10 @@
     a {
         text-decoration: none;
 
+        &:hover {
+            color: #f66;
+        }
+
         &:link, &:visited {
             outline: medium none;
         }
