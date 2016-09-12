@@ -1,7 +1,7 @@
 source:       .
 destination:  ./_site
 include:      []
-exclude:      [CNAME, Gemfile, Gemfile.lock, pom.xml, txazo-github-io.iml]
+exclude:      [CNAME, Gemfile, Gemfile.lock, pom.xml, txazoc-github-io.iml, README.md]
 timezone:     Asia/Shanghai
 encoding:     UTF-8
 

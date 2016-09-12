@@ -1,5 +1,6 @@
 ---
 layout:     article
+categories: [linux]
 title:      CentOS搭建VPN
 tags:       [linux, vpn]
 date:       2016-02-16
