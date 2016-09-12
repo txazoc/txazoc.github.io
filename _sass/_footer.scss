@@ -4,20 +4,6 @@
 .footer {
     display: none;
 
-    .focus {
-        padding: 10px 0;
-        text-align: center;
-        display: none;
-
-        a {
-            color: #111;
-
-            &:hover, &:focus {
-                color: #f66;
-            }
-        }
-    }
-
     .copy-right {
         padding: 20px 0;
         font-size: 13px;

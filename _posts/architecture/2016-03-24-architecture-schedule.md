@@ -1,7 +1,7 @@
 ---
 layout:     article
 published:  false
-categories: [分布式]
+categories: [distribution]
 title:      任务调度
 tags:       [quartz, spring]
 date:       2016-03-24

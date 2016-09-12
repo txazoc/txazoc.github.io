@@ -39,16 +39,6 @@ menu:
     归档: /archive.html
     关于: /about.html
 
-focus:
-    email: "mailto:txazo1218@163.com"
-    facebook: "https://www.facebook.com/txazo"
-    twitter: "https://twitter.com/txazo1218"
-    github: "https://github.com/txazo"
-    rss: "/feed.xml"
-    weibo: "http://weibo.com/txazo"
-    qzone: "javascript:;"
-    weixin: "javascript:;"
-
 # 分页
 paginate: 10
 paginate_path: "index/:num"
