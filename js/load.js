@@ -1,8 +1,8 @@
 seajs.config({
     base: '/js',
     alias: {
-        'init': 'init.js?v=20160507',
-        'data': 'data.js?v=20160507'
+        'init': 'init.js',
+        'data': 'data.js'
     }
 });
 
