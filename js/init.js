@@ -4,8 +4,6 @@ define(function (require, exports, module) {
 
     var LandScapeSvg = ['beach.svg', 'castle.svg', 'cityscape.svg', 'fields.svg', 'forest.svg', 'hills.svg', 'iceberg.svg', 'mill.svg', 'river.svg', 'spruce.svg', 'trees.svg', 'waterfall.svg', 'windmills.svg'];
 
-    var Month = ['一', '二', '三', '四', '五', '六', '七', '八', '九', '十', '十一', '十二'];
-
     var Init = {
         init: function () {
             // 事件
@@ -313,7 +311,7 @@ define(function (require, exports, module) {
         },
 
         convertDate: function (yyyy_mm) {
-            return yyyy_mm.substring(2, 4) + '年' + Month[Init.parseToInt(yyyy_mm.substring(5, 7)) - 1] + '月';
+            return yyyy_mm.substring(0, 4) + '年' + Init.prefillZero(Init.parseToInt(yyyy_mm.substring(5, 7))) + '月';
         },
 
         parseToInt: function (mm) {
@@ -321,6 +319,10 @@ define(function (require, exports, module) {
                 return parseInt(mm.substring(1, 2));
             }
             return parseInt(mm.substring(0, 2));
+        },
+
+        prefillZero: function(i) {
+            return i < 10 ? '0' + i : i;
         }
     };
 
