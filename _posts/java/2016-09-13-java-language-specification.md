@@ -1,7 +1,7 @@
 ---
 layout:     article
 categories: [java]
-title:      Java Language Specification
+title:      Java Specification
 tags:       [java]
 date:       2016-09-13
 ---

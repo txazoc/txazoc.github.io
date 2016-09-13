@@ -1,7 +1,7 @@
 ---
 layout:     article
 categories: [java]
-title:      Java的参数传递
+title:      Java参数传递
 tags:       [java]
 date:       2016-09-11
 ---
