@@ -8,6 +8,5 @@
     </div>
 </footer>
 
-{% for js in site.js %}
-<script src="{{ js | prepend: site.baseurl }}"></script>
+{% for js in site.js %}<script src="{{ js | prepend: site.baseurl }}"></script>
 {% endfor %}
