@@ -12,8 +12,10 @@ date:       2016-09-09
 
 * [Java Language Specification](https://docs.oracle.com/javase/specs/jls/se7/html/index.html)
 * 词汇结构
-	* 注释：/\* \*/、//
+	* 注释：//、/\* \*/、/\*\* \*/
+	* 标识符
 	* 关键字
+	* 字面值：基本数据类型、字符串、转义字符、null
 	* 分隔符：( ) [ ] { } . , : ; ... @
 	* 运算符
 * 类型、值和变量
@@ -22,6 +24,11 @@ date:       2016-09-09
 		* 浮点类型：float、double
 		* 布尔类型：boolean
 	* 引用类型
+		* 类类型
+		* 接口类型
+		* 泛型类型
+		* 数组类型
+	* 引用类型对象
 		* 类实例
 		* 数组
 	* 泛型
