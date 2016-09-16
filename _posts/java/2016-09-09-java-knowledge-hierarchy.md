@@ -141,15 +141,178 @@ date:       2016-09-09
 		* 单个元素注解
 	* 功能性接口
 * ***数组***
-	* 数组类型
-	* 数组变量
+	* 数组类型: [[I
+	* 数组变量: int[] ai
 	* 数组创建
-	* 数组访问
-	* 数组
-	* 数组初始化
+	* 数组访问: a[i]
+	* 数组存储异常
+	* 数组初始化: {}
 	* 数组成员
+		* length
+		* 继承自Object的成员
+		* T[] clone()
 	* 数组的class
-	* 
+	* char数组不是String
+* ***异常***
+	* 异常分类
+		* Throwable
+			* Exception
+				* RuntimeException
+				* 非运行时异常
+			* Error
+		* 受检异常
+		* 非受检异常: Error + RuntimeException
+	* 异常原因
+		* throw
+		* JVM中断执行的同步异常
+		* 异步异常: OutOfMemoryError
+	* 异常捕获
+		* try-catch-finally
+* ***执行***
+	* JVM启动
+		* 加载主类
+		* 链接主类
+		* 初始化主类
+		* 调用主类的main方法
+	* 加载类和接口
+		* 查找二进制的类文件格式: ClassLoader.loadClass()
+		* 构造类的Class对象: ClassLoader.defineClass()
+	* 链接类和接口
+		* 验证: 类或接口的二进制表示是否正确
+		* 准备: static属性(类变量和常量)的内存分配和默认值
+		* 解析: 常量池中的符号引用替换为直接引用
+			* 类和接口的符号引用
+			* 属性的符号引用
+			* 方法的的符号引用
+			* 构造函数的符号引用
+	* 类和接口的初始化
+		* 何时初始化
+			* 创建类实例
+			* static方法被调用
+			* static属性被赋值
+			* 非常量的static属性访问
+			* 子类初始化，父类和接口未初始化
+		* 初始化过程
+			* 获取锁
+			* 初始化常量
+			* 父类和接口初始化
+			* 类变量和静态代码块初始化(按声明顺序)
+			* 释放锁
+	* 创建类实例
+		* 类实例化
+			* 字符串字面值
+			* 基本数据类型装箱
+			* 字符串+操作
+		* 类实例化过程
+			* 分配内存空间
+			* 实例变量初始化默认值
+			* 调用构造函数
+			* 构造函数参数赋值给参数变量
+			* 父类实例化
+			* 实例变量赋值
+			* 执行构造函数
+	* 卸载类和接口
+	* 程序退出
+* ***语句***
+	* 执行中断: break、continue、return、throw
+	* 语句块
+	* 空语句: ;
+	* 标记
+	* 表达式
+		* 赋值表达式
+		* 自增自减表达式
+		* 方法调用
+		* new
+	* if: if ... else if ... else
+	* assert
+		* assert expression;
+		* assert expression : expression;
+	* switch
+	* while
+	* do ... while
+	* for
+		* for(;;;)
+		* for(:)
+	* break
+	* continue
+	* return
+	* throw
+	* synchronized: synchronized (expression) {}
+	* try
+		* try-catch-finally
+		* try-with-resources
+* ***表达式***
+	* 类实例创建表达式: new
+	* 数组创建和访问表达式
+		* new [] {}
+		* array[i]
+	* 属性访问表达式: [this | super | identifier | ClassName].identifier
+	* 方法调用表达式: [this | super | identifier | ClassName].identifier(args...)
+	* 转型表达式: (Type)
+	* 自增自减表达式: ++i、--i、i++、i--
+	* 四则运算表达式: + - \* / %
+	* 位运算表达式: & | ^ ~
+	* 移位运算表达式: << >> >>>
+	* 关系运算表达式: == != > >= < <= instanceof
+	* 逻辑运算表达式: && || !
+	* 条件表达式: ? :
+	* 赋值运算表达式: = += -= \*= /= %= &= |= ^= <<= >>= >>>=
+	* Lambda表达式
+* ***线程和锁***
+	* synchronized: monitor
+		* synchronized方法
+		* synchronized代码块
+	* wait和notify
+	* interrupt
+	* sleep
+	* yield
+	* join
+	* 内存模型
+	* final的语言
+
+#### Java虚拟机规范
+* [***Java Virtual Machine Specification***](https://docs.oracle.com/javase/specs/jvms/se8/html/index.html)
+* JVM结构
+	* 类文件格式
+	* 数据类型
+		* 基本数据类型
+		* 引用类型
+		* 数据类型使用
+			* 局部变量表
+			* 操作数栈
+			* 方法传参
+			* 方法返回值
+			* 运算
+	* 基本数据类型和值
+		* 整数类型
+		* 浮点类型
+		* 布尔类型
+	* 引用类型和值
+	* 运行时数据区
+		* 程序计数器
+		* 栈
+		* 堆
+		* 方法区
+			* 类结构
+				* 运行时常量池
+				* 属性
+				* 方法
+			* 代码
+				* 方法
+				* 构造函数
+				* 特殊方法: <init\>、<cinit\>
+		* 运行时常量池
+		* 本地方法栈
+	* 栈帧
+	* 浮点运算
+	* 特殊方法
+	* 异常
+	* 指令集
+	* 类库
+* JVM编译
+* 类文件结构
+* 加载、链接和初始化
+* JVM指令集
 
 #### Java代码
 
