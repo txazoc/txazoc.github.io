@@ -10,6 +10,8 @@ date:       2016-09-09
 
 #### Java语言规范
 
+![Java Diagram](/images/java.png)
+
 * [***Java Language Specification***](https://docs.oracle.com/javase/specs/jls/se8/html/index.html)
 * ***词汇结构***
 	* 注释：//、/\* \*/、/\*\* \*/
