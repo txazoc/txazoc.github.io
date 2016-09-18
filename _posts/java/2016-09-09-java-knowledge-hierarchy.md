@@ -8,9 +8,35 @@ date:       2016-09-09
 
 罗列一下Java的知识体系，慢慢消化。
 
-#### Java语言规范
+#### Java Document
 
-![Java Diagram](/images/java.png)
+* [Java Conceptual Diagram](http://docs.oracle.com/javase/8/docs/technotes/guides/desc_jdk_structure.html)
+* [The Java Tutorials](http://docs.oracle.com/javase/tutorial/)
+* [Java SE Specifications](http://docs.oracle.com/javase/specs/index.html)
+* [Troubleshooting Guide](http://docs.oracle.com/javase/8/docs/technotes/guides/troubleshoot/index.html)
+* [Java SE Document](http://docs.oracle.com/javase/8/)
+* [Java SE White Papers](http://www.oracle.com/technetwork/java/javase/documentation/whitepapers-jsp-139357.html)
+
+![Java Conceptual Diagram](/images/java/java-conceptual-diagram.png)
+
+#### Java增强功能
+
+* 1.4
+    * 断言
+* 1.5
+    * 泛型
+    * 增强for循环
+    * 自动装箱拆箱
+    * 枚举
+    * 变长参数
+    * 静态导入
+    * 注解
+* 1.7
+    * 二进制字面值
+    * switch字符串
+    * try-with-resources
+
+#### Java语言规范
 
 * [***Java Language Specification***](https://docs.oracle.com/javase/specs/jls/se8/html/index.html)
 * ***词汇结构***
@@ -275,16 +301,16 @@ date:       2016-09-09
 #### Java虚拟机规范
 * [***Java Virtual Machine Specification***](https://docs.oracle.com/javase/specs/jvms/se8/html/index.html)
 * JVM结构
-	* 类文件格式
+	* 类文件格式: 类和接口的二进制表示
 	* 数据类型
 		* 基本数据类型
 		* 引用类型
 		* 数据类型使用
 			* 局部变量表
-			* 操作数栈
 			* 方法传参
 			* 方法返回值
-			* 运算
+			* 操作数栈
+			* 操作基本数据类型值和引用类型值
 	* 基本数据类型和值
 		* 整数类型
 		* 浮点类型
