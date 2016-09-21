@@ -406,9 +406,113 @@ date:       2016-09-09
 			* 获取pc指向的指令opcode
 			* 指令有操作数, 获取操作数
 			* 执行指令opcode
+		* 指令类型
+			* boolean、byte、char、short -> int
+		* 加载和存储指令
+			* 局部变量表 -> 操作数栈: iload、iload_<n\> ...
+			* 操作数栈 -> 局部变量表: istore、istore_<n\> ...
+			* 常量 -> 操作数栈: bipush、iconst_<i\> ...
+			* wide
+		* 算术指令
+			* 整数类型值和浮点类型值
+			* 加、减、乘、除、余
+			* 否定
+			* 移位
+			* 位运算
+			* 局部变量自增
+			* 比较
+		* 类型转换指令
+		* 对象创建和操作指令
+			* 创建类实例: new
+			* 创建数组: newarray、anewarray、multianewarray
+			* 访问类的属性: getstatic、putstatic、getfield、putfield
+			* 访问数组元素: baload、bastore ...
+			* 数组长度: arraylength
+			* 类型检查: instanceof、checkcast
+		* 操作数堆栈管理指令
+			* 出栈: pop、pop2
+			* 复制: dup、dup2、dup_x1、dup2_x1、dup_x2、dup2_x2
+			* 交换: swap
+		* 控制转移指令
+			* if
+			* switch
+			* goto
+		* 方法调用和返回指令
+			* invokevirtual: 类实例方法
+			* invokeinterface: 接口方法
+			* invokespecial: <init\>、private方法、父类方法
+			* invokestatic: 类静态方法
+			* invokedynamic
+			* return
+		* 抛出异常指令
+			* athrow
+		* 同步指令
+			*  monitorenter
+			*  monitorexit
 	* 类库
 * JVM编译
-* 类文件结构
+	* <index\> <opcode\> [ <operand1\> [ <operand2\>... ]] [<comment\>]
+	* 常量和局部变量
+	* 运算
+	* 访问运行时常量池
+	* 控制结构
+		* for、while
+	* 接收参数
+	* 调用方法
+	* 类实例
+	* 数组
+	* switch
+	* 操作数栈
+	* 异常抛出和处理
+	* 同步
+* 类文件格式
+	* 类文件结构
+		* magic: 魔数(0xCAFEBABE)
+		* minor_version: 次版本号
+		* major_version: 主版本号
+		* constant_pool_count: 常量池大小
+		* constant_pool: 常量池(1 ~ constant_pool_count - 1)
+			* 基本数据类型常量
+			* 字符串常量
+			* 类和接口名
+			* 属性、方法名和类型
+		* access_flags: 访问标识
+		* this_class: 类或接口
+		* super_class: 父类
+			* CONSTANT_Class_info
+		* interfaces_count: 接口数量
+		* interfaces: 接口
+		* fields_count: 字段数量
+		* fields: 字段
+			* field_info
+		* methods_count: 方法数量
+		* methods: 方法
+			* method_info
+		* attributes_count: 属性数量
+		* attributes: 属性
+			* attribute_info
+	* 描述符
+		* 属性描述符
+			* B C D F I J(long) S Z(boolean)
+			* L<ClassName\>;
+			* [<ComponentType\>
+		* 方法描述符
+			* eg: (IDLjava/lang/Thread;)Ljava/lang/Object;
+	* 常量池
+		* CONSTANT_Class_info Structure: 类或接口
+		* CONSTANT_Fieldref_info: 属性的符号引用
+		* CONSTANT_Methodref_info: 方法的符号引用
+		* CONSTANT_InterfaceMethodref_info: 接口方法的符号引用
+		* CONSTANT_String_info: String字符串
+		* CONSTANT_Integer_info: int常量
+		* CONSTANT_Float_info: float常量
+		* CONSTANT_Long_info: long常量
+		* CONSTANT_Double_info: double常量
+		* CONSTANT_NameAndType_info
+		* CONSTANT_Utf8_info: String常量
+		* CONSTANT_MethodHandle_info
+		* CONSTANT_MethodType_info
+		* CONSTANT_InvokeDynamic_info
 * 加载、链接和初始化
 * JVM指令集
 
