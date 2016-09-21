@@ -513,7 +513,77 @@ date:       2016-09-09
 		* CONSTANT_MethodHandle_info
 		* CONSTANT_MethodType_info
 		* CONSTANT_InvokeDynamic_info
+	* Field
+		* field_info
+			* access_flags
+			* name_index
+			* descriptor_index
+			* attributes_count
+			* attributes
+	* Method
+		* method_info
+			* access_flags
+			* name_index
+			* descriptor_index
+			* attributes_count
+			* attributes
+	* Attribute
+		* attribute_info
+			* attribute_name_index
+			* attribute_length
+			* info
+		* Code Attribute: 方法指令
+			* max_stack: 操作数栈的最大深度
+			* max_locals: 局部变量表的大小
+			* code_length: 指令的长度
+			* code[]: 字节码指令数组
+			* exception_table_length: 异常表的长度
+			* exception_table[]: 异常表(异常处理程序)
+				* start_pc
+				* end_pc
+				* handler_pc
+				* catch_type: catch的异常类型
+		* Exceptions Attribute: 方法声明throw的异常
+		* SourceFile Attribute: 源文件
+		* LineNumberTable Attribute: 行号表
+			* line_number_table_length
+			* line_number_table[]
+				* start_pc: 字节码偏移
+				* line_number: 源码行号
+		* LocalVariableTable Attribute: 局部变量表
+		* InnerClasses Attribute: 内部类
+			* classes[]
+				* inner_class_info_index
+				* outer_class_info_index
+				* inner_name_index
+				* inner_class_access_flags
+	* 格式检查
 * 加载、链接和初始化
+	* 运行时常量池
+		* 类或接口的符号引用
+			* java.lang.Object
+			* [[Ljava.lang.Object;
+		* 属性、方法的符号引用
+			* 类或接口的符号引用
+			* 名称、描述
+		* 字符串常量: 转换为String实例的引用
+		* 基本数据类型常量
+	* Java虚拟机启动
+	* 创建和加载
+		* 类加载器
+			* 启动类加载器
+			* 自定义类加载器: ClassLoader
+		* 运行时类型: class loader + class name
+		* 创建类或接口的过程
+			* 非数组的类或接口
+				* 由启动类加载器定义, 启动类加载器加载
+				* 否则, 自定义类加载器加载
+			* 数组: jvm直接创建数组class
+		* 自定义类加载器加载
+	* 链接
+	* 初始化
+	* 绑定本地方法实现
+	* java虚拟机退出
 * JVM指令集
 
 #### Java代码
