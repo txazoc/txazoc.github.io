@@ -569,11 +569,21 @@ date:       2016-09-09
 		* 字符串常量: 转换为String实例的引用
 		* 基本数据类型常量
 	* Java虚拟机启动
+		* 启动类加载器加载sun.launcher.LauncherHelper类
+		* 调用LauncherHelper的checkAndLoadMain()方法, 通过系统类加载器加载、链接、初始化主类
+		* 调用主类的main()方法
+		* 执行JVM指令, 触发其它类/接口的加载、链接、初始化和方法调用
 	* 创建和加载
 		* 类加载器
-			* 启动类加载器
-			* 自定义类加载器: ClassLoader
-		* 运行时类型: class loader + class name
+			* 启动类加载器(虚拟机提供)
+				* sun.boot.class.path
+			* 用户自定义类加载器: 继承自ClassLoader
+				* 扩展类加载器: Launcher.ExtClassLoader
+					* java.ext.dirs
+				* 系统类加载器: Launcher.AppClassLoader
+					* java.class.path
+				* 自定义类加载器
+		* 运行时类型: class name + class loader
 		* 创建类或接口的过程
 			* 非数组的类或接口
 				* 由启动类加载器定义, 启动类加载器加载
