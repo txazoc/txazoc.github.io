@@ -607,9 +607,31 @@ date:       2016-09-09
 			* 有父类, 加载父类
 			* 有接口, 加载接口
 	* 链接
+		* 验证
+		* 准备
+			* 创建static属性, 初始化默认值
+		* 解析
+			* 符号引用转换为直接引用的过程
+			* 解析符号引用的指令
+				* new、 anewarray、multianewarray
+				* getfield、putfield、getstatic、putstatic
+				* checkcast、instanceof
+				* invokedynamic、invokeinterface、invokespecial、invokestatic、invokevirtual
+				* ldc、ldc_w
 	* 初始化
+		* 类初始化
+			* 执行new、getstatic、putstatic、invokestatic指令
+			* 反射
+			* 子类初始化
+			* 主类
+		* 初始化过程
+			* 初始化final static常量(按声明顺序)
+			* 有父类, 初始化父类
+			* 有接口, 初始化接口
+			* assert
+			* 执行类初始化方法
 	* 绑定本地方法实现
-	* java虚拟机退出
+	* Java虚拟机退出
 * JVM指令集
 
 #### Java代码
