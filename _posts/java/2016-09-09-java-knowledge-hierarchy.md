@@ -19,6 +19,12 @@ date:       2016-09-09
 
 ![Java Conceptual Diagram](/images/java/java-conceptual-diagram.png)
 
+#### Java Conceptual Diagram
+
+* ***Java HotSpot Client and Server VM***
+* ***lang和util基础库***
+* ***其它基础库***
+
 #### Java增强功能
 
 * 1.4
