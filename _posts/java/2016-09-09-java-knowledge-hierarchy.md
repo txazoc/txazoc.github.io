@@ -22,6 +22,10 @@ date:       2016-09-09
 #### Java Conceptual Diagram
 
 * ***Java HotSpot Client and Server VM***
+	* 解释器
+	* 即时编译器
+	* 内存分配
+	* 垃圾回收
 * ***lang和util基础库***
 * ***其它基础库***
 
