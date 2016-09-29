@@ -30,6 +30,7 @@ options为命令行选项，args为Java主类参数。
 | -verbose:gc | 输出gc信息 |
 | -verbose:jni | 输出native方法和JNI信息 |
 | -verbose:class | 输出加载的类信息 |
+| -classpath | 类路径 |
 
 #### 非标准选项
 
@@ -60,6 +61,7 @@ options为命令行选项，args为Java主类参数。
 | -XX:+TraceClassLoading | 踪迹加载的类 |
 | -XX:+TraceClassResolution | 跟踪常量池解析 |
 | -XX:-UseCompressedOops | 禁用指针压缩  |
+| -XX:+PrintFlagsFinal | |
 
 #### JIT编译器选项
 
