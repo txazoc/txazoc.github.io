@@ -327,25 +327,6 @@ jdb支持的常用命令:
 | threadlocks [thread id] | 输出线程的锁信息 |
 | exit \| quit | 退出调试器 |
 
-```console
-> run
-> stop at com.dianping.mobile.api.discovery.facade.FindRankListFacade:58
-> stop in com.test.Main.test
-> next
-> step
-> dump context.config
-> print context.config
-> cont
-> threads
-> thread <index>
-> where
-> where all
-> where <index>
-> catch java.io.FileNotFoundException
-> ignore
-```
-
-
 #### <a id="jps">jps</a>
 
 显示当前所有Java进程的pid
@@ -378,9 +359,32 @@ jdb支持的常用命令:
 
 Java Virtual Machine Statistics Monitoring Tool，监控Java虚拟机的统计数据
 
-命令格式: jstat [ generalOption | outputOptions vmid [interval[s|ms] [count]] ]
+* 命令格式: jstat [ generalOption | outputOptions vmid [interval[s|ms] [count]]
+    * ***generalOption***: -help、-options
+    * ***outputOptions***: `jstat -options`输出的选项、-t、-h&lt;lines&gt;
+    * ***vmid***: lvmid[@hostname[:port]/servername]，lvmid即pid
+    * ***interval***: 每间隔interval[s|ms]时间输出一次
+    * ***count***: 总共输出count次
 
-各个options的字段含义参考 [java se 8 jstat](http://docs.oracle.com/javase/8/docs/technotes/tools/unix/jstat.html)
+`jstat -options`输出的选项:
+
+```console
+~ jstat -options
+-class
+-compiler
+-gc
+-gccapacity
+-gccause
+-gcnew
+-gcnewcapacity
+-gcold
+-gcoldcapacity
+-gcpermcapacity
+-gcutil
+-printcompilation
+```
+
+各个options选项的输出字段含义参考 [jstat](http://docs.oracle.com/javase/8/docs/technotes/tools/unix/jstat.html)
 
 * `jstat -class`: 类加载统计
 
