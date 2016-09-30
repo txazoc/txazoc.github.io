@@ -201,6 +201,28 @@
                 &:nth-child(2n) {
                     background: #F9FAFB;
                 }
+
+                &:last-child {
+                    td {
+                        &:first-child {
+                            border-radius: 0 0 0 5px;
+                        }
+
+                        &:last-child {
+                            border-radius: 0 0 5px 0;
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    h1, h2, h3, h4, h5, h6 {
+        > a {
+            color: #000;
+
+            &:hover {
+                color: #000;
             }
         }
     }
