@@ -253,13 +253,13 @@ Java Debugger，java的debug调试工具
 
 jdb有两种使用方式:
 
-* 方式一: 以jdb方式直接启动
+* 方式一: jdb方式直接启动
 
 `jdb org.txazo.Test`
 
-* 方式二: attach方式
+* 方式二: attach方式连接到Java进程
 
-程序通过debug方式启动:
+以debug方式启动Java程序:
 
 ```console
 java -Xdebug -Xrunjdwp:transport=dt_socket,address=8787,server=y,suspend=n org.txazo.Test
@@ -268,6 +268,64 @@ java -Xdebug -Xrunjdwp:transport=dt_socket,address=8787,server=y,suspend=n org.t
 然后，通过jdb的attach方式建立连接:
 
 `jdb -attach 192.168.224.111:8787`
+
+
+
+```console
+$ jdb -classpath . org.txazo.Test
+正在初始化jdb...
+> stop in org.txazo.Test.main
+正在延迟断点org.txazo.Test.main。
+将在加载类后设置。
+> run
+运行org.txazo.Test
+设置未捕获的java.lang.Throwable
+设置延迟的未捕获的java.lang.Throwable
+> 
+VM 已启动: 设置延迟的断点org.txazo.Test.main
+
+断点命中: "线程=main", org.txazo.Test.main(), 行=6 bci=0
+
+main[1] next
+> 
+已完成的步骤: "线程=main", org.txazo.Test.main(), 行=7 bci=2
+
+main[1] cont
+> 
+应用程序已退出
+```
+
+jdb支持的常用命令:
+
+| 命令 | 含义 |
+| ---  | --- |
+| run | 开始执行应用程序的主类 |
+| stop in &lt;class&gt;:&lt;method&gt; | 在方法中设置断点 |
+| stop at &lt;class&gt;:&lt;line&gt; | 在行中设置断点 |
+| clear | 列出断点 |
+| clear &lt;class&gt;:&lt;method&gt; | 清除方法中的断点 |
+| clear &lt;class&gt;:&lt;line&gt; | 清除行中的断点 |
+| next | 下一步, 跳过一行 |
+| step  | 执行当前行 |
+| stepi | 执行当前指令 |
+| step up | 一直执行, 直到当前方法返回到其调用方 |
+| cont | 从断点处继续执行 |
+| threads | 列出线程 |
+| where [&lt;thread id&gt; \| all] | 转储线程的堆栈 |
+| wherei [&lt;thread id&gt; \| all] | 转储线程的堆栈以及pc信息 |
+| up [n frames] | 上移线程的堆栈 |
+| down [n frames] | 下移线程的堆栈 |
+| locals | 输出当前堆栈帧中的所有本地变量 |
+| print &lt;expr&gt; | 输出表达式的值 |
+| eval &lt;expr&gt; | 对表达式求值(与print相同) |
+| dump &lt;expr&gt; | 输出所有对象信息 |
+| set &lt;lvalue&gt; = &lt;expr&gt; | 向字段/变量/数组元素分配新值 |
+| class &lt;class&gt; | 显示类的信息 |
+| methods &lt;class&gt; | 列出类的方法 |
+| fields &lt;class&gt; | 列出类的字段 |
+| lock &lt;expr&gt; | 输出对象的锁信息 |
+| threadlocks [thread id] | 输出线程的锁信息 |
+| exit \| quit | 退出调试器 |
 
 ```console
 > run
@@ -290,13 +348,105 @@ java -Xdebug -Xrunjdwp:transport=dt_socket,address=8787,server=y,suspend=n org.t
 
 #### <a id="jps">jps</a>
 
-显示当前所有Java进程pid
+显示当前所有Java进程的pid
 
-`jps`
+* `jps`: 默认方式, 显示pid + 主类名
 
-`jps -l`
+```console
+42424 RemoteMavenServer
+58990 Jps
+42214 
+```
+
+* `jps -l`: 显示pid + 主类名全称
+
+```console
+42424 org.jetbrains.idea.maven.server.RemoteMavenServer
+42214 
+59015 sun.tools.jps.Jps
+```
+
+* `jps -v`: 显示pid + java参数
+
+```console
+42424 RemoteMavenServer -Djava.awt.headless=true -Didea.version==15.0.2 -Xmx512m -Didea.maven.embedder.version=3.0.5 -Dfile.encoding=UTF-8
+59673 Jps -Denv.class.path=/Library/Java/JavaVirtualMachines/current.jdk/Contents/Home/lib -Dapplication.home=/Library/Java/JavaVirtualMachines/jdk1.7.0_80.jdk/Contents/Home -Xms8m
+42214  -Dfile.encoding=UTF-8 -XX:+UseConcMarkSweepGC -XX:SoftRefLRUPolicyMSPerMB=50 -ea -Dsun.io.useCanonCaches=false -Djava.net.preferIPv4Stack=true -XX:+HeapDumpOnOutOfMemoryError -XX:-OmitStackTraceInFastThrow -Xverify:none -Xbootclasspath/a:../lib/boot.jar -Xms128m -Xmx750m -XX:MaxPermSize=350m -XX:ReservedCodeCacheSize=240m -XX:+UseCompressedOops -Djb.vmOptionsFile=/Applications/IntelliJ IDEA 15.app/Contents/bin/idea.vmoptions -Didea.java.redist=custom-jdk-bundled -Didea.home.path=/Applications/IntelliJ IDEA 15.app/Contents -Didea.executable=idea -Didea.paths.selector=IntelliJIdea15
+```
 
 #### <a id="jstat">jstat</a>
+
+Java Virtual Machine Statistics Monitoring Tool，监控Java虚拟机的统计数据
+
+命令格式: jstat [ generalOption | outputOptions vmid [interval[s|ms] [count]] ]
+
+各个options的字段含义参考 [java se 8 jstat](http://docs.oracle.com/javase/8/docs/technotes/tools/unix/jstat.html)
+
+* `jstat -class`: 类加载统计
+
+```console
+> jstat -class 63413
+Loaded  Bytes  Unloaded  Bytes     Time   
+  8269 16738.6        0     0.0      19.51
+```
+
+* `jstat -compiler`: HotSpot的JIT编译器编译统计
+
+```console
+> jstat -compiler 63413
+Compiled Failed Invalid   Time   FailedType FailedMethod
+    2618      0       0    57.18          0
+```
+
+* `jstat -gc`: 堆的大小和gc统计
+
+```console
+> jstat -gc 63413
+ S0C    S1C    S0U    S1U      EC       EU        OC         OU       PC     PU    YGC     YGCT    FGC    FGCT     GCT   
+43008.0 21504.0  0.0   21249.3 517120.0 359146.4  156160.0   129677.5  49664.0 49428.3     19    1.227   1      0.283    1.511
+```
+
+* `jstat -gccapacity`: 堆中各个代的内存统计
+
+```console
+> jstat -gccapacity 63413 1000 10
+ NGCMN    NGCMX     NGC     S0C   S1C       EC      OGCMN      OGCMX       OGC         OC      PGCMN    PGCMX     PGC       PC     YGC    FGC 
+ 44032.0 699392.0 556544.0 22016.0 38400.0 449536.0    87040.0  1397760.0   156160.0   156160.0  21504.0  83968.0  49664.0  49664.0     22     1
+```
+
+* `jstat -gcutil`: 堆中各个代已使用内存的百分比和gc统计
+
+```console
+> jstat -gcutil 63413 1000 10
+  S0     S1     E      O      P     YGC     YGCT    FGC    FGCT     GCT   
+ 98.49   0.00   1.55  83.04  99.57     24    1.470     1    0.283    1.754
+```
+
+* `jstat -gccause`: 同`-gcutil`，多出最后一次gc的原因和当前gc的原因
+
+```console
+> jstat -gccause 63413
+  S0     S1     E      O      P     YGC     YGCT    FGC    FGCT     GCT    LGCC                 GCC                 
+  0.00  98.60  15.28  83.04  99.59     27    1.586     1    0.283    1.870 Allocation Failure   No GC
+```
+
+* `jstat -gcnew`
+* `jstat -gcnewcapacity`
+* `jstat -gcold`
+* `jstat -gcoldcapacity`
+* `jstat -gcpermcapacity`
+* `jstat -printcompilation`
+* `jstat ... interval count`: 每间隔`interval`ms输出一次，总共输出`count`次
+
+```console
+> jstat -class -t 63413 1000 5
+Timestamp       Loaded  Bytes  Unloaded  Bytes     Time   
+         2833.4   8269 16738.6        0     0.0      19.51
+         2834.4   8269 16738.6        0     0.0      19.51
+         2835.4   8269 16738.6        0     0.0      19.51
+         2836.4   8269 16738.6        0     0.0      19.51
+         2837.4   8269 16738.6        0     0.0      19.51
+```
 
 #### <a id="jconsole">jconsole</a>
 
