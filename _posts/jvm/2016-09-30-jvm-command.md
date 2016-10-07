@@ -418,14 +418,6 @@ Compiled Failed Invalid   Time   FailedType FailedMethod
  44032.0 699392.0 556544.0 22016.0 38400.0 449536.0    87040.0  1397760.0   156160.0   156160.0  21504.0  83968.0  49664.0  49664.0     22     1
 ```
 
-* `jstat -gcutil`: 堆中各个代已使用内存的百分比和gc统计
-
-```console
-> jstat -gcutil 63413 1000 10
-  S0     S1     E      O      P     YGC     YGCT    FGC    FGCT     GCT   
- 98.49   0.00   1.55  83.04  99.57     24    1.470     1    0.283    1.754
-```
-
 * `jstat -gccause`: 同`-gcutil`，多出最后一次gc的原因和当前gc的原因
 
 ```console
@@ -439,6 +431,15 @@ Compiled Failed Invalid   Time   FailedType FailedMethod
 * `jstat -gcold`
 * `jstat -gcoldcapacity`
 * `jstat -gcpermcapacity`
+
+* `jstat -gcutil`: 堆中各个代已使用内存的百分比和gc统计
+
+```console
+> jstat -gcutil 63413 1000 10
+  S0     S1     E      O      P     YGC     YGCT    FGC    FGCT     GCT   
+ 98.49   0.00   1.55  83.04  99.57     24    1.470     1    0.283    1.754
+```
+
 * `jstat -printcompilation`
 * `jstat ... interval count`: 每间隔`interval`ms输出一次，总共输出`count`次
 
