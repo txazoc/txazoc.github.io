@@ -21,6 +21,7 @@ date:       2016-09-30
 * [jstack](#jstack)
 * [jmap](#jmap)
 * [jhat](#jhat)
+* [jinfo](#jinfo)
 
 #### <a id="java">java</a>
 
@@ -33,17 +34,17 @@ date:       2016-09-30
 
 #### <a id="javac">javac</a>
 
-编译Java源文件为class字节码文件
+Java Compiler，Java编译器，编译Java源文件为class字节码文件
 
 例如，`javac org.txazo.Test.java`，编译生成`Test.class`字节码文件
 
 #### <a id="javadoc">javadoc</a>
 
-从Java源文件生成API文档
+Java API Documentation Generator，Java API文档生成器
 
 #### <a id="jar">jar</a>
 
-操纵jar包
+Java Archive Tool，Java存档工具
 
 * `jar -cvf test.jar *`: 打jar包
 * `jar -tvf test.jar`: 列出jar包中文件
@@ -271,8 +272,6 @@ java -Xdebug -Xrunjdwp:transport=dt_socket,address=8787,server=y,suspend=n org.t
 
 `jdb -attach 192.168.224.111:8787`
 
-
-
 ```console
 $ jdb -classpath . org.txazo.Test
 正在初始化jdb...
@@ -331,7 +330,7 @@ jdb支持的常用命令:
 
 #### <a id="jps">jps</a>
 
-显示当前所有Java进程的pid
+Java Process Status Tool，Java进程状态工具
 
 * `jps`: 默认方式, 显示pid + 主类名
 
@@ -498,7 +497,7 @@ Timestamp        S0C    S1C    S0U    S1U   TT MTT  DSS      EC       EU     YGC
 
 #### <a id="jconsole">jconsole</a>
 
-图形化控制台
+Java Monitoring and Management Console，Java监视和管理控制台
 
 包括以下几部分:
 
@@ -525,14 +524,14 @@ Timestamp        S0C    S1C    S0U    S1U   TT MTT  DSS      EC       EU     YGC
 
 #### <a id="jstack">jstack</a>
 
-打印Java线程栈
+Java Stack Trace，Java堆栈跟踪
 
 * `jstack <pid>`: 打印线程栈
-* `jstack -F <pid>`: 强制打印线程栈
 * `jstack -l <pid>`: 打印详细的线程栈
-* `jstack -m <pid>`: 打印Java和C++的混合栈
 
 #### <a id="jmap">jmap</a>
+
+Java Memory Map，Java内存映射
 
 * `jmap -heap <pid>`: 打印堆的摘要信息
 
@@ -586,7 +585,7 @@ PS Perm Generation
 20314 interned Strings occupying 2436648 bytes.
 ```
 
-* `jmap -histo[:live] <pid>`: 打印堆中对象的柱状图，包括实例数、内存大小、类型签名
+* `jmap [-F] -histo[:live] <pid>`: 打印堆的柱状图，包括实例数、内存大小和类型签名
 
 ```console
 > jmap -histo:live 8705 | head -10
@@ -602,22 +601,98 @@ PS Perm Generation
    7:          6762        5411264  <constantPoolCacheKlass>
 ```
 
-* `jmap -dump:[live,]format=b,file=<filename> <pid>`: 以hprof二进制格式转储堆到文件
+* `jmap [-F] -dump:[live,]format=b,file=<filename> <pid>`: 以hprof二进制格式转储堆到文件，之后使用jhat或MAT进行分析
+
+> 注: `-F`代表强制执行，`live`代表只统计存活的对象
 
 #### <a id="jhat">jhat</a>
 
-Java堆分析工具，用于分析堆转储文件
+Java Heap Analysis Tool，Java堆分析工具，用于分析堆转储文件
 
-格式: jhat [ options ] <heap-dump-file\>
+格式: jhat [options] <heap-dump-file\>
 
 options:
 
-* -stack <bool\>: 对象内存分配调用栈跟踪开关
-* -refs <bool\>: 对象引用跟踪开关
-* -port <port\>: jhat Http Server的端口号，默认为7000
+* -stack <bool\>: 对象内存分配调用栈跟踪开关，默认开
+* -refs <bool\>: 对象引用跟踪开关，默认开
+* -port <port\>: 设置HTTP Server的端口号，默认为7000
 * -baseline <file\>: 指定基准堆转储，用于比较两个堆转储
-* -debug <int\>: 设置debug级别，0－不输出调试信息，1和2输出调试信息
+* -debug <int\>: 设置debug级别，0不输出调试信息，1和2输出调试信息
 
 `jhat -port 7888 heap.bin`
 
-浏览器访问`http://127.0.0.1:7888`查看堆信息
+浏览器访问 [http://127.0.0.1:7888](http://127.0.0.1:7888) 查看分析结果
+
+#### <a id="jinfo">jinfo</a>
+
+Java Configuration Info，Java配置信息
+
+* `jinfo <pid>`: 输出Java系统属性和JVM参数
+* `jinfo -flag <name> <pid>`: 输出指定名称的JVM参数的值
+
+```console
+> jinfo -flag NewSize 94243
+-XX:NewSize=89128960
+```
+
+* `jinfo -flag [+|-]<name> <pid>`: 启用/禁用指定名称的JVM参数
+
+```console
+> jinfo -flag +PrintGC 94243
+> jinfo -flag PrintGC 94243
+-XX:+PrintGC
+> jinfo -flag -PrintGC 94243
+> jinfo -flag PrintGC 94243
+-XX:-PrintGC
+```
+
+* `jinfo -flag <name>=<value> <pid>`: 设置指定名称的JVM参数的值
+
+```console
+> jinfo -flag MaxHeapFreeRatio 94243
+-XX:MaxHeapFreeRatio=100
+> jinfo -flag MaxHeapFreeRatio=80 94243
+-XX:MaxHeapFreeRatio=80
+```
+
+* `jinfo -flags <pid>`: 输出JVM参数
+
+```console
+> jinfo -flags 94243
+Non-default VM flags: -XX:CICompilerCount=4 -XX:InitialHeapSize=268435456 -XX:MaxHeapSize=4294967296 -XX:MaxNewSize=1431306240 -XX:MinHeapDeltaBytes=524288 -XX:NewSize=89128960 -XX:OldSize=179306496 -XX:+UseCompressedClassPointers -XX:+UseCompressedOops -XX:+UseFastUnorderedTimeStamps -XX:+UseParallelGC 
+Command line:  -Didea.launcher.port=7534 -Didea.launcher.bin.path=/Applications/IntelliJ IDEA 15.app/Contents/bin -Dfile.encoding=UTF-8
+```
+
+* `jinfo -sysprops <pid>`: 输出Java系统属性
+
+```console
+> jinfo -sysprops 94243
+java.runtime.name = Java(TM) SE Runtime Environment
+java.vm.version = 25.71-b15
+sun.boot.library.path = /Library/Java/JavaVirtualMachines/jdk1.8.0_71.jdk/Contents/Home/jre/lib
+...
+```
+
+可以在运行时通过`jinfo`动态修改的JVM参数:
+
+```console
+java -XX:+PrintFlagsFinal | grep manageable
+ intx CMSAbortablePrecleanWaitMillis            = 100                                 {manageable}
+ intx CMSTriggerInterval                        = -1                                  {manageable}
+ intx CMSWaitDuration                           = 2000                                {manageable}
+ bool HeapDumpAfterFullGC                       = false                               {manageable}
+ bool HeapDumpBeforeFullGC                      = false                               {manageable}
+ bool HeapDumpOnOutOfMemoryError                = false                               {manageable}
+ccstr HeapDumpPath                              =                                     {manageable}
+uintx MaxHeapFreeRatio                          = 100                                 {manageable}
+uintx MinHeapFreeRatio                          = 0                                   {manageable}
+ bool PrintClassHistogram                       = false                               {manageable}
+ bool PrintClassHistogramAfterFullGC            = false                               {manageable}
+ bool PrintClassHistogramBeforeFullGC           = false                               {manageable}
+ bool PrintConcurrentLocks                      = false                               {manageable}
+ bool PrintGC                                   = false                               {manageable}
+ bool PrintGCDateStamps                         = false                               {manageable}
+ bool PrintGCDetails                            = false                               {manageable}
+ bool PrintGCID                                 = false                               {manageable}
+ bool PrintGCTimeStamps                         = false                               {manageable}
+```
