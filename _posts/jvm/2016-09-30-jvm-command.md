@@ -389,68 +389,109 @@ Java Virtual Machine Statistics Monitoring Tool，监控Java虚拟机的统计�
 * `jstat -class`: 类加载统计
 
 ```console
-> jstat -class 63413
+> jstat -class 8705
 Loaded  Bytes  Unloaded  Bytes     Time   
-  8269 16738.6        0     0.0      19.51
+  8233 16680.3        0     0.0      12.33
 ```
 
 * `jstat -compiler`: HotSpot的JIT编译器编译统计
 
 ```console
-> jstat -compiler 63413
+> jstat -compiler 8705
 Compiled Failed Invalid   Time   FailedType FailedMethod
-    2618      0       0    57.18          0
+    1945      0       0    24.28          0
 ```
 
 * `jstat -gc`: 堆的大小和gc统计
 
 ```console
-> jstat -gc 63413
+> jstat -gc 8705
  S0C    S1C    S0U    S1U      EC       EU        OC         OU       PC     PU    YGC     YGCT    FGC    FGCT     GCT   
-43008.0 21504.0  0.0   21249.3 517120.0 359146.4  156160.0   129677.5  49664.0 49428.3     19    1.227   1      0.283    1.511
+13312.0 12288.0 2560.0  0.0   117760.0 78743.0   307200.0   202786.7  49664.0 49175.5     56    0.680   0      0.000    0.680
 ```
 
 * `jstat -gccapacity`: 堆中各个代的内存统计
 
 ```console
-> jstat -gccapacity 63413 1000 10
+> jstat -gccapacity 8705
  NGCMN    NGCMX     NGC     S0C   S1C       EC      OGCMN      OGCMX       OGC         OC      PGCMN    PGCMX     PGC       PC     YGC    FGC 
- 44032.0 699392.0 556544.0 22016.0 38400.0 449536.0    87040.0  1397760.0   156160.0   156160.0  21504.0  83968.0  49664.0  49664.0     22     1
+143360.0 143360.0 143360.0 11776.0 12288.0 117760.0   307200.0   307200.0   307200.0   307200.0  21504.0  83968.0  49664.0  49664.0     57     0
 ```
 
 * `jstat -gccause`: 同`-gcutil`，多出最后一次gc的原因和当前gc的原因
 
 ```console
-> jstat -gccause 63413
+> jstat -gccause 8705
   S0     S1     E      O      P     YGC     YGCT    FGC    FGCT     GCT    LGCC                 GCC                 
-  0.00  98.60  15.28  83.04  99.59     27    1.586     1    0.283    1.870 Allocation Failure   No GC
+  0.00  11.20  94.86  66.02  99.02     57    0.685     0    0.000    0.685 Allocation Failure   No GC
 ```
 
 * `jstat -gcnew`
+
+```console
+> jstat -gcnew 8705
+ S0C    S1C    S0U    S1U   TT MTT  DSS      EC       EU     YGC     YGCT  
+11776.0 10752.0 3104.0    0.0  1  15 10752.0 120832.0  84236.4     58    0.692
+```
+
 * `jstat -gcnewcapacity`
+
+```console
+> jstat -gcnewcapacity 8705
+  NGCMN      NGCMX       NGC      S0CMX     S0C     S1CMX     S1C       ECMX        EC      YGC   FGC 
+  143360.0   143360.0   143360.0  20480.0  10240.0  20480.0  10752.0   142336.0   120832.0    59     0
+```
+
 * `jstat -gcold`
+
+```console
+> jstat -gcold 8705
+   PC       PU        OC          OU       YGC    FGC    FGCT     GCT   
+ 49664.0  49183.4    307200.0    202874.7     59     0    0.000    0.699
+```
+
 * `jstat -gcoldcapacity`
+
+```console
+> jstat -gcoldcapacity 8705
+   OGCMN       OGCMX        OGC         OC       YGC   FGC    FGCT     GCT   
+   307200.0    307200.0    307200.0    307200.0    60     0    0.000    0.707
+```
+
 * `jstat -gcpermcapacity`
+
+```console
+> jstat -gcpermcapacity 8705
+  PGCMN      PGCMX       PGC         PC      YGC   FGC    FGCT     GCT   
+   21504.0    83968.0    49664.0    49664.0    60     0    0.000    0.707
+```
 
 * `jstat -gcutil`: 堆中各个代已使用内存的百分比和gc统计
 
 ```console
-> jstat -gcutil 63413 1000 10
+> jstat -gcutil 8705
   S0     S1     E      O      P     YGC     YGCT    FGC    FGCT     GCT   
- 98.49   0.00   1.55  83.04  99.57     24    1.470     1    0.283    1.754
+  0.00  31.58  45.52  66.05  99.04     61    0.713     0    0.000    0.713
 ```
 
 * `jstat -printcompilation`
+
+```console
+> jstat -printcompilation 8705
+Compiled  Size  Type Method
+    2042      5    1 com/dianping/mobile/framework/io/ResponseContent getStatusCode
+```
+
 * `jstat ... interval count`: 每间隔`interval`ms输出一次，总共输出`count`次
 
 ```console
-> jstat -class -t 63413 1000 5
-Timestamp       Loaded  Bytes  Unloaded  Bytes     Time   
-         2833.4   8269 16738.6        0     0.0      19.51
-         2834.4   8269 16738.6        0     0.0      19.51
-         2835.4   8269 16738.6        0     0.0      19.51
-         2836.4   8269 16738.6        0     0.0      19.51
-         2837.4   8269 16738.6        0     0.0      19.51
+> jstat -gcnew -t 8705 1000 5
+Timestamp        S0C    S1C    S0U    S1U   TT MTT  DSS      EC       EU     YGC     YGCT  
+          682.9 8192.0 8704.0    0.0 2336.0  1  15 8192.0 125440.0  45636.5     63    0.723
+          683.9 8192.0 8704.0    0.0 2336.0  1  15 8192.0 125440.0  48214.4     63    0.723
+          685.0 8192.0 8704.0    0.0 2336.0  1  15 8192.0 125440.0  48434.1     63    0.723
+          686.0 8192.0 8704.0    0.0 2336.0  1  15 8192.0 125440.0  48434.2     63    0.723
+          687.0 8192.0 8704.0    0.0 2336.0  1  15 8192.0 125440.0  48436.5     63    0.723
 ```
 
 #### <a id="jconsole">jconsole</a>
