@@ -19,6 +19,8 @@ date:       2016-09-30
 * [jconsole](#jconsole)
 * [jvisualvm](#jvisualvm)
 * [jstack](#jstack)
+* [jmap](#jmap)
+* [jhat](#jhat)
 
 #### <a id="java">java</a>
 
@@ -357,7 +359,7 @@ jdb支持的常用命令:
 
 #### <a id="jstat">jstat</a>
 
-Java Virtual Machine Statistics Monitoring Tool，监控Java虚拟机的统计数据
+Java Virtual Machine Statistics Monitoring Tool，Java虚拟机统计监控工具
 
 * 命令格式: jstat [ generalOption | outputOptions vmid [interval[s|ms] [count]]
     * ***generalOption***: -help、-options
@@ -384,7 +386,7 @@ Java Virtual Machine Statistics Monitoring Tool，监控Java虚拟机的统计�
 -printcompilation
 ```
 
-各个options选项的输出字段含义参考 [jstat](http://docs.oracle.com/javase/8/docs/technotes/tools/unix/jstat.html)
+各个options选项输出的字段含义参考 [jstat](http://docs.oracle.com/javase/8/docs/technotes/tools/unix/jstat.html)
 
 * `jstat -class`: 类加载统计
 
@@ -394,7 +396,7 @@ Loaded  Bytes  Unloaded  Bytes     Time
   8233 16680.3        0     0.0      12.33
 ```
 
-* `jstat -compiler`: HotSpot的JIT编译器编译统计
+* `jstat -compiler`: JIT编译统计
 
 ```console
 > jstat -compiler 8705
@@ -402,7 +404,7 @@ Compiled Failed Invalid   Time   FailedType FailedMethod
     1945      0       0    24.28          0
 ```
 
-* `jstat -gc`: 堆的大小和gc统计
+* `jstat -gc`: 堆内存和gc统计
 
 ```console
 > jstat -gc 8705
@@ -410,7 +412,7 @@ Compiled Failed Invalid   Time   FailedType FailedMethod
 13312.0 12288.0 2560.0  0.0   117760.0 78743.0   307200.0   202786.7  49664.0 49175.5     56    0.680   0      0.000    0.680
 ```
 
-* `jstat -gccapacity`: 堆中各个代的内存统计
+* `jstat -gccapacity`: 堆内存容量统计
 
 ```console
 > jstat -gccapacity 8705
@@ -418,7 +420,7 @@ Compiled Failed Invalid   Time   FailedType FailedMethod
 143360.0 143360.0 143360.0 11776.0 12288.0 117760.0   307200.0   307200.0   307200.0   307200.0  21504.0  83968.0  49664.0  49664.0     57     0
 ```
 
-* `jstat -gccause`: 同`-gcutil`，多出最后一次gc的原因和当前gc的原因
+* `jstat -gccause`: 输出同`-gcutil`，多最后一次gc的原因和当前gc的原因
 
 ```console
 > jstat -gccause 8705
@@ -426,7 +428,7 @@ Compiled Failed Invalid   Time   FailedType FailedMethod
   0.00  11.20  94.86  66.02  99.02     57    0.685     0    0.000    0.685 Allocation Failure   No GC
 ```
 
-* `jstat -gcnew`
+* `jstat -gcnew`: 新生代统计
 
 ```console
 > jstat -gcnew 8705
@@ -434,7 +436,7 @@ Compiled Failed Invalid   Time   FailedType FailedMethod
 11776.0 10752.0 3104.0    0.0  1  15 10752.0 120832.0  84236.4     58    0.692
 ```
 
-* `jstat -gcnewcapacity`
+* `jstat -gcnewcapacity`: 新生代容量统计
 
 ```console
 > jstat -gcnewcapacity 8705
@@ -442,7 +444,7 @@ Compiled Failed Invalid   Time   FailedType FailedMethod
   143360.0   143360.0   143360.0  20480.0  10240.0  20480.0  10752.0   142336.0   120832.0    59     0
 ```
 
-* `jstat -gcold`
+* `jstat -gcold`: 老年代统计
 
 ```console
 > jstat -gcold 8705
@@ -450,7 +452,7 @@ Compiled Failed Invalid   Time   FailedType FailedMethod
  49664.0  49183.4    307200.0    202874.7     59     0    0.000    0.699
 ```
 
-* `jstat -gcoldcapacity`
+* `jstat -gcoldcapacity`: 老年代容量统计
 
 ```console
 > jstat -gcoldcapacity 8705
@@ -458,7 +460,7 @@ Compiled Failed Invalid   Time   FailedType FailedMethod
    307200.0    307200.0    307200.0    307200.0    60     0    0.000    0.707
 ```
 
-* `jstat -gcpermcapacity`
+* `jstat -gcpermcapacity`: 持久代容量统计
 
 ```console
 > jstat -gcpermcapacity 8705
@@ -466,7 +468,7 @@ Compiled Failed Invalid   Time   FailedType FailedMethod
    21504.0    83968.0    49664.0    49664.0    60     0    0.000    0.707
 ```
 
-* `jstat -gcutil`: 堆中各个代已使用内存的百分比和gc统计
+* `jstat -gcutil`: 堆内存百分比和gc统计
 
 ```console
 > jstat -gcutil 8705
@@ -496,7 +498,22 @@ Timestamp        S0C    S1C    S0U    S1U   TT MTT  DSS      EC       EU     YGC
 
 #### <a id="jconsole">jconsole</a>
 
-`jconsole pid`
+图形化控制台
+
+包括以下几部分:
+
+* CPU占用率
+* 堆内存使用
+* 类加载
+* 线程
+* VM概要
+* MBean
+
+使用方式:
+
+* `jconsole`
+* `jconsole pid`
+* `jconsole host:port`
 
 ```console
 -Dcom.sun.management.jmxremote.port=9999
@@ -504,17 +521,103 @@ Timestamp        S0C    S1C    S0U    S1U   TT MTT  DSS      EC       EU     YGC
 -Dcom.sun.management.jmxremote.ssl=false
 ```
 
-`jconsole 127.0.0.1:9999`
-
 #### <a id="jvisualvm">jvisualvm</a>
 
 #### <a id="jstack">jstack</a>
 
 打印Java线程栈
 
-`jstack pid`
+* `jstack <pid>`: 打印线程栈
+* `jstack -F <pid>`: 强制打印线程栈
+* `jstack -l <pid>`: 打印详细的线程栈
+* `jstack -m <pid>`: 打印Java和C++的混合栈
 
-* `jstack pid`: 打印线程栈
-* `jstack -F pid`: 强制打印线程栈
-* `jstack -l pid`: 打印详细的线程栈
-* `jstack -m pid`: 打印Java和C++的混合栈
+#### <a id="jmap">jmap</a>
+
+* `jmap -heap <pid>`: 打印堆的摘要信息
+
+```console
+> jmap -heap 8705
+
+using thread-local object allocation.
+Parallel GC with 4 thread(s)
+
+Heap Configuration:
+   MinHeapFreeRatio = 0
+   MaxHeapFreeRatio = 100
+   MaxHeapSize      = 461373440 (440.0MB)
+   NewSize          = 146800640 (140.0MB)
+   MaxNewSize       = 146800640 (140.0MB)
+   OldSize          = 5439488 (5.1875MB)
+   NewRatio         = 2
+   SurvivorRatio    = 5
+   PermSize         = 21757952 (20.75MB)
+   MaxPermSize      = 85983232 (82.0MB)
+   G1HeapRegionSize = 0 (0.0MB)
+
+Heap Usage:
+PS Young Generation
+Eden Space:
+   capacity = 138412032 (132.0MB)
+   used     = 82236344 (78.42668914794922MB)
+   free     = 56175688 (53.57331085205078MB)
+   59.41415844541608% used
+From Space:
+   capacity = 4194304 (4.0MB)
+   used     = 0 (0.0MB)
+   free     = 4194304 (4.0MB)
+   0.0% used
+To Space:
+   capacity = 3670016 (3.5MB)
+   used     = 0 (0.0MB)
+   free     = 3670016 (3.5MB)
+   0.0% used
+PS Old Generation
+   capacity = 314572800 (300.0MB)
+   used     = 33263096 (31.72216033935547MB)
+   free     = 281309704 (268.27783966064453MB)
+   10.574053446451822% used
+PS Perm Generation
+   capacity = 73924608 (70.5MB)
+   used     = 50952240 (48.59184265136719MB)
+   free     = 22972368 (21.908157348632812MB)
+   68.92459950548538% used
+
+20314 interned Strings occupying 2436648 bytes.
+```
+
+* `jmap -histo[:live] <pid>`: 打印堆中对象的柱状图，包括实例数、内存大小、类型签名
+
+```console
+> jmap -histo:live 8705 | head -10
+
+ num     #instances         #bytes  class name
+----------------------------------------------
+   1:         75439       13235696  [C
+   2:         84708       12940176  <constMethodKlass>
+   3:         84708       10852976  <methodKlass>
+   4:          8309        9851872  <constantPoolKlass>
+   5:         23323        6850288  [B
+   6:          8309        5941736  <instanceKlassKlass>
+   7:          6762        5411264  <constantPoolCacheKlass>
+```
+
+* `jmap -dump:[live,]format=b,file=<filename> <pid>`: 以hprof二进制格式转储堆到文件
+
+#### <a id="jhat">jhat</a>
+
+Java堆分析工具，用于分析堆转储文件
+
+格式: jhat [ options ] <heap-dump-file\>
+
+options:
+
+* -stack <bool\>: 对象内存分配调用栈跟踪开关
+* -refs <bool\>: 对象引用跟踪开关
+* -port <port\>: jhat Http Server的端口号，默认为7000
+* -baseline <file\>: 指定基准堆转储，用于比较两个堆转储
+* -debug <int\>: 设置debug级别，0－不输出调试信息，1和2输出调试信息
+
+`jhat -port 7888 heap.bin`
+
+浏览器访问`http://127.0.0.1:7888`查看堆信息
