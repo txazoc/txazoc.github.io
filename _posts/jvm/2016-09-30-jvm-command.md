@@ -27,29 +27,29 @@ date:       2016-09-30
 
 启动Java应用程序，参见 [java命令](/jvm/jvm-java-command.html)
 
-例如:
-
 * `java org.txazo.Test`，启动运行类
-* `java -jar test.jar`，启动运行jar包
+* `java -jar test.jar`，启动运行jar包中的main class
 
 #### <a id="javac">javac</a>
 
-Java Compiler，Java编译器，编译Java源文件为class字节码文件
+Java Compiler，Java编译器，编译`.java`源文件为`.class`字节码文件
 
-例如，`javac org.txazo.Test.java`，编译生成`Test.class`字节码文件
+* `javac org.txazo.Test.java`: 编译生成`Test.class`字节码文件
 
 #### <a id="javadoc">javadoc</a>
 
 Java API Documentation Generator，Java API文档生成器
 
+* `javadoc -sourcepath . -d api org.txazo`: org.txazo包生成api文档(不包含子包)
+
 #### <a id="jar">jar</a>
 
-Java Archive Tool，Java存档工具
+Java Archive，Java存档
 
-* `jar -cvf test.jar *`: 打jar包
-* `jar -tvf test.jar`: 列出jar包中文件
-* `jar -uvf test.jar test.txt`: 更新文件到jar包
+* `jar -cvf test.jar *`: 创建jar包
+* `jar -uvf test.jar test.txt`: 更新jar包
 * `jar -xvf test.jar`: 解压jar包
+* `jar -tvf test.jar`: 列出jar包中文件
 
 #### <a id="javap">javap</a>
 
@@ -265,7 +265,7 @@ jdb有两种使用方式:
 以debug方式启动Java程序:
 
 ```console
-java -Xdebug -Xrunjdwp:transport=dt_socket,address=8787,server=y,suspend=n org.txazo.Test
+$ java -Xdebug -Xrunjdwp:transport=dt_socket,address=8787,server=y,suspend=n org.txazo.Test
 ```
 
 然后，通过jdb的attach方式建立连接:
@@ -335,6 +335,7 @@ Java Process Status Tool，Java进程状态工具
 * `jps`: 默认方式, 显示pid + 主类名
 
 ```console
+$ jps
 42424 RemoteMavenServer
 58990 Jps
 42214 
@@ -343,6 +344,7 @@ Java Process Status Tool，Java进程状态工具
 * `jps -l`: 显示pid + 主类名全称
 
 ```console
+$ jps -l
 42424 org.jetbrains.idea.maven.server.RemoteMavenServer
 42214 
 59015 sun.tools.jps.Jps
@@ -351,6 +353,7 @@ Java Process Status Tool，Java进程状态工具
 * `jps -v`: 显示pid + java参数
 
 ```console
+$ jps -v
 42424 RemoteMavenServer -Djava.awt.headless=true -Didea.version==15.0.2 -Xmx512m -Didea.maven.embedder.version=3.0.5 -Dfile.encoding=UTF-8
 59673 Jps -Denv.class.path=/Library/Java/JavaVirtualMachines/current.jdk/Contents/Home/lib -Dapplication.home=/Library/Java/JavaVirtualMachines/jdk1.7.0_80.jdk/Contents/Home -Xms8m
 42214  -Dfile.encoding=UTF-8 -XX:+UseConcMarkSweepGC -XX:SoftRefLRUPolicyMSPerMB=50 -ea -Dsun.io.useCanonCaches=false -Djava.net.preferIPv4Stack=true -XX:+HeapDumpOnOutOfMemoryError -XX:-OmitStackTraceInFastThrow -Xverify:none -Xbootclasspath/a:../lib/boot.jar -Xms128m -Xmx750m -XX:MaxPermSize=350m -XX:ReservedCodeCacheSize=240m -XX:+UseCompressedOops -Djb.vmOptionsFile=/Applications/IntelliJ IDEA 15.app/Contents/bin/idea.vmoptions -Didea.java.redist=custom-jdk-bundled -Didea.home.path=/Applications/IntelliJ IDEA 15.app/Contents -Didea.executable=idea -Didea.paths.selector=IntelliJIdea15
@@ -370,7 +373,7 @@ Java Virtual Machine Statistics Monitoring Tool，Java虚拟机统计监控工�
 `jstat -options`输出的选项:
 
 ```console
-~ jstat -options
+$ jstat -options
 -class
 -compiler
 -gc
@@ -390,7 +393,7 @@ Java Virtual Machine Statistics Monitoring Tool，Java虚拟机统计监控工�
 * `jstat -class`: 类加载统计
 
 ```console
-> jstat -class 8705
+$ jstat -class 8705
 Loaded  Bytes  Unloaded  Bytes     Time   
   8233 16680.3        0     0.0      12.33
 ```
@@ -398,7 +401,7 @@ Loaded  Bytes  Unloaded  Bytes     Time
 * `jstat -compiler`: JIT编译统计
 
 ```console
-> jstat -compiler 8705
+$ jstat -compiler 8705
 Compiled Failed Invalid   Time   FailedType FailedMethod
     1945      0       0    24.28          0
 ```
@@ -406,7 +409,7 @@ Compiled Failed Invalid   Time   FailedType FailedMethod
 * `jstat -gc`: 堆内存和gc统计
 
 ```console
-> jstat -gc 8705
+$ jstat -gc 8705
  S0C    S1C    S0U    S1U      EC       EU        OC         OU       PC     PU    YGC     YGCT    FGC    FGCT     GCT   
 13312.0 12288.0 2560.0  0.0   117760.0 78743.0   307200.0   202786.7  49664.0 49175.5     56    0.680   0      0.000    0.680
 ```
@@ -414,7 +417,7 @@ Compiled Failed Invalid   Time   FailedType FailedMethod
 * `jstat -gccapacity`: 堆内存容量统计
 
 ```console
-> jstat -gccapacity 8705
+$ jstat -gccapacity 8705
  NGCMN    NGCMX     NGC     S0C   S1C       EC      OGCMN      OGCMX       OGC         OC      PGCMN    PGCMX     PGC       PC     YGC    FGC 
 143360.0 143360.0 143360.0 11776.0 12288.0 117760.0   307200.0   307200.0   307200.0   307200.0  21504.0  83968.0  49664.0  49664.0     57     0
 ```
@@ -422,7 +425,7 @@ Compiled Failed Invalid   Time   FailedType FailedMethod
 * `jstat -gccause`: 输出同`-gcutil`，多最后一次gc的原因和当前gc的原因
 
 ```console
-> jstat -gccause 8705
+$ jstat -gccause 8705
   S0     S1     E      O      P     YGC     YGCT    FGC    FGCT     GCT    LGCC                 GCC                 
   0.00  11.20  94.86  66.02  99.02     57    0.685     0    0.000    0.685 Allocation Failure   No GC
 ```
@@ -430,7 +433,7 @@ Compiled Failed Invalid   Time   FailedType FailedMethod
 * `jstat -gcnew`: 新生代统计
 
 ```console
-> jstat -gcnew 8705
+$ jstat -gcnew 8705
  S0C    S1C    S0U    S1U   TT MTT  DSS      EC       EU     YGC     YGCT  
 11776.0 10752.0 3104.0    0.0  1  15 10752.0 120832.0  84236.4     58    0.692
 ```
@@ -438,7 +441,7 @@ Compiled Failed Invalid   Time   FailedType FailedMethod
 * `jstat -gcnewcapacity`: 新生代容量统计
 
 ```console
-> jstat -gcnewcapacity 8705
+$ jstat -gcnewcapacity 8705
   NGCMN      NGCMX       NGC      S0CMX     S0C     S1CMX     S1C       ECMX        EC      YGC   FGC 
   143360.0   143360.0   143360.0  20480.0  10240.0  20480.0  10752.0   142336.0   120832.0    59     0
 ```
@@ -446,7 +449,7 @@ Compiled Failed Invalid   Time   FailedType FailedMethod
 * `jstat -gcold`: 老年代统计
 
 ```console
-> jstat -gcold 8705
+$ jstat -gcold 8705
    PC       PU        OC          OU       YGC    FGC    FGCT     GCT   
  49664.0  49183.4    307200.0    202874.7     59     0    0.000    0.699
 ```
@@ -454,7 +457,7 @@ Compiled Failed Invalid   Time   FailedType FailedMethod
 * `jstat -gcoldcapacity`: 老年代容量统计
 
 ```console
-> jstat -gcoldcapacity 8705
+$ jstat -gcoldcapacity 8705
    OGCMN       OGCMX        OGC         OC       YGC   FGC    FGCT     GCT   
    307200.0    307200.0    307200.0    307200.0    60     0    0.000    0.707
 ```
@@ -462,7 +465,7 @@ Compiled Failed Invalid   Time   FailedType FailedMethod
 * `jstat -gcpermcapacity`: 持久代容量统计
 
 ```console
-> jstat -gcpermcapacity 8705
+$ jstat -gcpermcapacity 8705
   PGCMN      PGCMX       PGC         PC      YGC   FGC    FGCT     GCT   
    21504.0    83968.0    49664.0    49664.0    60     0    0.000    0.707
 ```
@@ -470,7 +473,7 @@ Compiled Failed Invalid   Time   FailedType FailedMethod
 * `jstat -gcutil`: 堆内存百分比和gc统计
 
 ```console
-> jstat -gcutil 8705
+$ jstat -gcutil 8705
   S0     S1     E      O      P     YGC     YGCT    FGC    FGCT     GCT   
   0.00  31.58  45.52  66.05  99.04     61    0.713     0    0.000    0.713
 ```
@@ -478,7 +481,7 @@ Compiled Failed Invalid   Time   FailedType FailedMethod
 * `jstat -printcompilation`
 
 ```console
-> jstat -printcompilation 8705
+$ jstat -printcompilation 8705
 Compiled  Size  Type Method
     2042      5    1 com/dianping/mobile/framework/io/ResponseContent getStatusCode
 ```
@@ -486,7 +489,7 @@ Compiled  Size  Type Method
 * `jstat ... interval count`: 每间隔`interval`ms输出一次，总共输出`count`次
 
 ```console
-> jstat -gcnew -t 8705 1000 5
+$ jstat -gcnew -t 8705 1000 5
 Timestamp        S0C    S1C    S0U    S1U   TT MTT  DSS      EC       EU     YGC     YGCT  
           682.9 8192.0 8704.0    0.0 2336.0  1  15 8192.0 125440.0  45636.5     63    0.723
           683.9 8192.0 8704.0    0.0 2336.0  1  15 8192.0 125440.0  48214.4     63    0.723
@@ -522,6 +525,10 @@ Java Monitoring and Management Console，Java监视和管理控制台
 
 #### <a id="jvisualvm">jvisualvm</a>
 
+Java监控、故障排除工具
+
+* `jvisualvm`
+
 #### <a id="jstack">jstack</a>
 
 Java Stack Trace，Java堆栈跟踪
@@ -536,7 +543,7 @@ Java Memory Map，Java内存映射
 * `jmap -heap <pid>`: 打印堆的摘要信息
 
 ```console
-> jmap -heap 8705
+$ jmap -heap 8705
 
 using thread-local object allocation.
 Parallel GC with 4 thread(s)
@@ -588,7 +595,7 @@ PS Perm Generation
 * `jmap [-F] -histo[:live] <pid>`: 打印堆的柱状图，包括实例数、内存大小和类型签名
 
 ```console
-> jmap -histo:live 8705 | head -10
+$ jmap -histo:live 8705 | head -10
 
  num     #instances         #bytes  class name
 ----------------------------------------------
@@ -631,34 +638,34 @@ Java Configuration Info，Java配置信息
 * `jinfo -flag <name> <pid>`: 输出指定名称的JVM参数的值
 
 ```console
-> jinfo -flag NewSize 94243
+$ jinfo -flag NewSize 94243
 -XX:NewSize=89128960
 ```
 
 * `jinfo -flag [+|-]<name> <pid>`: 启用/禁用指定名称的JVM参数
 
 ```console
-> jinfo -flag +PrintGC 94243
-> jinfo -flag PrintGC 94243
+$ jinfo -flag +PrintGC 94243
+$ jinfo -flag PrintGC 94243
 -XX:+PrintGC
-> jinfo -flag -PrintGC 94243
-> jinfo -flag PrintGC 94243
+$ jinfo -flag -PrintGC 94243
+$ jinfo -flag PrintGC 94243
 -XX:-PrintGC
 ```
 
 * `jinfo -flag <name>=<value> <pid>`: 设置指定名称的JVM参数的值
 
 ```console
-> jinfo -flag MaxHeapFreeRatio 94243
+$ jinfo -flag MaxHeapFreeRatio 94243
 -XX:MaxHeapFreeRatio=100
-> jinfo -flag MaxHeapFreeRatio=80 94243
+$ jinfo -flag MaxHeapFreeRatio=80 94243
 -XX:MaxHeapFreeRatio=80
 ```
 
 * `jinfo -flags <pid>`: 输出JVM参数
 
 ```console
-> jinfo -flags 94243
+$ jinfo -flags 94243
 Non-default VM flags: -XX:CICompilerCount=4 -XX:InitialHeapSize=268435456 -XX:MaxHeapSize=4294967296 -XX:MaxNewSize=1431306240 -XX:MinHeapDeltaBytes=524288 -XX:NewSize=89128960 -XX:OldSize=179306496 -XX:+UseCompressedClassPointers -XX:+UseCompressedOops -XX:+UseFastUnorderedTimeStamps -XX:+UseParallelGC 
 Command line:  -Didea.launcher.port=7534 -Didea.launcher.bin.path=/Applications/IntelliJ IDEA 15.app/Contents/bin -Dfile.encoding=UTF-8
 ```
@@ -666,7 +673,7 @@ Command line:  -Didea.launcher.port=7534 -Didea.launcher.bin.path=/Applications/
 * `jinfo -sysprops <pid>`: 输出Java系统属性
 
 ```console
-> jinfo -sysprops 94243
+$ jinfo -sysprops 94243
 java.runtime.name = Java(TM) SE Runtime Environment
 java.vm.version = 25.71-b15
 sun.boot.library.path = /Library/Java/JavaVirtualMachines/jdk1.8.0_71.jdk/Contents/Home/jre/lib
@@ -676,7 +683,7 @@ sun.boot.library.path = /Library/Java/JavaVirtualMachines/jdk1.8.0_71.jdk/Conten
 可以在运行时通过`jinfo`动态修改的JVM参数:
 
 ```console
-java -XX:+PrintFlagsFinal | grep manageable
+$ java -XX:+PrintFlagsFinal | grep manageable
  intx CMSAbortablePrecleanWaitMillis            = 100                                 {manageable}
  intx CMSTriggerInterval                        = -1                                  {manageable}
  intx CMSWaitDuration                           = 2000                                {manageable}
