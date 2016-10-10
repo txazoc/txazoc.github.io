@@ -23,6 +23,8 @@ date:       2016-09-30
 * [jhat](#jhat)
 * [jinfo](#jinfo)
 * [jcmd](#jcmd)
+* [jmc](#jmc)
+* [jfr](#jfr)
 
 #### <a id="java">java</a>
 
@@ -631,6 +633,8 @@ options:
 
 浏览器访问 [http://127.0.0.1:7888](http://127.0.0.1:7888) 查看分析结果
 
+![堆转储分析结果](/images/java/jhat.png =540x)
+
 #### <a id="jinfo">jinfo</a>
 
 Java Configuration Info，Java配置信息
@@ -802,4 +806,18 @@ JDK 7.0_80
 24060:
 OpenJDK 64-Bit Server VM version 25.40-b25
 JDK 8.0_40
+```
+
+#### <a id="jmc">jmc</a>
+
+Java Mission Control，Java任务控制
+
+* `jmc`
+
+#### <a id="jfr">jfr</a>
+
+Java Flight Recorder，Java飞行记录器
+
+```console
+java -XX:+UnlockCommercialFeatures -XX:+FlightRecorder -XX:StartFlightRecording=duration=60s,filename=myrecording.jfr MyApp
 ```
