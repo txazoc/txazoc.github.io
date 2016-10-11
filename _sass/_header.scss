@@ -139,10 +139,10 @@ $navbar-hover-background-color: top, #f99, #f66, #f99;
 
     > li {
         > a {
-            padding: ($navbar-height - 16px) / 2 $menu-padding - $menu-font-size / 2 ($navbar-height - 16px) / 2 $menu-padding + $menu-font-size / 2;
+            padding: ($navbar-height - 16px) / 2 $menu-padding - ($menu-font-size / 2) / 2 ($navbar-height - 16px) / 2 $menu-padding + ($menu-font-size / 2) / 2;
             height: $navbar-height;
             font-size: $menu-font-size;
-            letter-spacing: $menu-font-size !important;
+            letter-spacing: $menu-font-size / 2 !important;
             line-height: $menu-font-size;
             text-align: center;
 

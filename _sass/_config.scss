@@ -27,9 +27,9 @@ $wrapper-max-width: $media-divide-width;
 $logo-width: 120px;
 
 // 菜单
-$menu-count: 4;
+$menu-count: 5;
 $menu-font-size: 16px;
-$menu-padding: ($media-divide-width - $logo-width - $menu-count * $menu-font-size * 3 - $wrapper-padding * 2 - 126px) / $menu-count / 2;
+$menu-padding: ($media-divide-width - $logo-width - $menu-count * $menu-font-size * 2.5 - $wrapper-padding * 2 - 40px) / $menu-count / 2;
 
 // 工具条
 $toolbar-size: 52px;
