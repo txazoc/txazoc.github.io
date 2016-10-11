@@ -53,4 +53,4 @@ json.dump(topicMap, open(topicJs, 'a'))
 
 writeFile(topicJs, 'a', ';')
 
-print 'build topic list success.\n\n'
+print 'build topic list success.\n'
