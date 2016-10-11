@@ -1,1 +1,1 @@
-var topicList = {"jstat": {"relativePath": "/jdk", "title": "jstat", "module": "\u547d\u4ee4\u884c", "fileName": "jstat"}, "jcmd": {"relativePath": "", "title": "jcmd", "module": "\u547d\u4ee4\u884c", "fileName": "jcmd"}};
+var topicList = {"jstat": {"path": "/jdk/jstat.html", "module": "\u547d\u4ee4\u884c", "title": "jstat"}, "jcmd": {"path": "/jcmd.html", "module": "\u547d\u4ee4\u884c", "title": "jcmd"}};

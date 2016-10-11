@@ -3,15 +3,14 @@
 import os
 import json
 
-class Topic:
-    def __init__(self, fileName, relativePath, title, module):
-        self.fileName = fileName
-        self.relativePath = relativePath
-        self.title = title
-        self.module = module
-
 topicMap = {}
 rootDir = os.getcwd() + '/topic'
+
+class Topic:
+    def __init__(self, path, title, module):
+        self.path = path
+        self.title = title
+        self.module = module
 
 def buildTopicList(relativePath):
     fullPath = rootDir + '/' + relativePath
@@ -24,7 +23,8 @@ def buildTopicList(relativePath):
         else:
             topic = readTopic(childFullPath)
             fileName = child.replace('.md', '')
-            topicMap[fileName] = Topic(fileName, relativePath, topic['title'], topic['module']).__dict__
+            topicMap[fileName] = Topic(relativePath + '/' + fileName + '.html', topic['title'],
+                                       topic['module']).__dict__
 
 def readTopic(file):
     topic = {}
@@ -42,15 +42,18 @@ def writeFile(file, mode, content):
     f.write(content)
     f.close()
 
-topicJs = os.getcwd() + '/js/topic.js'
+def main():
+    print '[python] build topic list begin.'
 
-buildTopicList('')
-# print topicMap
+    topicJs = os.getcwd() + '/js/topic.js'
+    buildTopicList('')
+    for (k, v) in topicMap.items():
+        print v
 
-writeFile(topicJs, 'w', 'var topicList = ')
+    writeFile(topicJs, 'w', 'var topicList = ')
+    json.dump(topicMap, open(topicJs, 'a'))
+    writeFile(topicJs, 'a', ';')
 
-json.dump(topicMap, open(topicJs, 'a'))
+    print '[python] build topic list success.'
 
-writeFile(topicJs, 'a', ';')
-
-print '[python] build topic list success.\n'
+main()
