@@ -196,6 +196,7 @@ define(function (require, exports, module) {
         initTags: function () {
             var tag = Init.getUrlParamValue('tag');
             if (tag == null || (tag = tag.trim()) == '') {
+                Init.redirectUrl('/404.html');
                 return;
             }
 
