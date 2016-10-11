@@ -45,10 +45,12 @@ def writeFile(file, mode, content):
 topicJs = os.getcwd() + '/js/topic.js'
 
 buildTopicList('')
-print topicMap
+# print topicMap
 
 writeFile(topicJs, 'w', 'var topicList = ')
 
 json.dump(topicMap, open(topicJs, 'a'))
 
 writeFile(topicJs, 'a', ';')
+
+print 'build topic list success.\n\n'
