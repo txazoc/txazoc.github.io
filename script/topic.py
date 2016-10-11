@@ -50,7 +50,7 @@ def main():
     for (k, v) in topicMap.items():
         print v
 
-    writeFile(topicJs, 'w', 'var topicList = ')
+    writeFile(topicJs, 'w', 'var TopicList = ')
     json.dump(topicMap, open(topicJs, 'a'))
     writeFile(topicJs, 'a', ';')
 

@@ -1,6 +1,6 @@
 ---
 layout: topic
-module: 命令行
+module: jdk
 title:  jstat
 ---
 

@@ -159,6 +159,8 @@ define(function (require, exports, module) {
                 Init.initTags();
             } else if (Page == 'archive') {
                 Init.initArchive();
+            } else if (Page == 'topics') {
+                Init.initTopics();
             }
         },
 
@@ -321,8 +323,37 @@ define(function (require, exports, module) {
             return parseInt(mm.substring(0, 2));
         },
 
-        prefillZero: function(i) {
+        prefillZero: function (i) {
             return i < 10 ? '0' + i : i;
+        },
+
+        initTopics: function () {
+            require.async('topic', function () {
+                Init.sortTopic();
+            });
+        },
+
+        sortTopic: function () {
+            var modules = {};
+            $.each(TopicList, function (k, v) {
+                if (!modules[v.module]) {
+                    modules[v.module] = [];
+                }
+                modules[v.module].push(k);
+            });
+
+            var $topics = $('.topics');
+            $.each(modules, function (k, v) {
+                var html = '<div class="topic">';
+                html += '<div class="topic-header"><h3>' + k + '</h3></div>';
+                html += '<div class="topic-list">';
+                $.each(v, function (i) {
+                    var t = TopicList[v[i]];
+                    html += '<span><a href="topic' + t.path + '">' + t.title + '</a></span>';
+                });
+                html += '</div></div>';
+                $topics.append(html);
+            });
         }
     };
 

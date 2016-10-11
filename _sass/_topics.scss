@@ -1,0 +1,47 @@
+@charset "UTF-8";
+
+// Topics
+.topic-search {
+    margin-top: 30px;
+    text-align: center;
+
+    .ui.input input {
+        letter-spacing: 0.5px;
+        border-radius: 8px;
+        font: 400 14px/1.5 Menlo, "Courier New", Consolas, Monaco, "Andale Mono", monospace;
+    }
+}
+
+.topics {
+    margin-top: 10px;
+
+    .topic {
+        padding-bottom: 20px;
+        border-bottom: 1px solid #e9F3F3;
+
+        .topic-header {
+            h3 {
+                line-height: 2;
+                color: #f1a7d1;
+                font-size: 18px;
+            }
+        }
+
+        .topic-list {
+            span {
+                margin-top: 10px;
+                margin-right: 20px;
+                font-size: 14px;
+                display: inline-block;
+
+                a {
+                    color: #6cc;
+
+                    &:hover {
+                        color: #f66;
+                    }
+                }
+            }
+        }
+    }
+}
