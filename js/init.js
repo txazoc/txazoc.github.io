@@ -8,6 +8,7 @@ define(function (require, exports, module) {
 
     var Init = {
         initFlag: false,
+        lastWindowWidth: 0,
 
         init: function () {
             // 事件
@@ -30,9 +31,10 @@ define(function (require, exports, module) {
             Init.resize();
 
             $(window).resize(function () {
-                if (!Init.initFlag) {
-                    Init.resize();
-                }
+                Init.resize();
+                //if (!Init.initFlag) {
+                //    Init.resize();
+                //}
             });
 
             $('.icon-qq').on('click', function () {
@@ -49,6 +51,13 @@ define(function (require, exports, module) {
         },
 
         resize: function () {
+            var windowWidth = $(document).width();
+            if (windowWidth == Init.lastWindowWidth) {
+                return;
+            }
+
+            Init.lastWindowWidth = windowWidth;
+
             var windowHeight = $(document).height();
             var headHeight = $('#header').innerHeight();
             var footHeight = $('#footer').show().innerHeight();
