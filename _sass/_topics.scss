@@ -33,7 +33,7 @@
     margin-top: 30px;
 
     .topic {
-        padding: 15px 16px;
+        padding: 16px 16px;
         border: 1px solid #dfdfdf;
         border-radius: 10px;
 
@@ -43,7 +43,7 @@
 
         .topic-header {
             h3 {
-                padding: 2px 0;
+                padding-bottom: 6px;
                 color: #ed9595;
                 font-size: 18px;
                 letter-spacing: 1px;
@@ -52,7 +52,7 @@
 
         .topic-list {
             span {
-                margin: 15px 20px 0 0;
+                margin: 10px 20px 0 0;
                 font-size: 14px;
                 display: inline-block;
 
@@ -67,4 +67,11 @@
             }
         }
     }
+}
+
+.topic-tip {
+    display: none;
+    text-align: center;
+    font-size: 16px;
+    color: #bbb;
 }

@@ -347,16 +347,28 @@ define(function (require, exports, module) {
                     var that = this;
                     LastSearchInputTime = new Date().getTime();
                     setTimeout(function () {
-                        if (new Date().getTime() - LastSearchInputTime >= 500) {
+                        if (new Date().getTime() - LastSearchInputTime >= 800) {
                             var key = $(that).val();
                             if (key != '' && (key = key.trim()) != '') {
+                                $(that).val(key);
+                                var showList = false;
+                                var keys = key.split(/\s+/);
                                 $('.topics').find('.topic').each(function () {
                                     var show = false;
                                     $(this).find('.topic-list span').each(function () {
+                                        var matched = false;
                                         var name = $(this).children(':first').html();
-                                        if (name.indexOf(key) >= 0) {
+                                        for (var i in keys) {
+                                            if (name.indexOf(keys[i]) >= 0) {
+                                                matched = true;
+                                                break;
+                                            }
+                                        }
+
+                                        if (matched) {
                                             $(this).show();
                                             show = true;
+                                            showList = true;
                                         } else {
                                             $(this).hide();
                                         }
@@ -367,13 +379,18 @@ define(function (require, exports, module) {
                                         $(this).hide();
                                     }
                                 });
+                                if (showList) {
+                                    $('.topic-tip').hide();
+                                } else {
+                                    $('.topic-tip').show();
+                                }
                             } else {
                                 $('.topics').find('.topic').each(function () {
                                     $(this).show().find('.topic-list span').show();
                                 });
                             }
                         }
-                    }, 500);
+                    }, 800);
                 });
             });
         },
