@@ -1,6 +1,6 @@
 ---
 layout: topic
-module: jdk
+module: JDK
 title:  javap
 ---
 
