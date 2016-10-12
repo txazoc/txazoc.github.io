@@ -357,9 +357,9 @@ define(function (require, exports, module) {
                                     var show = false;
                                     $(this).find('.topic-list span').each(function () {
                                         var matched = false;
-                                        var name = $(this).children(':first').html();
+                                        var name = $(this).children(':first').html().toLowerCase();
                                         for (var i in keys) {
-                                            if (name.indexOf(keys[i]) >= 0) {
+                                            if (name.indexOf(keys[i].toLowerCase()) >= 0) {
                                                 matched = true;
                                                 break;
                                             }
