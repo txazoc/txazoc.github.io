@@ -340,6 +340,10 @@ define(function (require, exports, module) {
         },
 
         initTopics: function () {
+            require.async('input-css', function () {
+                $('.topic-search .ui.input').show();
+            });
+
             require.async('topic', function () {
                 Init.buildTopic();
 

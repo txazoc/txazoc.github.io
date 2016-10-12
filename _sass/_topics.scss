@@ -5,26 +5,30 @@
     padding-top: 30px;
     text-align: center;
 
-    .ui.input input {
-        color: #dfdfdf;
-        letter-spacing: 0.5px;
-        border-radius: 10px;
-        font: 400 14px/1.5 Menlo, "Courier New", Consolas, Monaco, "Andale Mono", monospace;
-        -webkit-appearance: none;
+    .ui.input {
+        display: none;
 
-        &:focus {
-            border-color: #ed9595;
-            color: #6cc;
-        }
+        input {
+            color: #dfdfdf;
+            letter-spacing: 0.5px;
+            border-radius: 10px;
+            font: 400 14px/1.5 Menlo, "Courier New", Consolas, Monaco, "Andale Mono", monospace;
+            -webkit-appearance: none;
 
-        &:focus::-webkit-input-placeholder {
-            color: #fff;
-        }
-        &:focus::-moz-placeholder {
-            color: #fff;
-        }
-        &:focus:-ms-input-placeholder {
-            color: #fff;
+            &:focus {
+                border-color: #ed9595;
+                color: #6cc;
+            }
+
+            &:focus::-webkit-input-placeholder {
+                color: #fff;
+            }
+            &:focus::-moz-placeholder {
+                color: #fff;
+            }
+            &:focus:-ms-input-placeholder {
+                color: #fff;
+            }
         }
     }
 }

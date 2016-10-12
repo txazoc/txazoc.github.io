@@ -3,7 +3,8 @@ seajs.config({
     alias: {
         'init': 'init.js',
         'data': 'data.js',
-        'topic': 'topic.js'
+        'topic': 'topic.js',
+        'input-css': '../css/input.min.css'
     }
 });
 
