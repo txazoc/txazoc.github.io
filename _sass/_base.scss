@@ -6,6 +6,11 @@ html, body, header, nav, footer, div, h1, h2, h3, h4, h5, h6, p, pre, blockquote
     padding: 0;
 }
 
+html {
+    overflow-y: scroll;
+    overflow: -moz-scrollbars-vertical;
+}
+
 // Body
 body {
     font: $default-font-weight #{$default-font-size}/#{$default-line-height} $default-font-family;
