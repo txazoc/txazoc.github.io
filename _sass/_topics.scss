@@ -6,10 +6,26 @@
     text-align: center;
 
     .ui.input input {
+        color: #dfdfdf;
         letter-spacing: 0.5px;
         border-radius: 10px;
         font: 400 14px/1.5 Menlo, "Courier New", Consolas, Monaco, "Andale Mono", monospace;
         -webkit-appearance: none;
+
+        &:focus {
+            border-color: #ed9595;
+            color: #6cc;
+        }
+
+        &:focus::-webkit-input-placeholder {
+            color: #fff;
+        }
+        &:focus::-moz-placeholder {
+            color: #fff;
+        }
+        &:focus:-ms-input-placeholder {
+            color: #fff;
+        }
     }
 }
 
@@ -28,7 +44,7 @@
         .topic-header {
             h3 {
                 padding: 2px 0;
-                color: #f1a7d1;
+                color: #ed9595;
                 font-size: 18px;
                 letter-spacing: 1px;
             }
