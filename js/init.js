@@ -7,6 +7,8 @@ define(function (require, exports, module) {
     var LastSearchInputTime = 0;
 
     var Init = {
+        initFlag: false,
+
         init: function () {
             // 事件
             Init.initEvent();
@@ -28,7 +30,9 @@ define(function (require, exports, module) {
             Init.resize();
 
             $(window).resize(function () {
-                Init.resize();
+                if (!Init.initFlag) {
+                    Init.resize();
+                }
             });
 
             $('.icon-qq').on('click', function () {
@@ -61,6 +65,7 @@ define(function (require, exports, module) {
                     hljs.highlightBlock(e);
                     $(this).parent().addClass('hljs-dark').show();
                 });
+                Init.initFlag = true;
             }
         },
 
@@ -186,6 +191,7 @@ define(function (require, exports, module) {
                 $tags.delegate('.item span', 'click', function () {
                     Init.redirectUrl('/tags.html?tag=' + $(this).attr('tag'));
                 }).show();
+                Init.initFlag = true;
             });
         },
 
@@ -212,6 +218,7 @@ define(function (require, exports, module) {
                 });
                 Init.displayTag(tag, postArray.length);
                 Init.displayPost(postArray);
+                Init.initFlag = true;
             });
         },
 
@@ -235,6 +242,7 @@ define(function (require, exports, module) {
             Init.loadData(function () {
                 var monthPost = Init.sortPostByMonth();
                 Init.displayPostByMonth(monthPost);
+                Init.initFlag = true;
             });
         },
 
@@ -366,6 +374,8 @@ define(function (require, exports, module) {
                         }
                     }, 500);
                 });
+
+                Init.initFlag = true;
             });
         },
 
