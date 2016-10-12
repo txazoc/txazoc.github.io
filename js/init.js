@@ -4,6 +4,8 @@ define(function (require, exports, module) {
 
     var LandScapeSvg = ['beach.svg', 'castle.svg', 'cityscape.svg', 'fields.svg', 'forest.svg', 'hills.svg', 'iceberg.svg', 'mill.svg', 'river.svg', 'spruce.svg', 'trees.svg', 'waterfall.svg', 'windmills.svg'];
 
+    var LastSearchInputTime = 0;
+
     var Init = {
         init: function () {
             // 事件
@@ -330,11 +332,44 @@ define(function (require, exports, module) {
 
         initTopics: function () {
             require.async('topic', function () {
-                Init.sortTopic();
+                Init.buildTopic();
+
+                $('.topic-search').delegate('input', 'input propertychange', function () {
+                    var that = this;
+                    LastSearchInputTime = new Date().getTime();
+                    setTimeout(function () {
+                        if (new Date().getTime() - LastSearchInputTime >= 500) {
+                            var key = $(that).val();
+                            if (key != '' && (key = key.trim()) != '') {
+                                $('.topics').find('.topic').each(function () {
+                                    var show = false;
+                                    $(this).find('.topic-list span').each(function () {
+                                        var name = $(this).children(':first').html();
+                                        if (name.indexOf(key) >= 0) {
+                                            $(this).show();
+                                            show = true;
+                                        } else {
+                                            $(this).hide();
+                                        }
+                                    });
+                                    if (show) {
+                                        $(this).show();
+                                    } else {
+                                        $(this).hide();
+                                    }
+                                });
+                            } else {
+                                $('.topics').find('.topic').each(function () {
+                                    $(this).show().find('.topic-list span').show();
+                                });
+                            }
+                        }
+                    }, 500);
+                });
             });
         },
 
-        sortTopic: function () {
+        buildTopic: function () {
             var modules = {};
             $.each(TopicList, function (k, v) {
                 if (!modules[v.module]) {
