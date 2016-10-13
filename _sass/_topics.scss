@@ -61,11 +61,11 @@
                 display: inline-block;
 
                 a {
-                    color: #6cc;
+                    color: lighten(#6cc, 5%);
                     letter-spacing: 1px;
 
                     &:hover {
-                        color: #f66;
+                        color: lighten(#f66, 5%);
                     }
                 }
             }
