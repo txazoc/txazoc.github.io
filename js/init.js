@@ -412,21 +412,30 @@ define(function (require, exports, module) {
         },
 
         buildTopic: function () {
-            var modules = {};
-            $.each(TopicList, function (k, v) {
-                if (!modules[v.module]) {
-                    modules[v.module] = [];
-                }
-                modules[v.module].push(k);
+            var $topics = $('.topics');
+
+            var modules = [];
+            $.each(TopicModule, function (k, v) {
+                modules.push(k);
             });
 
-            var $topics = $('.topics');
-            $.each(modules, function (k, v) {
+            modules.sort(function (m1, m2) {
+                return Init.sortStr(m1, m2);
+            });
+
+            $.each(modules, function (i) {
+                var k = modules[i];
+                var v = TopicModule[k];
                 var html = '<div class="topic">';
                 html += '<div class="topic-header"><h3>' + k + '</h3></div>';
                 html += '<div class="topic-list">';
-                $.each(v, function (i) {
-                    var t = TopicList[v[i]];
+
+                v.sort(function (v1, v2) {
+                    return Init.sortStr(v1.title, v2.title);
+                });
+
+                $.each(v, function (j) {
+                    var t = v[j];
                     html += '<span><a href="/topic' + t.path + '">' + t.title + '</a></span>';
                 });
                 html += '</div></div>';
@@ -434,19 +443,37 @@ define(function (require, exports, module) {
             });
         },
 
+        sortStr: function (s1, s2) {
+            if (Init.isLetter(s1.charAt(0)) && !Init.isLetter(s2.charAt(0))) {
+                return -1;
+            }
+            if (!Init.isLetter(s1.charAt(0)) && Init.isLetter(s2.charAt(0))) {
+                return 1;
+            }
+            return s1.localeCompare(s2);
+        },
+
+        isLetter: function (str) {
+            var reg = /[a-zA-Z]+/;
+            return reg.test(str);
+        },
+
         initTopic: function (pathName) {
             var path = pathName.substring(6, pathName.length);
             require.async('topic', function () {
-                $.each(TopicList, function (k, v) {
-                    if (v['path'] == path) {
-                        $('.topic-nav')
-                            .append('<a href="/topics.html">专题</a>')
-                            .append('<span class="dire">&gt;&gt;</span>')
-                            .append('<span class="tag">' + v['module'] + '</span>')
-                            .append('<span class="dire">&gt;&gt;</span>')
-                            .append('<span class="tag">' + v['title'] + '</span>')
-                            .css('visibility', 'visible');
-                    }
+                $.each(TopicModule, function (k, v) {
+                    $.each(v, function (i) {
+                        var t = v[i];
+                        if (t['path'] == path) {
+                            $('.topic-nav')
+                                .append('<a href="/topics.html">专题</a>')
+                                .append('<span class="dire">&gt;&gt;</span>')
+                                .append('<span class="tag">' + t['module'] + '</span>')
+                                .append('<span class="dire">&gt;&gt;</span>')
+                                .append('<span class="tag">' + t['title'] + '</span>')
+                                .css('visibility', 'visible');
+                        }
+                    });
                 });
             });
         }

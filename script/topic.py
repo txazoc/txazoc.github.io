@@ -3,7 +3,7 @@
 import os
 import json
 
-topicMap = {}
+topicModule = {}
 rootDir = os.getcwd() + '/topic'
 
 class Topic:
@@ -12,20 +12,25 @@ class Topic:
         self.title = title
         self.module = module
 
-def buildTopicList(relativePath):
+def buildTopicModule(relativePath):
     fullPath = rootDir + '/' + relativePath
     childs = os.listdir(fullPath)
     for child in childs:
         childRelativePath = relativePath + '/' + child
         childFullPath = rootDir + '/' + childRelativePath
         if os.path.isdir(childFullPath):
-            buildTopicList(childRelativePath)
+            buildTopicModule(childRelativePath)
         else:
             topic = readTopic(childFullPath)
             if not (topic.has_key('published')) or topic['published'] != 'false':
                 fileName = child.replace('.md', '')
-                topicMap[fileName] = Topic(relativePath + '/' + fileName + '.html', topic['title'],
-                                           topic['module']).__dict__
+                path = relativePath + '/' + fileName + '.html'
+                addTopic(Topic(path, topic['title'], topic['module']).__dict__)
+
+def addTopic(topic):
+    if not topicModule.has_key(topic['module']):
+        topicModule[topic['module']] = []
+    topicModule[topic['module']].append(topic)
 
 def readTopic(file):
     topic = {}
@@ -44,17 +49,22 @@ def writeFile(file, mode, content):
     f.close()
 
 def main():
-    print '[python] build topic list begin.'
+    print '[python] build topic module begin.'
+    print '------------------------------'
 
     topicJs = os.getcwd() + '/js/topic.js'
-    buildTopicList('')
-    for (k, v) in topicMap.items():
-        print v
+    buildTopicModule('')
 
-    writeFile(topicJs, 'w', 'var TopicList = ')
-    json.dump(topicMap, open(topicJs, 'a'))
+    for (k, v) in topicModule.items():
+        print '[' + k + ']'
+        for t in v:
+            print '    ' + t['path']
+
+    writeFile(topicJs, 'w', 'var TopicModule = ')
+    json.dump(topicModule, open(topicJs, 'a'))
     writeFile(topicJs, 'a', ';')
 
-    print '[python] build topic list success.'
+    print '------------------------------'
+    print '[python] build topic module success.'
 
 main()
