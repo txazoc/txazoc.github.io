@@ -1,5 +1,5 @@
 ---
 layout: topic
 module: Python
-title: 元祖
+title: 元组
 ---

@@ -370,29 +370,28 @@ define(function (require, exports, module) {
                                 var showList = false;
                                 var keys = key.split(/\s+/);
                                 $('.topics').find('.topic').each(function () {
-                                    var show = false;
-                                    $(this).find('.topic-list span').each(function () {
-                                        var matched = false;
-                                        var name = $(this).children(':first').html().toLowerCase();
-                                        for (var i in keys) {
-                                            if (name.indexOf(keys[i].toLowerCase()) >= 0) {
-                                                matched = true;
-                                                break;
+                                    var module = $(this).find('.topic-header h3').html();
+                                    if (Init.matchTopic(module, keys)) {
+                                        $(this).find('.topic-list span').show();
+                                        $(this).show();
+                                        showList = true;
+                                    } else {
+                                        var show = false;
+                                        $(this).find('.topic-list span').each(function () {
+                                            var name = $(this).children(':first').html().toLowerCase();
+                                            if (Init.matchTopic(name, keys)) {
+                                                $(this).show();
+                                                show = true;
+                                                showList = true;
+                                            } else {
+                                                $(this).hide();
                                             }
-                                        }
-
-                                        if (matched) {
+                                        });
+                                        if (show) {
                                             $(this).show();
-                                            show = true;
-                                            showList = true;
                                         } else {
                                             $(this).hide();
                                         }
-                                    });
-                                    if (show) {
-                                        $(this).show();
-                                    } else {
-                                        $(this).hide();
                                     }
                                 });
                                 if (showList) {
@@ -409,6 +408,15 @@ define(function (require, exports, module) {
                     }, 800);
                 });
             });
+        },
+
+        matchTopic: function (name, keys) {
+            for (var i in keys) {
+                if (name.toLowerCase().indexOf(keys[i].toLowerCase()) >= 0) {
+                    return true;
+                }
+            }
+            return false;
         },
 
         buildTopic: function () {
