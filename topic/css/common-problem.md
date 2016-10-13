@@ -1,7 +1,7 @@
 ---
 layout: topic
 module: CSS
-title:  兼容
+title:  常见问题
 ---
 
 #### 移动端清除输入框内阴影

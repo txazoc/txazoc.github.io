@@ -166,21 +166,24 @@ define(function (require, exports, module) {
         initPage: function () {
             var index;
             var pathName = window.location.pathname;
-            if ((index = pathName.lastIndexOf('/')) >= 0) {
-                pathName = pathName.substring(index + 1, pathName.length);
+            var pageName = pathName;
+            if ((index = pageName.lastIndexOf('/')) >= 0) {
+                pageName = pageName.substring(index + 1, pageName.length);
             }
-            if ((index = pathName.indexOf('.')) >= 0) {
-                pathName = pathName.substring(0, index);
+            if ((index = pageName.indexOf('.')) >= 0) {
+                pageName = pageName.substring(0, index);
             }
 
-            if (pathName == 'tag') {
+            if (pageName == 'tag') {
                 Init.initTag();
-            } else if (pathName == 'tags') {
+            } else if (pageName == 'tags') {
                 Init.initTags();
-            } else if (pathName == 'archive') {
+            } else if (pageName == 'archive') {
                 Init.initArchive();
-            } else if (pathName == 'topics') {
+            } else if (pageName == 'topics') {
                 Init.initTopics();
+            } else if (pathName.length > 6 && pathName.substr(0, 7) == '/topic/') {
+                Init.initTopic(pathName);
             }
         },
 
@@ -424,10 +427,27 @@ define(function (require, exports, module) {
                 html += '<div class="topic-list">';
                 $.each(v, function (i) {
                     var t = TopicList[v[i]];
-                    html += '<span><a href="topic' + t.path + '">' + t.title + '</a></span>';
+                    html += '<span><a href="/topic' + t.path + '">' + t.title + '</a></span>';
                 });
                 html += '</div></div>';
                 $topics.append(html);
+            });
+        },
+
+        initTopic: function (pathName) {
+            var path = pathName.substring(6, pathName.length);
+            require.async('topic', function () {
+                $.each(TopicList, function (k, v) {
+                    if (v['path'] == path) {
+                        $('.topic-nav')
+                            .append('<a href="/topics.html">专题</a>')
+                            .append('<span class="dire">&gt;&gt;</span>')
+                            .append('<span class="tag">' + v['module'] + '</span>')
+                            .append('<span class="dire">&gt;&gt;</span>')
+                            .append('<span class="tag">' + v['title'] + '</span>')
+                            .css('visibility', 'visible');
+                    }
+                });
             });
         }
     };
