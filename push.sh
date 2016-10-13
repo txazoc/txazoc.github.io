@@ -6,6 +6,7 @@ git add .
 git cm 'update'
 git push origin master
 
+echo '--------------------------------------------------'
 echo 'sleep 5s waiting github pages to build ...'
 sleep 5
 

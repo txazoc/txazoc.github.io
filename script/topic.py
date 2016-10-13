@@ -50,7 +50,7 @@ def writeFile(file, mode, content):
 
 def main():
     print '[python] build topic module begin.'
-    print '------------------------------'
+    print '--------------------------------------------------'
 
     topicJs = os.getcwd() + '/js/topic.js'
     buildTopicModule('')
@@ -64,7 +64,7 @@ def main():
     json.dump(topicModule, open(topicJs, 'a'))
     writeFile(topicJs, 'a', ';')
 
-    print '------------------------------'
+    print '--------------------------------------------------'
     print '[python] build topic module success.'
 
 main()
