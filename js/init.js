@@ -164,13 +164,22 @@ define(function (require, exports, module) {
         },
 
         initPage: function () {
-            if (Page == 'tag') {
+            var index;
+            var pathName = window.location.pathname;
+            if ((index = pathName.lastIndexOf('/')) >= 0) {
+                pathName = pathName.substring(index + 1, pathName.length);
+            }
+            if ((index = pathName.indexOf('.')) >= 0) {
+                pathName = pathName.substring(0, index);
+            }
+
+            if (pathName == 'tag') {
                 Init.initTag();
-            } else if (Page == 'tags') {
+            } else if (pathName == 'tags') {
                 Init.initTags();
-            } else if (Page == 'archive') {
+            } else if (pathName == 'archive') {
                 Init.initArchive();
-            } else if (Page == 'topics') {
+            } else if (pathName == 'topics') {
                 Init.initTopics();
             }
         },
