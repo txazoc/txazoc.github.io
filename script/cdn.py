@@ -17,7 +17,7 @@ import traceback
 access_key_id = '';
 access_key_secret = '';
 cdn_server_address = 'https://cdn.aliyuncs.com'
-CONFIGFILE = os.getcwd() + '/aliyun.ini'
+CONFIGFILE = os.getcwd() + '/script/aliyun.ini'
 CONFIGSECTION = 'Credentials'
 cmdlist = '''
 接口说明请参照pdf文档
