@@ -237,7 +237,7 @@ define(function (require, exports, module) {
         },
 
         displayTag: function (tag, size) {
-            $('#main').find('.wrapper').html($('<div class="list_tag"></div>').append($('<a href="/tag.html">标签</a>')).append($('<span class="dire"></span>').html('>>')).append($('<span class="tag"></span>').html(tag)));
+            $('#main').find('.wrapper').html($('<div class="list_tag"></div>').append($('<a href="http://www.txazo.com/tag.html">标签</a>')).append($('<span class="dire"></span>').html('>>')).append($('<span class="tag"></span>').html(tag)));
         },
 
         displayPost: function (posts) {
@@ -474,7 +474,7 @@ define(function (require, exports, module) {
                         var t = v[i];
                         if (t['path'] == path) {
                             $('.topic-nav')
-                                .append('<a href="/topics.html">专题</a>')
+                                .append('<a href="http://www.txazo.com/topics.html">专题</a>')
                                 .append('<span class="dire">&gt;&gt;</span>')
                                 .append('<span class="tag">' + t['module'] + '</span>')
                                 .append('<span class="dire">&gt;&gt;</span>')

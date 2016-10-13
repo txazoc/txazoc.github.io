@@ -26,6 +26,7 @@ highlightstyle: hljs-txazo
 
 local: "false"
 
+indexDomain: 'http://www.txazo.com'
 staticDomain: 'http://image.txazo.com'
 
 # css引入
