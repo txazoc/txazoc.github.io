@@ -22,9 +22,10 @@ def buildTopicList(relativePath):
             buildTopicList(childRelativePath)
         else:
             topic = readTopic(childFullPath)
-            fileName = child.replace('.md', '')
-            topicMap[fileName] = Topic(relativePath + '/' + fileName + '.html', topic['title'],
-                                       topic['module']).__dict__
+            if not (topic.has_key('published')) or topic['published'] != 'false':
+                fileName = child.replace('.md', '')
+                topicMap[fileName] = Topic(relativePath + '/' + fileName + '.html', topic['title'],
+                                           topic['module']).__dict__
 
 def readTopic(file):
     topic = {}

@@ -7,6 +7,10 @@
         </div>
     </div>
 </footer>
-
+{% if site.local == 'true' %}
+{% for js in site.localJs %}<script src="{{ js | prepend: site.baseurl }}"></script>
+{% endfor %}
+{% else %}
 {% for js in site.js %}<script src="{{ js | prepend: site.baseurl }}"></script>
 {% endfor %}
+{% endif %}
