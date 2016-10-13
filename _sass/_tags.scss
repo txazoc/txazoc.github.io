@@ -22,23 +22,14 @@
             }
 
             span {
-                padding: 7px 14px;
-                font-size: 14px;
-                color: #FFF;
-                text-shadow: 1px 1px 1px #ccc;
-                border-radius: 14px;
+                padding: 6px 13px;
+                font-size: 13px;
+                border-radius: 13px;
                 white-space: nowrap;
                 cursor: pointer;
 
                 @media (max-width: $media-divide-width) {
                     padding: 6px 10px;
-                    border-radius: 14px;
-                }
-
-                &:hover {
-                    color: #f8f8f8;
-                    text-shadow: 1px 1px 1px #333;
-                    border-radius: 7px;
                 }
             }
         }
