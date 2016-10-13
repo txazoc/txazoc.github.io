@@ -6,8 +6,7 @@ git add .
 git cm 'update'
 git push origin master
 
-echo 'sleep 1'
-sleep 3
-echo 'sleep 3'
+echo 'sleep 5s waiting github pages to build ...'
+sleep 5
 
-python cdn-refresh.py
+python script/cdn-refresh.py
