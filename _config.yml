@@ -12,7 +12,7 @@ gems: [jekyll-paginate]
 # 网站设置
 title: "txazoc"
 email: "txazo1218@163.com"
-description: "java,openjdk,jvm,java web,设计模式,开源框架,struts2,spring,mybatis,数据库,mysql,linux,html,css,js,javascript,jquery"
+description: "java,openjdk,jvm,java web,设计模式,开源框架,struts2,spring,mybatis,数据库,mysql,linux,html,css,js,javascript,jquery,ruby,python,shell"
 baseurl: ""
 url: "http://www.txazo.com"
 
