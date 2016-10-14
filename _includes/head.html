@@ -16,9 +16,10 @@
     <meta name="format-detection" content="telephone=no">
     <link rel="shortcut icon" type="image/x-icon" href="/images/logo.png"/>
     <title>{% if page.title %}{{ page.title }}{% else %}{{ site.title }}{% endif %}</title>
-    <meta name="author" content="txazo"/>
+    <meta name="author" content="txazo">
     <meta name="description" content="{% if page.excerpt %}{{ page.excerpt | strip_html | strip_newlines | truncate: 160 }}{% else %}{{ site.description }}{% endif %}">
     <meta name="keywords" content="{% if page.excerpt %}{{ page.excerpt | strip_html | strip_newlines | truncate: 160 }}{% else %}{{ site.description }}{% endif %}">
+    <meta name="baidu-site-verification" content="f8coNhpWkq">
     {% if site.localDebug == 'true' %}{% for css in site.localCss %}<link rel="stylesheet" href="{{ css | prepend: site.baseurl }}">
     {% endfor %}{% else %}{% for css in site.css %}<link rel="stylesheet" href="{{ css | prepend: site.baseurl }}">
     {% endfor %}{% endif %}<link rel="canonical" href="{{ page.url | replace: 'index.html' ,'' | prepend: site.baseurl | prepend: site.url }}">
