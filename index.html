@@ -7,7 +7,7 @@ layout: default
         {% for post in paginator.posts %}
         <li>
             <h3 class="list-title">
-                <a href="{{ post.url | prepend: site.baseurl }}">{{ post.title }}</a>
+                <a href="{% if site.localDebug == 'true' %}{{ post.url | prepend: site.baseurl | prepend: site.localDomain }}{% else %}{{ post.url | prepend: site.baseurl | prepend: site.sourceDomain }}{% endif %}">{{ post.title }}</a>
             </h3>
             <div class="list-content">
                 <p>{{ post.content | strip_html | strip_newlines | truncate: 150 }}</p>

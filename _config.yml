@@ -24,10 +24,22 @@ markdownStyle: md-primary
 # highlight高亮样式
 highlightstyle: hljs-txazo
 
-local: "false"
+# 是否本地调试
+localDebug: "false"
 
-indexDomain: 'http://www.txazo.com'
-staticDomain: 'http://image.txazo.com'
+# 本地域名
+localDomain: "http://127.0.0.1:4000"
+# 源站域名
+sourceDomain: "http://github.txazo.com"
+# 首页加速域名
+indexSpeedDomain: 'http://www.txazo.com'
+# 静态加速域名
+staticSpeedDomain: 'http://image.txazo.com'
+
+# 百度统计开关
+hmSwitch: "true"
+# Google Analytics开关
+gaSwitch: "false"
 
 # css引入
 css: ["http://cdn.bootcss.com/bootstrap/3.3.6/css/bootstrap.min.css", "http://image.txazo.com/css/core.css"]

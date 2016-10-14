@@ -7,9 +7,13 @@ define(function (require, exports, module) {
     var LastSearchInputTime = 0;
 
     var Init = {
+        domain: 'http://www.txazo.com',
+
         lastWindowWidth: 0,
 
-        init: function () {
+        init: function (domain) {
+            Init.domain = domain;
+
             // 事件
             Init.initEvent();
 
@@ -24,6 +28,16 @@ define(function (require, exports, module) {
 
             // 代码高亮
             Init.initHighlight();
+        },
+
+        wrapDomain: function (url) {
+            if (url == null || url.trim() == '') {
+                return url;
+            }
+            if (url.indexOf('/') > -1) {
+                return Init.domain + url;
+            }
+            return Init.domain + '/' + url;
         },
 
         initEvent: function () {
@@ -147,7 +161,7 @@ define(function (require, exports, module) {
                 if (v == currentPage) {
                     p.css('color', '#999');
                 } else {
-                    p.addClass('hover').attr('href', v == 1 ? '/' : '/index/' + v);
+                    p.addClass('hover').attr('href', Init.wrapDomain(v == 1 ? '/' : '/index/' + v));
                 }
                 $page.append(p);
             });
@@ -205,7 +219,7 @@ define(function (require, exports, module) {
                     $items.append($('<div class="item"></div>').append($('<span></span>').attr('tag', t.name).attr('color', Color[i % Color.length]).addClass(Color[i % Color.length]).html(t.name + '(' + t.size + ')')));
                 });
                 $tags.delegate('.item span', 'click', function () {
-                    Init.redirectUrl('/tags.html?tag=' + $(this).attr('tag'));
+                    Init.redirectUrl(Init.wrapDomain('/tags.html?tag=' + $(this).attr('tag')));
                 }).show();
             });
         },
@@ -219,7 +233,7 @@ define(function (require, exports, module) {
         initTags: function () {
             var tag = Init.getUrlParamValue('tag');
             if (tag == null || (tag = tag.trim()) == '') {
-                Init.redirectUrl('/404.html');
+                Init.redirectUrl(Init.wrapDomain('/404.html'));
                 return;
             }
 
@@ -245,7 +259,7 @@ define(function (require, exports, module) {
             var list = listWrapper.find('ul');
             $.each(posts, function (i, p) {
                 list.append($('<li></li>')
-                    .append($('<h3 class="list-title"></h3>').append($('<a></a>').attr('href', p.url).html(p.title)))
+                    .append($('<h3 class="list-title"></h3>').append($('<a></a>').attr('href', Init.wrapDomain(p.url)).html(p.title)))
                     .append($('<div class="list-content"></div>').append($('<p></p>').html(p.content)))
                     .append($('<div class="list-info"></div>').append($('<span class="datetime"></span>').html(p.date))));
             });
@@ -279,7 +293,7 @@ define(function (require, exports, module) {
                 $month.append(
                     $('<div class="node">')
                         .append($('<div class="node_circle"></div>').append(
-                            $('<img/>').attr('src', '/images/svg/landscape/' + LandScapeSvg[i++ % LandScapeSvg.length]))
+                            $('<img/>').attr('src', Init.wrapDomain('/images/svg/landscape/' + LandScapeSvg[i++ % LandScapeSvg.length])))
                         )
                         .append($('<span class="node_title"></span>').html(Init.convertDate(k)))
                 );
@@ -288,7 +302,7 @@ define(function (require, exports, module) {
                     $dates.append(
                         $('<div class="date"></div>')
                             .append($('<span></span>').html(post.dateYMD.substring(5, 10)))
-                            .append($('<a></a>').attr('href', post.url).html(post.title))
+                            .append($('<a></a>').attr('href', Init.wrapDomain(post.url)).html(post.title))
                     );
                 });
                 $month.append($dates);
@@ -299,7 +313,7 @@ define(function (require, exports, module) {
                     $('<div class="node">')
                         .append(
                             $('<div class="node_circle"></div>').append(
-                                $('<img/>').attr('src', '/images/svg/landscape/' + LandScapeSvg[i++ % LandScapeSvg.length])
+                                $('<img/>').attr('src', Init.wrapDomain('/images/svg/landscape/' + LandScapeSvg[i++ % LandScapeSvg.length]))
                             )
                         )
                 )
@@ -444,7 +458,7 @@ define(function (require, exports, module) {
 
                 $.each(v, function (j) {
                     var t = v[j];
-                    html += '<span><a href="/topic' + t.path + '">' + t.title + '</a></span>';
+                    html += '<span><a href="' + Init.wrapDomain('/topic' + t.path) + '">' + t.title + '</a></span>';
                 });
                 html += '</div></div>';
                 $topics.append(html);

@@ -16,7 +16,11 @@
         <div id="navbar" class="collapse navbar-collapse">
             <ul class="nav navbar-nav">
                 {% for menu in site.menu %}
-                <li><a href="{{ menu[1] | prepend: site.indexDomain }}">{{ menu[0] }}</a></li>
+                    {% if site.localDebug == 'true' %}
+                <li><a href="{{ menu[1] | prepend: site.localDomain }}">{{ menu[0] }}</a></li>
+                    {% else %}
+                <li><a href="{{ menu[1] | prepend: site.indexSpeedDomain }}">{{ menu[0] }}</a></li>
+                    {% endif %}
                 {% endfor %}
             </ul>
         </div>
