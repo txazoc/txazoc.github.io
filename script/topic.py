@@ -21,11 +21,12 @@ def buildTopicModule(relativePath):
         if os.path.isdir(childFullPath):
             buildTopicModule(childRelativePath)
         else:
-            topic = readTopic(childFullPath)
-            if not (topic.has_key('published')) or topic['published'] != 'false':
-                fileName = child.replace('.md', '')
-                path = relativePath + '/' + fileName + '.html'
-                addTopic(Topic(path, topic['title'], topic['module']).__dict__)
+            if child != '.DS_Store':
+                topic = readTopic(childFullPath)
+            	if not (topic.has_key('published')) or topic['published'] != 'false':
+                	fileName = child.replace('.md', '')
+                	path = relativePath + '/' + fileName + '.html'
+                	addTopic(Topic(path, topic['title'], topic['module']).__dict__)
 
 def addTopic(topic):
     if not topicModule.has_key(topic['module']):
