@@ -97,7 +97,7 @@ unset JAVA_HOME
 运行下面的命令进行编译检查:
 
 ```sh
-make sanity
+sudo make sanity
 ```
 
 若编译检查通过，输出如下:
@@ -111,7 +111,7 @@ Sanity check passed.
 运行下面的命令开始编译:
 
 ```sh
-make CC=clang COMPILER_WARNINGS_FATAL=false LFLAGS='-Xlinker -lstdc++' USE_CLANG=true LANG=C LP64=1 ARCH_DATA_MODEL=64 HOTSPOT_BUILD_JOBS=8 ALT_BOOTDIR=/Library/Java/Home _JAVA_OPTIONS=-Dfile.encoding=ASCII fastdebug_build
+sudo make CC=clang COMPILER_WARNINGS_FATAL=false LFLAGS='-Xlinker -lstdc++' USE_CLANG=true LANG=C LP64=1 ARCH_DATA_MODEL=64 HOTSPOT_BUILD_JOBS=8 ALT_BOOTDIR=/Library/Java/Home _JAVA_OPTIONS=-Dfile.encoding=ASCII fastdebug_build
 ```
 
 编译过程中可能会遇到下面的错误:
