@@ -23,6 +23,7 @@ def cdnRefreshQuery(path):
                 else:
                     time.sleep(2)
 
+cdnRefreshQuery('http://www.txazo.com/')
 cdnRefreshQuery('http://image.txazo.com/css/core.css')
 cdnRefreshQuery('http://image.txazo.com/css/input.min.css')
 cdnRefreshQuery('http://image.txazo.com/js/init.js')
