@@ -13,12 +13,12 @@ title:  关于我
     <p style="margin-top: 10px;">微信扫描二维码加好友</p>
 
     <div class="qrcode">
-        <img class="weixin" src="/images/weixin.png">
+        <img class="weixin" src="{% if site.localDebug == 'true' %}{{ site.localDomain }}{% else %}{{ site.indexSpeedDomain }}{% endif %}/images/weixin.png">
     </div>
 
     <p>支付宝扫描二维码赞助</p>
 
     <div class="qrcode">
-        <img class="zhifubao" src="/images/zhifubao.png">
+        <img class="zhifubao" src="{% if site.localDebug == 'true' %}{{ site.localDomain }}{% else %}{{ site.indexSpeedDomain }}{% endif %}/images/zhifubao.png">
     </div>
 </div>
