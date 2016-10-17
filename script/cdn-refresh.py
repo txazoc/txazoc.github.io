@@ -10,7 +10,7 @@ def cdnRefresh(path):
         return 0
 
 def cdnRefreshQuery(path):
-    taskId = cdnRefresh('http://image.txazo.com/js/init.js')
+    taskId = cdnRefresh(path)
     if taskId > 0:
         print '[CDN Refresh]: Refreshing ' + path + ' ...'
         for i in range(1, 15):
