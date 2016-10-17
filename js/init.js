@@ -170,7 +170,7 @@ define(function (require, exports, module) {
                 if (v == currentPage) {
                     p.css('color', '#999');
                 } else {
-                    p.addClass('hover').attr('href', Init.wrapIndexSpeedDomain(v == 1 ? '/' : '/index/' + v));
+                    p.addClass('hover').attr('href', Init.wrapIndexSpeedDomain(v == 1 ? '/' : '/index/' + v + '/'));
                 }
                 $page.append(p);
             });
