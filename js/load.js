@@ -23,5 +23,5 @@ seajs.config({
 });
 {% endif %}
 seajs.use('init', function (init) {
-    init.init('{% if site.localDebug == 'true' %}{{ site.localDomain }}{% else %}{{ site.sourceDomain }}{% endif %}');
+    init.init('{% if site.localDebug == 'true' %}{{ site.localDomain }}{% else %}{{ site.sourceDomain }}{% endif %}', '{% if site.localDebug == 'true' %}{{ site.localDomain }}{% else %}{{ site.indexSpeedDomain }}{% endif %}');
 });

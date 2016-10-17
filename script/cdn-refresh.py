@@ -31,3 +31,5 @@ cdnRefreshQuery('http://image.txazo.com/js/init.js')
 cdnRefreshQuery('http://image.txazo.com/js/load.js')
 cdnRefreshQuery('http://image.txazo.com/js/topic.js')
 cdnRefreshQuery('http://image.txazo.com/js/lib/seajs-css.js')
+for i in range(2, 10):
+    cdnRefreshQuery('http://www.txazo.com/index/' + i)
