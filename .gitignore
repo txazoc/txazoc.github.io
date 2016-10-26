@@ -3,3 +3,4 @@
 Gemfile.lock
 *.iml
 .DS_Store
+*.pyc
