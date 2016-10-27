@@ -58,12 +58,14 @@ void os::interrupt(Thread *thread) {
         osthread->set_interrupted(true);
         OrderAccess::fence();
         ParkEvent *const slp = thread->_SleepEvent;
+        // 唤醒线程的sleep状态
         if (slp != NULL) slp->unpark();
     }
 
     if (thread->is_Java_thread())
         ((JavaThread *) thread)->parker()->unpark();
 
+    // 唤醒线程的wait状态
     ParkEvent *ev = thread->_ParkEvent;
     if (ev != NULL) ev->unpark();
 }
@@ -96,3 +98,10 @@ class OSThread : public CHeapObj<mtThread> {
 
 };
 ```
+
+
+Java中可以被中断的方法分为三类:
+
+* sleep: Thread.sleep()
+* wait: Object.wait()、Thread.join()
+* lock: ReentrantLock.lockInterruptibly()
