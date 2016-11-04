@@ -1,7 +1,7 @@
 ---
 layout: topic
-module: Mac sudo免密
-title:  cpu
+module: Mac
+title:  sudo免密
 ---
 
 ```shell
