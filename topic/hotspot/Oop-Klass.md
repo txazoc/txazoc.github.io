@@ -1,7 +1,7 @@
 ---
 layout: topic
 module: HotSpot
-title:  Oop-Klass
+title:  Oop/Klass
 date:   2016-10-25
 ---
 
