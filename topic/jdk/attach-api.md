@@ -5,24 +5,15 @@ title:  Attach API
 date:   2016-11-08
 ---
 
-Attach API是Java提供的一套扩展API，用来连接到目标Java虚拟机。
-
-从 [Attach API文档](http://docs.oracle.com/javase/8/docs/jdk/api/attach/spec/index.html) 可以看到，Attach API只有两个包:
+[Attach API](http://docs.oracle.com/javase/8/docs/jdk/api/attach/spec/index.html)，Java提供的一套扩展API，用来连接到目标Java虚拟机
 
 * `com.sun.tools.attach`
+    * VirtualMachine
+    * VirtualMachineDescriptor
 * `com.sun.tools.attach.spi`
-
-#### com.sun.tools.attach包
-
-com.sun.tools.attach包提供连接到Java虚拟机的接口，主要有两个类: `VirtualMachine`和`VirtualMachineDescriptor`，VirtualMachine是Attach API的核心接口，VirtualMachineDescriptor则用来描述一个Java虚拟机。
-
-#### com.sun.tools.attach.spi包
-
-com.sun.tools.attach包中只有一个类`AttachProvider`，定义attach实现。
+    * AttachProvider
 
 #### VirtualMachine.list()
-
-VirtualMachine的`list()`方法返回系统的虚拟机进程列表。
 
 ```java
 public static void main(String[] args) {
@@ -33,39 +24,30 @@ public static void main(String[] args) {
 }
 ```
 
-输出结果:
+输出结果: 进程id和main class，类似`jps`
 
 ```console
-2716 com.intellij.rt.execution.application.AppMain org.txazo.jvm.attach.JpsTest
-1033 org.jetbrains.idea.maven.server.RemoteMavenServer
-428
+9925
+9794 org.jetbrains.idea.maven.server.RemoteMavenServer
+10859 com.intellij.rt.execution.application.AppMain org.txazo.jvm.attach.VirtualMachineListTest
 ```
-
-输出虚拟机进程的进程id和main class，功能类似jps工具。
 
 #### VirtualMachine.attach()
 
-VirtualMachine的`attach()`方法用来连接到目标虚拟机进程。
-
-下面给出一个attach的例子。
-
-首先，按照 [JavaAgent规范](http://docs.oracle.com/javase/8/docs/api/) 创建一个Agent类。
+* 创建Agent类`AttachAgent`，参考 [java.lang.instrument](http://docs.oracle.com/javase/8/docs/api/java/lang/instrument/package-summary.html)
 
 ```java
 public class AttachAgent {
 
     public static void agentmain(String agentArgs, Instrumentation inst) {
-        System.out.println("attach sucess ...");
+        System.out.println("attach success ...");
     }
 
 }
 ```
 
-打包为attach-agent.jar，并添加`Agent-Class`属性到`MANIFEST`。
-
-* Agent-Class: AttachAgent
-
-然后，创建一个测试类，attach到目标虚拟机并加载attach-agent.jar。
+* 打包为`attach-agent.jar`，并添加`Agent-Class: AttachAgent`到`MANIFEST.MF`
+* 创建Attach启动类`AttachAgentTest`
 
 ```java
 public class AttachAgentTest {
@@ -81,78 +63,40 @@ public class AttachAgentTest {
 }
 ```
 
-最后，随便启动一个Java应用程序并保证运行，假设进程id为5000。
+* 运行一个Java程序，假设进程id为5000
+* 执行 `java AttachAgentTest 5000 attach-agent.jar`
 
-执行 `java AttachAgentTest 5000 attach-agent.jar` ，在目标Java进程中可以看到输出:
+#### Attach API实现的类层次结构
 
-```console
-attach sucess ...
-```
+* VirtualMachine
+    * HotSpotVirtualMachine
+        * BsdVirtualMachine
+* AttachProvider
+    * HotSpotAttachProvider
+        * BsdAttachProvider
 
 #### Attach原理
 
-Mac系统上`VirtualMachine`的继承关系为:
+* **第一步**: attach到目标虚拟机，参考 `BsdVirtualMachine`
 
-* `HotSpotVirtualMachine`继承自`VirtualMachine`
-* `BsdVirtualMachine`继承自`HotSpotVirtualMachine`
-
-VirtualMachine的`attach()`方法逻辑为:
-
-* 调用`AttachProvider.providers()`获取系统的`AttachProvider`实现列表
-* 遍历`AttachProvider`列表，并调用`attachVirtualMachine()`方法尝试连接目标虚拟机
-
-Mac系统上的`AttachProvider`实现为`BsdAttachProvider`，`attachVirtualMachine()`方法返回`BsdVirtualMachine`实例。
-
-不带`-F`选项的`jcmd`、`jinfo`、`jmap`、`jstack`是通过Attach API实现的。
-
-以`jstack`为例。
+先连接到目标虚拟机，然后关闭连接，这一步主要用来检查目标虚拟机是否可连接
 
 ```java
-private static void runThreadDump(String pid, String[] args) throws Exception {
-    VirtualMachine vm = null;
-    try {
-        vm = VirtualMachine.attach(pid);
-    } catch (Exception e) {
-        System.exit(1);
-    }
-
-    InputStream input = ((HotSpotVirtualMachine) vm).remoteDataDump((Object[]) args);
-
-    int length = 0;
-    byte[] buffer = new byte[256];
-    do {
-        length = input.read(buffer);
-        if (length > 0) {
-            System.out.print(new String(buffer, 0, length, "UTF-8"));
-        }
-    } while (length > 0);
-
-    input.close();
-    vm.detach();
+int fd = socket();
+try {
+    connect(fd, this.path);
+} finally {
+    close(fd);
 }
 ```
 
-```java
-public InputStream remoteDataDump(Object... args) throws IOException {
-    return this.executeCommand("threaddump", args);
-}
+* **第二步**: 连接到目标虚拟机并发送命令给目标虚拟机，参考`HotSpotVirtualMachine`和`BsdVirtualMachine`
+* **第三步**: 等待命令执行完成，输出返回结果，参考`BsdVirtualMachine`
+* **第四步**: detach关闭连接，参考`BsdVirtualMachine`
 
-private InputStream executeCommand(String name, Object... args) throws IOException {
-    try {
-        return this.execute(name, args);
-    } catch (AgentLoadException e) {
-        throw new InternalError("Should not get here");
-    }
-}
+HotSpot中支持的Attach命令:
 
-abstract InputStream execute(String name, Object... args) throws AgentLoadException, IOException;
-```
-
-`execute()`的实现在`BsdVirtualMachine`中，先connect到目标虚拟机，然后发送`name`和`args`到目标虚拟机，最后返回连接的InputStream。
-
-虚拟机接收到命令后的处理入口: `hotspot/src/share/vm/services/attachListener.cpp`的`attach_listener_thread_entry()`方法。
-
-Attach API支持的命令如下:
+`hotspot/src/share/vm/services/attachListener.cpp`
 
 ```c
 static AttachOperationFunctionInfo funcs[] = {
@@ -170,22 +114,73 @@ static AttachOperationFunctionInfo funcs[] = {
 };
 ```
 
-* 
+* ***agentProperties***: VirtualMachine.getAgentProperties()
+* ***datadump***
+* ***dumpheap***: `jmap -heap`，参考`sun.tools.jmap.JMap`
+* ***load***: VirtualMachine.loadAgent()
+* ***properties***: VirtualMachine.getSystemProperties()
+* ***threaddump***: `jstack`，参考`sun.tools.jstack.JStack`
+* ***inspectheap***: `jmap -histo`，参考`sun.tools.jmap.JMap`
+* ***setflag***: `jinfo`，参考`sun.tools.jinfo.JInfo`
+* ***printflag***: `jinfo`，参考`sun.tools.jinfo.JInfo`
+* ***jcmd***: `jcmd`，参考`sun.tools.jcmd.JCmd`
 
-jcmd
+> 注: 不带`-F`选项的`jmap`、`jstack`、`jinfo`、`jcmd`是通过Attach API实现的
 
-* jcmd
+HotSpot中Attach命令的处理入口:
 
-jinfo
+`hotspot/src/share/vm/services/attachListener.cpp`
 
-* setflag
-* printflag
+```c
+static void attach_listener_thread_entry(JavaThread *thread, TRAPS) {
+    for (;;) {
+        AttachOperation *op = AttachListener::dequeue();
+        if (op == NULL) {
+            return;
+        }
 
-jmap
+        // 分发命令
+        AttachOperationFunctionInfo *info = NULL;
+        for (int i = 0; funcs[i].name != NULL; i++) {
+            const char *name = funcs[i].name;
+            if (strcmp(op->name(), name) == 0) {
+                info = &(funcs[i]);
+                break;
+            }
+        }
 
-* inspectheap
-* dumpheap
+        if (info != NULL) {
+            // 执行命令
+            res = (info->func)(op, &st);
+        } else {
+            res = JNI_ERR;
+        }
 
-jstack
+        // 返回结果给client
+        op->complete(res, &st);
+    }
+}
+```
 
-* threaddump
+`hotspot/src/os/bsd/vm/attachListener_bsd.cpp`
+
+```c
+BsdAttachOperation *BsdAttachListener::dequeue() {
+    for (;;) {
+        // 等待客户端连接
+        RESTARTABLE(::accept(listener(), &addr, &len), s);
+        if (s == -1) {
+            return NULL;
+        }
+
+        // 读取client请求
+        BsdAttachOperation *op = read_request(s);
+        if (op == NULL) {
+            RESTARTABLE(::close(s), res);
+            continue;
+        } else {
+            return op;
+        }
+    }
+}
+```
