@@ -114,16 +114,16 @@ static AttachOperationFunctionInfo funcs[] = {
 };
 ```
 
-* ***agentProperties***: VirtualMachine.getAgentProperties()
+* ***agentProperties***: 实现VirtualMachine.getAgentProperties()
 * ***datadump***
-* ***dumpheap***: `jmap -heap`，参考`sun.tools.jmap.JMap`
-* ***load***: VirtualMachine.loadAgent()
-* ***properties***: VirtualMachine.getSystemProperties()
-* ***threaddump***: `jstack`，参考`sun.tools.jstack.JStack`
-* ***inspectheap***: `jmap -histo`，参考`sun.tools.jmap.JMap`
-* ***setflag***: `jinfo`，参考`sun.tools.jinfo.JInfo`
-* ***printflag***: `jinfo`，参考`sun.tools.jinfo.JInfo`
-* ***jcmd***: `jcmd`，参考`sun.tools.jcmd.JCmd`
+* ***dumpheap***: 实现`jmap -heap`，参考`sun.tools.jmap.JMap`
+* ***load***: 实现VirtualMachine.loadAgent()
+* ***properties***: 实现VirtualMachine.getSystemProperties()
+* ***threaddump***: 实现`jstack`，参考`sun.tools.jstack.JStack`
+* ***inspectheap***: 实现`jmap -histo`，参考`sun.tools.jmap.JMap`
+* ***setflag***: 实现`jinfo`，参考`sun.tools.jinfo.JInfo`
+* ***printflag***: 实现`jinfo`，参考`sun.tools.jinfo.JInfo`
+* ***jcmd***: 实现`jcmd`，参考`sun.tools.jcmd.JCmd`
 
 > 注: 不带`-F`选项的`jmap`、`jstack`、`jinfo`、`jcmd`是通过Attach API实现的
 
