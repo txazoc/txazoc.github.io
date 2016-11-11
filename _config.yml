@@ -30,7 +30,7 @@ localDebug: "false"
 # 本地域名
 localDomain: "http://127.0.0.1:4000"
 # 源站域名
-sourceDomain: "http://github.txazo.com"
+sourceDomain: "http://www.txazo.com"
 # 首页加速域名
 indexSpeedDomain: 'http://www.txazo.com'
 # 静态加速域名
