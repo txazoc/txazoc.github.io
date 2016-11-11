@@ -23,13 +23,13 @@ def cdnRefreshQuery(path):
                 else:
                     time.sleep(2)
 
-cdnRefreshQuery('http://www.txazo.com/')
-cdnRefreshQuery('http://image.txazo.com/css/core.css')
-cdnRefreshQuery('http://image.txazo.com/css/input.min.css')
-cdnRefreshQuery('http://image.txazo.com/js/data.js')
-cdnRefreshQuery('http://image.txazo.com/js/init.js')
-cdnRefreshQuery('http://image.txazo.com/js/load.js')
-cdnRefreshQuery('http://image.txazo.com/js/topic.js')
-cdnRefreshQuery('http://image.txazo.com/js/lib/seajs-css.js')
-for i in range(2, 10):
-    cdnRefreshQuery('http://www.txazo.com/index/' + str(i) + '/')
+# cdnRefreshQuery('http://www.txazo.com/')
+# cdnRefreshQuery('http://image.txazo.com/css/core.css')
+# cdnRefreshQuery('http://image.txazo.com/css/input.min.css')
+# cdnRefreshQuery('http://image.txazo.com/js/data.js')
+# cdnRefreshQuery('http://image.txazo.com/js/init.js')
+# cdnRefreshQuery('http://image.txazo.com/js/load.js')
+# cdnRefreshQuery('http://image.txazo.com/js/topic.js')
+# cdnRefreshQuery('http://image.txazo.com/js/lib/seajs-css.js')
+# for i in range(2, 10):
+#     cdnRefreshQuery('http://www.txazo.com/index/' + str(i) + '/')
