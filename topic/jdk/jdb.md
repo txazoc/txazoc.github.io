@@ -17,7 +17,8 @@ jdb有两种使用方式:
 以debug方式启动Java程序:
 
 ```console
-$ java -Xdebug -Xrunjdwp:transport=dt_socket,address=8787,server=y,suspend=n org.txazo.Test
+$ java -Xdebug -Xrunjdwp:transport=dt_socket,server=y,address=8787,suspend=n org.txazo.Test
+$ java -agentlib:jdwp=transport=dt_socket,server=y,address=8787,suspend=n org.txazo.Test
 ```
 
 然后，通过jdb的attach方式建立连接:

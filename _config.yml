@@ -34,7 +34,7 @@ sourceDomain: "http://github.txazo.com"
 # 首页加速域名
 indexSpeedDomain: 'http://www.txazo.com'
 # 静态加速域名
-staticSpeedDomain: 'http://image.txazo.com'
+staticSpeedDomain: 'http://www.txazo.com'
 
 # 百度统计开关
 hmSwitch: "true"
@@ -42,10 +42,10 @@ hmSwitch: "true"
 gaSwitch: "true"
 
 # css引入
-css: ["http://cdn.bootcss.com/bootstrap/3.3.6/css/bootstrap.min.css", "http://image.txazo.com/css/core.css"]
+css: ["http://cdn.bootcss.com/bootstrap/3.3.6/css/bootstrap.min.css", "http://www.txazo.com/css/core.css"]
 localCss: ["/css/lib/bootstrap.min.css", "/css/core.css"]
 # js引入
-js: ["http://cdn.bootcss.com/jquery/1.12.1/jquery.min.js", "http://cdn.bootcss.com/bootstrap/3.3.6/js/bootstrap.min.js", "http://cdn.bootcss.com/seajs/3.0.2/sea.js", "http://image.txazo.com/js/lib/seajs-css.js", "http://cdn.bootcss.com/highlight.js/9.5.0/highlight.min.js", "http://image.txazo.com/js/load.js"]
+js: ["http://cdn.bootcss.com/jquery/1.12.1/jquery.min.js", "http://cdn.bootcss.com/bootstrap/3.3.6/js/bootstrap.min.js", "http://cdn.bootcss.com/seajs/3.0.2/sea.js", "http://www.txazo.com/js/lib/seajs-css.js", "http://cdn.bootcss.com/highlight.js/9.5.0/highlight.min.js", "http://www.txazo.com/js/load.js"]
 localJs: ["/js/lib/jquery.min.js", "/js/lib/bootstrap.min.js", "/js/lib/sea.js", "/js/lib/seajs-css.js", "/js/lib/highlight.min.js", "/js/load.js"]
 
 # rss
