@@ -94,8 +94,12 @@ jconsole包含以下几部分:
     * 库路径
     * 引导类路径
 
-#### MBean
+#### <a id="mbean">MBean</a>
 
 ![MBean](/images/topic/jdk/console/mbean.png =664x)
 
-参见 [JMX](/topic/jdk/jmx.html)
+参见 [JMX MBean](/topic/jdk/jmx.html#mbean)
+
+\[参考\]:
+
+* [Using JConsole - Java SE Monitoring and Management Guide](https://docs.oracle.com/javase/8/docs/technotes/guides/management/jconsole.html)
