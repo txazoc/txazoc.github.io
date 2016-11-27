@@ -10,13 +10,13 @@ JMX主要包含三部分:
 
 * MBean
 * JMX Agent
-* Remote management
+* Remote Management
 
 #### <a id="mbean">MBean</a>
 
-* Standard MBean
+MBean，JMX管理的资源
 
-MBean接口组成:
+MBean组成:
 
 * Attribute(getter/setter规范)
 * Operation
@@ -86,11 +86,17 @@ public class Hello implements HelloMBean {
 
 #### JMX Agent
 
-`JMX Agent`，JMX代理
+JMX Agent，JMX代理，提供管理MBean的容器和服务
 
-* 管理MBean
+MBean容器(MBeanServer):
 
 ```java
+// 创建MBeanServer
+MBeanServer mbs = ManagementFactory.createMBeanServer();
+```
+
+```java
+// 获取平台的MBeanServer
 MBeanServer mbs = ManagementFactory.getPlatformMBeanServer();
 ```
 
@@ -102,6 +108,8 @@ HelloMBean bean = new Hello(1, "local", 25);
 mbs.registerMBean(bean, name);
 ```
 
+创建并注册MBean:
+
 ```java
 String className = "org.txazo.jmx.mbean.standard.Hello";
 ObjectName name = ObjectName.getInstance("org.txazo.jmx.mbean.standard:type=Hello,name=local");
@@ -110,9 +118,11 @@ String[] signatures = new String[]{"int", "java.lang.String", "int"};
 mbs.createMBean(className, name, params, signatures);
 ```
 
-#### Remote management
+#### Remote Management
 
-目标应用启动时添加如下JVM参数:
+Remote Management，远程管理
+
+被管理Java应用启动时添加如下JVM参数:
 
 ```console
 -Dcom.sun.management.jmxremote.port=9999
@@ -120,13 +130,16 @@ mbs.createMBean(className, name, params, signatures);
 -Dcom.sun.management.jmxremote.ssl=false
 ```
 
-RMI方式连接远程Mbean Server:
+然后，通过RMI方式连接远程MbeanServer:
 
 ```java
 JMXServiceURL url = new JMXServiceURL("service:jmx:rmi:///jndi/rmi://:9999/jmxrmi");
 JMXConnector jmxc = JMXConnectorFactory.connect(url);
 MBeanServerConnection mbsc = jmxc.getMBeanServerConnection();
-// ...
+Set<ObjectName> objectNames = mbsc.queryNames(null, null);
+for (ObjectName name : objectNames) {
+    System.out.println("ObjectName: " + name.getCanonicalName());
+}
 jmxc.close();
 ```
 
