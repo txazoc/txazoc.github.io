@@ -5,14 +5,16 @@ title:  jvisualvm
 date:   2016-11-28
 ---
 
-Java VisualVM，Java监控和故障排除工具，使用到的技术有:
+Java VisualVM，一体化的Java监控和故障排除工具
+
+VisualVM使用到的技术有:
 
 * jvmstat
 * [JMX](/topic/jdk/jmx)
 * Serviceability Agent
 * Attach API
 
-启动Java VisualVM:
+启动VisualVM:
 
 ```linux
 $ jvisualvm
@@ -24,13 +26,16 @@ $ jvisualvm
 
 * 应用程序
     * 本地: 本地Java进程
-        * 右键
+        * 鼠标右键
             * [线程Dump](#threaddump)
             * [堆Dump](#heapdump)
-            * 应用程序快照
+            * [应用程序快照](#snapshot)
+            * 在出现OOME时生成堆Dump: 启用/禁用
     * 远程: 远程Java进程
     * VM核心dump
     * 快照
+        * 生成的应用程序快照
+        * 打开保存的应用程序快照
 * 起始页
 
 #### 概述
@@ -39,7 +44,7 @@ $ jvisualvm
 
 * 概述
     * PID、主机、主类、参数
-    * JVM、Java Home、JVM标志
+    * JVM、Java、Java Home、JVM标志
 * 保存的数据
     * [线程Dump](#threaddump)
     * [堆Dump](#heapdump)
@@ -114,10 +119,15 @@ $ jvisualvm
 
 ![线程Dump](/images/topic/jdk/jvisualvm/threaddump.png =664x)
 
+* 鼠标右键
+    * 另存为: \*.tdump
+
 #### <a id="heapdump">堆Dump</a>
 
 ![堆Dump](/images/topic/jdk/jvisualvm/heapdump.png =664x)
 
+* 鼠标右键
+    * 另存为: \*.hprof
 * 概要
     * 概述
         * 基本信息
@@ -137,6 +147,11 @@ $ jvisualvm
     * 字段
     * 引用
 * OQL控制台
+
+#### <a id="snapshot">应用程序快照</a>
+
+* 鼠标右键
+    * 另存为: \*.apps
 
 #### 插件
 

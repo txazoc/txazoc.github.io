@@ -71,7 +71,7 @@ define(function (require, exports, module) {
 
             $('#main').find('.article a').each(function () {
                 var href = $(this).attr('href');
-                if (href != null && href.substr(0, 1) != '/') {
+                if (href != null && href.substr(0, 1) != '/' && href.substr(0, 1) != '#') {
                     $(this).attr('target', '_blank');
                 }
             });
