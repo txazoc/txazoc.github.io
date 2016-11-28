@@ -25,8 +25,8 @@ $ jvisualvm
 * 应用程序
     * 本地: 本地Java进程
         * 右键
-            * 线程Dump
-            * 堆Dump
+            * [线程Dump](#threaddump)
+            * [堆Dump](#heapdump)
             * 应用程序快照
     * 远程: 远程Java进程
     * VM核心dump
@@ -41,8 +41,8 @@ $ jvisualvm
     * PID、主机、主类、参数
     * JVM、Java Home、JVM标志
 * 保存的数据
-    * 线程Dump
-    * 堆Dump
+    * [线程Dump](#threaddump)
+    * [堆Dump](#heapdump)
     * Profiler快照
 * JVM参数
 * 系统属性
@@ -75,7 +75,7 @@ $ jvisualvm
 
 * 实时线程
 * 守护线程
-* 线程Dump
+* [线程Dump](#threaddump)
 * 时间线
     * 名称
     * 状态变化
@@ -94,7 +94,7 @@ $ jvisualvm
     * 内存设置
 * CPU抽样
     * CPU样例
-        * 线程Dump
+        * [线程Dump](#threaddump)
         * 热点方法和时间
     * 线程CPU时间
         * 线程和线程CPU时间
@@ -104,19 +104,39 @@ $ jvisualvm
     * PermGen柱状图
     * 每个线程分配
     * 执行GC
-    * 堆Dump
+    * [堆Dump](#heapdump)
 
 #### Profiler
 
 ![Profiler](/images/topic/jdk/jvisualvm/profiler.png =664x)
 
-#### 线程Dump
+#### <a id="threaddump">线程Dump</a>
 
 ![线程Dump](/images/topic/jdk/jvisualvm/threaddump.png =664x)
 
-#### 堆Dump
+#### <a id="heapdump">堆Dump</a>
 
 ![堆Dump](/images/topic/jdk/jvisualvm/heapdump.png =664x)
+
+* 概要
+    * 概述
+        * 基本信息
+        * 环境
+        * 系统属性
+        * 堆转储上的线程
+    * 最大对象查找
+* 类
+    * 类
+        * 堆转储比较
+        * 类: 类名、实例数、大小
+        * 类名过滤器
+    * 类的静态字段
+* 实例数
+    * 类型、实例数、实例大小、总大小
+    * 实例
+    * 字段
+    * 引用
+* OQL控制台
 
 #### 插件
 
@@ -131,3 +151,7 @@ Java VisualVM支持插件功能
 #### SA Plugin插件
 
 ![SA Plugin插件](/images/topic/jdk/jvisualvm/sa.png =664x)
+
+\[参考\]:
+
+* [Introduction to VisualVM](http://visualvm.java.net/intro.html)

@@ -7,6 +7,7 @@ define(function (require, exports, module) {
     var LastSearchInputTime = 0;
 
     var Init = {
+        top: '热点',
         lastWindowWidth: 0,
         sourceDomain: 'http://github.txazo.com',
         indexSpeedDomain: 'http://www.txazo.com',
@@ -66,6 +67,13 @@ define(function (require, exports, module) {
 
             $('.icon-weixin').on('click', function () {
                 Share.shareToWeixin();
+            });
+
+            $('#main').find('.article a').each(function () {
+                var href = $(this).attr('href');
+                if (href != null && href.substr(0, 1) != '/') {
+                    $(this).attr('target', '_blank');
+                }
             });
         },
 
@@ -451,7 +459,7 @@ define(function (require, exports, module) {
             });
 
             modules.sort(function (m1, m2) {
-                return Init.sortStr(m1, m2);
+                return Init.sortTopic(m1, m2);
             });
 
             $.each(modules, function (i) {
@@ -472,6 +480,15 @@ define(function (require, exports, module) {
                 html += '</div></div>';
                 $topics.append(html);
             });
+        },
+
+        sortTopic: function (s1, s2) {
+            if (s1 == Init.top) {
+                return -1;
+            } else if (s2 == Init.top) {
+                return 1;
+            }
+            return Init.sortStr(s1, s2);
         },
 
         sortStr: function (s1, s2) {
