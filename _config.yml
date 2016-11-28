@@ -5,7 +5,7 @@ exclude:      [CNAME, Gemfile, Gemfile.lock, pom.xml, txazoc-github-io.iml, READ
 timezone:     Asia/Shanghai
 encoding:     UTF-8
 
-permalink:  /:categories/:title.html
+permalink:  /:categories/:title
 
 gems: [jekyll-paginate]
 
@@ -25,7 +25,7 @@ markdownStyle: md-primary
 highlightstyle: hljs-txazo
 
 # 是否本地调试
-localDebug: "false"
+localDebug: "true"
 
 # 本地域名
 localDomain: "http://127.0.0.1:4000"
@@ -54,10 +54,10 @@ rssxml: "/feed.xml"
 # 导航条菜单
 menu:
     首页: /
-    标签: /tag.html
-    归档: /archive.html
-    专题: /topics.html
-    关于: /about.html
+    标签: /tag
+    归档: /archive
+    专题: /topics
+    关于: /about
 
 # 分页
 paginate: 10

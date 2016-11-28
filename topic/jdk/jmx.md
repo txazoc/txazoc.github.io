@@ -147,4 +147,4 @@ jmxc.close();
 
 * [Java Management Extensions (JMX)](http://docs.oracle.com/javase/8/docs/technotes/guides/jmx/)
 * [Java Management Extensions (JMX) Technology Tutorial](http://docs.oracle.com/javase/8/docs/technotes/guides/jmx/tutorial/tutorialTOC.html)
-* [JConsole MBean](/topic/jdk/jconsole.html#mbean)
+* [JConsole MBean](/topic/jdk/jconsole#mbean)

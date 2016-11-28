@@ -5,10 +5,10 @@ title:  jvisualvm
 date:   2016-11-28
 ---
 
-Java VisualVM
+Java VisualVM，Java监控和故障排除工具，使用到的技术有:
 
 * jvmstat
-* JMX
+* [JMX](/topic/jdk/jmx)
 * Serviceability Agent
 * Attach API
 
@@ -154,4 +154,5 @@ Java VisualVM支持插件功能
 
 \[参考\]:
 
+* [VisualVM](https://visualvm.github.io/)
 * [Introduction to VisualVM](http://visualvm.java.net/intro.html)

@@ -98,7 +98,7 @@ jconsole包含以下几部分:
 
 ![MBean](/images/topic/jdk/console/mbean.png =664x)
 
-参见 [JMX MBean](/topic/jdk/jmx.html#mbean)
+参见 [JMX MBean](/topic/jdk/jmx#mbean)
 
 \[参考\]:
 
