@@ -12,7 +12,11 @@ Java VisualVM
 * Serviceability Agent
 * Attach API
 
-启动Java VisualVM，`jvisualvm`
+启动Java VisualVM:
+
+```linux
+$ jvisualvm
+```
 
 #### 应用程序和起始页
 
@@ -73,11 +77,57 @@ Java VisualVM
 * 守护线程
 * 线程Dump
 * 时间线
+    * 名称
+    * 状态变化
+        * RUNNABLE
+        * BLOCKED
+        * WAITING
+        * TIMED_WAITING
+    * 运行时间
 
 #### 抽样器
 
 ![抽样器](/images/topic/jdk/jvisualvm/sampler.png =664x)
 
+* 设置
+    * CPU设置
+    * 内存设置
+* CPU抽样
+    * CPU样例
+        * 线程Dump
+        * 热点方法和时间
+    * 线程CPU时间
+        * 线程和线程CPU时间
+* 内存抽样
+    * 堆柱状图
+        * 类名、实例数、字节
+    * PermGen柱状图
+    * 每个线程分配
+    * 执行GC
+    * 堆Dump
+
 #### Profiler
 
 ![Profiler](/images/topic/jdk/jvisualvm/profiler.png =664x)
+
+#### 线程Dump
+
+![线程Dump](/images/topic/jdk/jvisualvm/threaddump.png =664x)
+
+#### 堆Dump
+
+![堆Dump](/images/topic/jdk/jvisualvm/heapdump.png =664x)
+
+#### 插件
+
+Java VisualVM支持插件功能
+
+![插件](/images/topic/jdk/jvisualvm/plugin.png =664x)
+
+#### MBeans插件
+
+![MBeans插件](/images/topic/jdk/jvisualvm/mbean.png =664x)
+
+#### SA Plugin插件
+
+![SA Plugin插件](/images/topic/jdk/jvisualvm/sa.png =664x)
