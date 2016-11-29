@@ -49,6 +49,12 @@ def writeFile(file, mode, content):
     f.write(content)
     f.close()
 
+def readTopics():
+    f = open(os.getcwd() + '/script/topic.conf')
+    line = f.readline().strip('\n')
+    f.close()
+    return line
+
 def main():
     print '--------------------------------------------------'
     print '[python] build topic module begin.'
@@ -61,7 +67,8 @@ def main():
         for t in v:
             print '    ' + t['path']
 
-    writeFile(topicJs, 'w', 'var TopicModule = ')
+    writeFile(topicJs, 'w', readTopics())
+    writeFile(topicJs, 'a', '\nvar TopicModule = ')
     json.dump(topicModule, open(topicJs, 'a'))
     writeFile(topicJs, 'a', ';')
 

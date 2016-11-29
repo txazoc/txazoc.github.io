@@ -7,7 +7,6 @@ define(function (require, exports, module) {
     var LastSearchInputTime = 0;
 
     var Init = {
-        top: '热点',
         lastWindowWidth: 0,
         sourceDomain: 'http://github.txazo.com',
         indexSpeedDomain: 'http://www.txazo.com',
@@ -453,18 +452,13 @@ define(function (require, exports, module) {
         buildTopic: function () {
             var $topics = $('.topics');
 
-            var modules = [];
-            $.each(TopicModule, function (k, v) {
-                modules.push(k);
-            });
-
-            modules.sort(function (m1, m2) {
-                return Init.sortTopic(m1, m2);
-            });
-
-            $.each(modules, function (i) {
-                var k = modules[i];
+            $.each(Topics, function (i) {
+                var k = Topics[i];
                 var v = TopicModule[k];
+                if (v == null || v.length < 1) {
+                    return;
+                }
+
                 var html = '<div class="topic">';
                 html += '<div class="topic-header"><h3>' + k + '</h3></div>';
                 html += '<div class="topic-list">';
@@ -480,15 +474,6 @@ define(function (require, exports, module) {
                 html += '</div></div>';
                 $topics.append(html);
             });
-        },
-
-        sortTopic: function (s1, s2) {
-            if (s1 == Init.top) {
-                return -1;
-            } else if (s2 == Init.top) {
-                return 1;
-            }
-            return Init.sortStr(s1, s2);
         },
 
         sortStr: function (s1, s2) {
