@@ -5,7 +5,7 @@ exclude:      [CNAME, Gemfile, Gemfile.lock, pom.xml, txazoc-github-io.iml, READ
 timezone:     Asia/Shanghai
 encoding:     UTF-8
 
-permalink:  /:categories/:title
+permalink:  /:categories/:title.html
 
 gems: [jekyll-paginate]
 
@@ -54,10 +54,10 @@ rssxml: "/feed.xml"
 # 导航条菜单
 menu:
     首页: /
-    标签: /tag
-    归档: /archive
-    专题: /topics
-    关于: /about
+    标签: /tag.html
+    归档: /archive.html
+    专题: /topics.html
+    关于: /about.html
 
 # 分页
 paginate: 10
