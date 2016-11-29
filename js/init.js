@@ -236,7 +236,7 @@ define(function (require, exports, module) {
                     $items.append($('<div class="item"></div>').append($('<span></span>').attr('tag', t.name).attr('color', Color[i % Color.length]).addClass(Color[i % Color.length]).html(t.name + '(' + t.size + ')')));
                 });
                 $tags.delegate('.item span', 'click', function () {
-                    Init.redirectUrl(Init.wrapSourceDomain('/tags?tag=' + $(this).attr('tag')));
+                    Init.redirectUrl(Init.wrapSourceDomain('/tags.html?tag=' + $(this).attr('tag')));
                 }).show();
             });
         },
@@ -250,7 +250,7 @@ define(function (require, exports, module) {
         initTags: function () {
             var tag = Init.getUrlParamValue('tag');
             if (tag == null || (tag = tag.trim()) == '') {
-                Init.redirectUrl(Init.wrapSourceDomain('/404'));
+                Init.redirectUrl(Init.wrapSourceDomain('/404.html'));
                 return;
             }
 
@@ -268,7 +268,7 @@ define(function (require, exports, module) {
         },
 
         displayTag: function (tag, size) {
-            $('#main').find('.wrapper').html($('<div class="list_tag"></div>').append($('<a href="' + Init.wrapIndexSpeedDomain('/tag') + '">标签</a>')).append($('<span class="dire"></span>').html('>>')).append($('<span class="tag"></span>').html(tag)));
+            $('#main').find('.wrapper').html($('<div class="list_tag"></div>').append($('<a href="' + Init.wrapIndexSpeedDomain('/tag.html') + '">标签</a>')).append($('<span class="dire"></span>').html('>>')).append($('<span class="tag"></span>').html(tag)));
         },
 
         displayPost: function (posts) {
@@ -514,7 +514,7 @@ define(function (require, exports, module) {
                         var t = v[i];
                         if (t['path'] == path) {
                             $('.topic-nav')
-                                .append('<a href="' + Init.wrapIndexSpeedDomain('/topics') + '">专题</a>')
+                                .append('<a href="' + Init.wrapIndexSpeedDomain('/topics.html') + '">专题</a>')
                                 .append('<span class="dire">&gt;&gt;</span>')
                                 .append('<span class="tag">' + t['module'] + '</span>')
                                 .append('<span class="dire">&gt;&gt;</span>')

@@ -10,7 +10,7 @@ Java VisualVM，一体化的Java监控和故障排除工具
 VisualVM使用到的技术有:
 
 * jvmstat
-* [JMX](/topic/jdk/jmx)
+* [JMX](/topic/jdk/jmx.html)
 * Serviceability Agent
 * Attach API
 

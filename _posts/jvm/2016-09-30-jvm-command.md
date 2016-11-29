@@ -28,7 +28,7 @@ date:       2016-09-30
 
 #### <a id="java">java</a>
 
-启动Java应用程序，参见 [java命令](/jvm/jvm-java-command)
+启动Java应用程序，参见 [java命令](/jvm/jvm-java-command.html)
 
 * `java org.txazo.Test`，启动运行类
 * `java -jar test.jar`，启动运行jar包中的main class
