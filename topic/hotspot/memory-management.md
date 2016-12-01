@@ -69,13 +69,24 @@ date:   2016-11-29
 
 ***`Serial收集器`***
 
-* 单线程
-* Stop-The-World
-* 年轻代: 复制算法  
-  年老代: 标记 - 清除 - 压缩算法
+* 年轻代, 单线程, Stop-The-World
+* 复制算法
 * -XX:+UseSerialGC
 
-***`Parallel收集器`***
+***`Serial Old收集器`***
+
+* 年老代, 单线程, Stop-The-World
+* 标记 - 清除 - 压缩算法
+* -XX:+UseSerialGC
+
+***`ParNew收集器`***
+
+* 年轻代, 多线程, Stop-The-World
+* 复制算法
+
+***`Parallel Scavenge收集器`***
+
+* 年轻代, 多线程
 
 ***`并行压缩收集器`***
 
