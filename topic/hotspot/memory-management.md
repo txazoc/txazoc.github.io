@@ -1,7 +1,7 @@
 ---
 layout: topic
 module: HotSpot
-title:  内存管理
+title:  自动内存管理
 date:   2016-11-29
 ---
 
@@ -11,9 +11,9 @@ date:   2016-11-29
 
 显示内存分配带来的问题:
 
-* 手动释放内存, 加重程序员负担
+* 手动释放内存，加重程序员负担
 * 对象持有已被释放内存的引用
-* 无用内存未释放, 导致内存泄露
+* 无用内存未释放，导致内存泄露
 
 #### 垃圾收集概念
 
@@ -36,7 +36,7 @@ date:   2016-11-29
 
 * 吞吐量: 应用程序运行时间 / (应用程序运行时间 + 垃圾收集时间)
 * 垃圾收集开销: 垃圾收集时间 / (应用程序运行时间 + 垃圾收集时间)
-* 停顿时间: 垃圾收集时, 应用程序被停止执行的时间
+* 停顿时间: 垃圾收集时，应用程序被停止执行的时间
 * 收集频率: 垃圾收集发生的频率
 * 内存占用大小: 比如堆的大小
 * 实时性: 对象从成为垃圾到被回收所经历的时间
@@ -46,8 +46,8 @@ date:   2016-11-29
 ***`分代收集`***:
 
 * 分代假设: 大部分对象的存活时间很短
-* 年轻代: 内存相对小, 存放新生对象, GC频繁, GC时间短
-* 年老代: 内存相对大, 存放年老对象, GC较少, GC时间长
+* 年轻代: 内存相对小，存放新生对象，GC频繁，GC时间短
+* 年老代: 内存相对大，存放年老对象，GC较少，GC时间长
 
 #### 垃圾收集器
 
@@ -65,31 +65,75 @@ date:   2016-11-29
 ***`快速分配`***:
 
 * 指针碰撞: 保存已分配内存的末尾
-* 线程局部分配缓冲(TLAB): Thread-Local Allocation Buffer, 多线程情况下, 每个线程都有自己的TLAB
+* 线程局部分配缓冲(TLAB): Thread-Local Allocation Buffer，多线程情况下，每个线程都有自己的TLAB
 
 ***`Serial收集器`***
 
-* 年轻代, 单线程, Stop-The-World
+* 年轻代，单线程，Stop-The-World
 * 复制算法
-* -XX:+UseSerialGC
-
-***`Serial Old收集器`***
-
-* 年老代, 单线程, Stop-The-World
-* 标记 - 清除 - 压缩算法
 * -XX:+UseSerialGC
 
 ***`ParNew收集器`***
 
-* 年轻代, 多线程, Stop-The-World
+* 年轻代，多线程，Stop-The-World
 * 复制算法
+* -XX:+UseParNewGC
 
 ***`Parallel Scavenge收集器`***
 
-* 年轻代, 多线程
+* 年轻代，多线程
 
-***`并行压缩收集器`***
+***`Serial Old收集器`***
 
-***`并发标记清除收集器(CMS)`***
+* 年老代，单线程，Stop-The-World
+* 标记 - 清除 - 压缩算法
+* -XX:+UseSerialGC
+
+***`Parallel Old收集器`***
+
+***`CMS收集器(Concurrent Mark Sweep)`***
+
+* 老年代, 多线程
+* 步骤一: 初始标记(STW): 标记GC Roots关联的对象，速度很快  
+  步骤二: 并发标记(并发): GC Roots Tracing  
+  步骤三: 重新标记(STW): 修正并发标记期间应用程序运行导致的标记变动  
+  步骤四: 并发清除(并发): 清除垃圾对象
+* 优点: 低停顿时间
+* 缺点:
+    * 不压缩导致内存碎片和更多的内存分配时间
+    * 内存碎片和并发标记的应用内存分配(预留内存空间)导致更大的堆空间
+    * 内存碎片过多，大对象分配可能导致提前触发Full GC
+    * 预留内存空间不足导致Concurrent Mode Failure，触发使用Serial Old收集器重新Full GC
+* VM选项:
+    * -XX:+UseConcMarkSweepGC
+
+***`G1收集器`***
 
 #### 自动调优
+
+***`并行收集器调优`***
+
+* 最大暂停时间目标: -XX:MaxGCPauseMillis=n
+* 吞吐量目标: -XX:GCTimeRatio=n
+
+#### 建议
+
+***`垃圾收集器选择`***
+
+* –XX:+UseSerialGC
+* –XX:+UseParallelGC
+* –XX:+UseParallelOldGC
+* –XX:+UseConcMarkSweepGC
+
+***`如何处理OutOfMemoryError`***
+
+* Java heap space: –Xmx
+* PermGen space: –XX:MaxPermSize=n
+* Requested array size exceeds VM limit
+
+#### 垃圾收集的性能评估的工具
+
+* –XX:+PrintGCDetails
+* –XX:+PrintGCTimeStamps
+* [jmap](/topic/jdk/jmap.html)
+* [jstat](/topic/jdk/jstat.html)

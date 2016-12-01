@@ -75,5 +75,24 @@ $ jmap -histo:live 8705 | head -10
 ```
 
 * `jmap [-F] -dump:[live,]format=b,file=<filename> <pid>`: 以hprof二进制格式转储堆到文件，之后使用jhat或MAT进行分析
+* `jmap -permstat <pid>`: 打印永久代的统计信息
+
+```console
+$ jmap -permstat 8705
+Attaching to process ID 8705, please wait...
+Debugger attached successfully.
+Server compiler detected.
+JVM version is 24.80-b11
+finding class loader instances ..done.
+computing per loader stat ..done.
+please wait.. computing liveness...........done.
+class_loader	classes	bytes	parent_loader	alive?	type
+
+<bootstrap>	465	3021792	  null  	live	<internal>
+0x00000007aaabb488	0	0	  null  	live	sun/misc/Launcher$ExtClassLoader@0x00000006fafc3388
+0x00000007aaaf47f0	29	316912	0x00000007aaabb488	live	sun/misc/Launcher$AppClassLoader@0x00000006fb01ea30
+
+total = 3	494	3338704	    N/A    	alive=3, dead=0	    N/A
+```
 
 > 注: `-F`代表强制执行，`live`代表只统计存活的对象
