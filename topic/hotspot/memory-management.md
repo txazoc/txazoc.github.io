@@ -137,3 +137,45 @@ date:   2016-11-29
 * –XX:+PrintGCTimeStamps
 * [jmap](/topic/jdk/jmap.html)
 * [jstat](/topic/jdk/jstat.html)
+* HPROF: Heap Profiler
+* HAT: Heap Analysis Tool
+
+#### 垃圾收集相关的关键选项
+
+***垃圾收集器选择***
+
+* –XX:+UseSerialGC: Serial收集器
+* –XX:+UseParallelGC: Parallel收集器
+* –XX:+UseParallelOldGC: Parallel Old收集器
+* –XX:+UseConcMarkSweepGC: CMS收集器
+
+***垃圾收集器统计***
+
+* –XX:+PrintGC
+* –XX:+PrintGCDetails
+* –XX:+PrintGCTimeStamps
+
+***堆和分代大小***
+
+* –Xms: 最小堆大小
+* –Xmx: 最大堆大小
+* –XX:MinHeapFreeRatio=minimum
+* –XX:MaxHeapFreeRatio=maximum
+* –XX:NewSize=n: 年轻代大小初始大小
+* –XX:NewRatio=n: 年轻代/年老代比例(1:n)
+* –XX:SurvivorRatio=n: Enen/Survivor比例(1:n)
+* –XX:MaxPermSize=n: 永久代最大大小
+
+***Parallel收集器选项***
+
+* –XX:ParallelGCThreads=n: 垃圾收集的线程数
+* –XX:MaxGCPauseMillis=n: 最大GC暂停时间
+* –XX:GCTimeRatio=n: GC时间比例(1/1+n)
+
+***CMS收集器选项***
+
+* –XX:ParallelGCThreads=n: 垃圾收集的线程数
+
+#### 更多信息
+
+* [Tuning Garbage Collection with the 5.0 Java Virtual Machine](http://www.oracle.com/technetwork/java/gc-tuning-5-138395.html)
