@@ -145,6 +145,18 @@
         }
     }
 
+    ol {
+        margin: 8px 0 8px 16px;
+
+        li {
+            padding: 0 0 0 12px;
+
+            ul {
+                margin: 4px 0 4px 16px;
+            }
+        }
+    }
+
     // 表格
     table {
         width: 100%;
