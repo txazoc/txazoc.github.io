@@ -100,22 +100,30 @@
 
 // xml
 .language-xml {
-    color: #ae81ff !important;
+    //color: #FF8785 !important;
+
+    .php{
+        color: #FF8785 !important;
+    }
+
+    .hljs-meta {
+        color: #a6e22e !important;
+    }
 
     .hljs-tag {
         color: #a6e22e !important;
     }
 
     .hljs-name {
-        color: #e6db74 !important;
+        color: #a6e22e !important;
     }
 
     .hljs-attr {
-        color: #66d9ef !important;
+        color: #FF8785 !important;
     }
 
     .hljs-string {
-        color: #f92672 !important;
+        color: #e6db74 !important;
     }
 }
 
