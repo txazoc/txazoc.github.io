@@ -25,4 +25,20 @@ date:   2016-11-29
 
 * tcp长连直连
 * 负载均衡
-* 
+
+#### 负载均衡
+
+* Failfast
+* Failover
+* Failsafe
+* Forking
+
+#### 序列化
+
+* Java
+* Jackson
+* Hessian
+* Thrift
+* Protobuf
+
+![序列化](/images/topic/middleware/rpc/serialize.png =540x)
