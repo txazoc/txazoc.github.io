@@ -39,7 +39,7 @@ staticSpeedDomain: 'http://www.txazo.com'
 # 百度统计开关
 hmSwitch: "true"
 # Google Analytics开关
-gaSwitch: "true"
+gaSwitch: "false"
 
 # css引入
 css: ["http://cdn.bootcss.com/bootstrap/3.3.6/css/bootstrap.min.css", "http://www.txazo.com/css/core.css"]
