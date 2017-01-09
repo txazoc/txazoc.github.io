@@ -7,4 +7,6 @@ date:   2016-12-14
 
 #### 美团点评日志中心 LogCenter
 
+![日志中心](/images/topic/middleware/logcenter/log.png =480x)
+
 ![日志中心](/images/topic/middleware/logcenter/logcenter.png =540x)

@@ -102,7 +102,7 @@
 .language-xml {
     //color: #FF8785 !important;
 
-    .php{
+    .php {
         color: #FF8785 !important;
     }
 
@@ -148,4 +148,18 @@
     .hljs-comment {
         color: #299999 !important;
     }
+}
+
+// nginx
+.language-nginx .hljs-attribute {
+    color: #a6e22e;
+}
+
+.language-nginx .hljs-variable {
+    color: #FF8785;
+}
+
+// http
+.language-http .hljs-attribute {
+    color: #66d9ef;
 }
