@@ -8,12 +8,18 @@ date:   2016-12-30
 在远程调用中，要传递结构化的数据，包含三种类型:
 
 * 基本类型
-* 对象
-* 数组
+* 结构体
+* 集合
 
-常见的序列化协议有java原生序列化、json、hessian、thrift、protobuf
+针对结构化的数据，会进行相应的序列化和反序列化
 
-#### json协议
+常见的序列化协议有java原生序列化、xml、json、hessian、thrift、protobuf
+
+#### java原生序列化
+
+#### xml
+
+#### json
 
 使用标准的json格式
 
@@ -26,9 +32,11 @@ date:   2016-12-30
 * 非二进制
 * key、分隔符(`{}[]:,`)
 
-#### hessian协议
+#### hessian
 
-#### thrift协议
+[Hessian 2.0序列化协议文档](http://hessian.caucho.com/doc/hessian-serialization.html)
+
+#### thrift
 
 #### 点评App API数据协议 - NVObject
 
