@@ -1,6 +1,6 @@
 ---
 layout: topic
-module: 临时
+module: Java
 title:  javac编译器
 date:   2016-12-06
 ---
