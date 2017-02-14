@@ -25,6 +25,10 @@ date:   2017-02-11
 * App <-> Server
 * Server <-> Server
 
+#### 存储
+
+* 
+
 #### IO
 
 * [IO模型](/topic/linux/io-model.html)
