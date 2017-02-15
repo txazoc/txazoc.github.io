@@ -1,7 +1,7 @@
 ---
 layout: topic
 module: 多线程
-title:  中断
+title:  线程中断
 date:   2016-10-27
 ---
 
@@ -105,3 +105,108 @@ Java中可以被中断的方法分为三类:
 * sleep: Thread.sleep()
 * wait: Object.wait()、Thread.join()
 * lock: ReentrantLock.lockInterruptibly()
+
+#### 如何中断一个线程?
+
+***1. volatile变量***
+
+```java
+public class Interrupt implements Runnable {
+
+    private volatile boolean avaliable = true;
+
+    @Override
+    public void run() {
+        while (avaliable) {
+        }
+    }
+
+    public void cancel() {
+        avaliable = false;
+    }
+
+}
+```
+
+***2. 中断标识检测***
+
+```java
+public class Interrupt implements Runnable {
+
+    @Override
+    public void run() {
+        while (!Thread.interrupted()) {
+        }
+//      while (!Thread.currentThread().isInterrupted()) {
+//      }
+    }
+
+}
+```
+
+***3. 中断异常捕获***
+
+适用于Object.wait、Thread.join、Thread.sleep等抛出InterruptedException的操作
+
+```java
+public class Interrupt implements Runnable {
+
+    @Override
+    public void run() {
+        try {
+            while (true) {
+                Thread.sleep(1000);
+            }
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+    }
+
+}
+```
+
+***4. 综合上述中断方式***
+
+```java
+public class Interrupt implements Runnable {
+
+    private volatile boolean avaliable = true;
+
+    @Override
+    public void run() {
+        try {
+            while (true) {
+                if (!avaliable || Thread.currentThread().isInterrupted()) {
+                    /** 检测到中断, 向外抛出InterruptedException */
+                    throw new InterruptedException();
+                }
+                task();
+            }
+        } catch (InterruptedException e) {
+            /** 重新设置中断标识 */
+            Thread.currentThread().interrupt();
+        }
+    }
+
+    public void task() throws InterruptedException {
+        try {
+            while (true) {
+                if (!avaliable || Thread.currentThread().isInterrupted()) {
+                    /** 检测到中断, 向外抛出InterruptedException */
+                    throw new InterruptedException();
+                }
+                Thread.sleep(1000);
+            }
+        } catch (InterruptedException e) {
+            /** 重新设置中断标识 */
+            Thread.currentThread().interrupt();
+            throw e;
+        }
+    }
+
+    public void cancel() {
+        avaliable = false;
+    }
+
+}
+```

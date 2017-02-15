@@ -9,10 +9,10 @@ DNS，Domain Name System，域名系统，因特网上作为域名和IP地址相
 
 域名解析: 得到域名对应的IP地址
 
-***域名解析过程***
+#### 域名解析过程
 
 * 递归查询
-    * 客户端DNS缓存(浏览器、App、应用程序)
+    * 应用DNS缓存(浏览器、App、应用程序)
     * hosts文件
     * 操作系统DNS缓存(TTL)
     * 本地DNS服务器
@@ -24,7 +24,7 @@ DNS，Domain Name System，域名系统，因特网上作为域名和IP地址相
     * 本地DNS服务器 > DNS服务器
     * 域名解析记录 > 本地DNS服务器缓存
 
-***域名解析记录***
+#### 域名解析记录
 
 * A记录: 域名 > ipv4地址
 * AAAA记录: 域名> ipv6地址
@@ -44,7 +44,7 @@ NS      pod      f1g1ns2.dnspod.net
 隐性URL  tobaidu  http://www.baidu.com
 ```
 
-***TTL***
+#### TTL
 
 TTL(Time To Live)，一条域名解析记录在DNS服务器中存留的时间，单位为秒
 
@@ -55,7 +55,7 @@ $ ping www.baidu.com
 64 bytes from 115.239.210.27: icmp_seq=2 ttl=53 time=13.113 ms
 ```
 
-***DNS负载均衡***
+#### DNS负载均衡
 
 在DNS服务器中为一个域名配置多个IP地址
 
@@ -65,6 +65,44 @@ A   www     124.168.2.2
 A   www     124.168.2.3
 ```
 
+#### DNS查询工具
+
 ***dig***
 
+```bash
+$ dig www.baidu.com
+
+; <<>> DiG 9.8.3-P1 <<>> www.baidu.com
+;; global options: +cmd
+;; Got answer:
+;; ->>HEADER<<- opcode: QUERY, status: NOERROR, id: 41105
+;; flags: qr rd ra; QUERY: 1, ANSWER: 3, AUTHORITY: 0, ADDITIONAL: 0
+
+;; QUESTION SECTION:
+;www.baidu.com.			IN	A
+
+;; ANSWER SECTION:
+www.baidu.com.		777	IN	CNAME	www.a.shifen.com.
+www.a.shifen.com.	300	IN	A	115.239.211.112
+www.a.shifen.com.	300	IN	A	115.239.210.27
+
+;; Query time: 35 msec
+;; SERVER: 180.168.255.18#53(180.168.255.18)
+;; WHEN: Wed Feb 15 20:27:45 2017
+;; MSG SIZE  rcvd: 90
+```
+
 ***nslookup***
+
+```bash
+$ nslookup www.baidu.com
+Server:		180.168.255.18
+Address:	180.168.255.18#53
+
+Non-authoritative answer:
+www.baidu.com	canonical name = www.a.shifen.com.
+Name:	www.a.shifen.com
+Address: 115.239.211.112
+Name:	www.a.shifen.com
+Address: 115.239.210.27
+```
