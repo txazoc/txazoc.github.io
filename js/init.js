@@ -464,6 +464,12 @@ define(function (require, exports, module) {
                 html += '<div class="topic-list">';
 
                 v.sort(function (v1, v2) {
+                    if (v1.title == v1.module) {
+                        return -1;
+                    }
+                    if (v2.title == v2.module) {
+                        return 1;
+                    }
                     return Init.sortStr(v1.title, v2.title);
                 });
 

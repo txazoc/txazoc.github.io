@@ -1,6 +1,6 @@
 ---
 layout: topic
-module: Java并发
+module: Java
 title:  synchronized
 date:   2017-01-07
 ---

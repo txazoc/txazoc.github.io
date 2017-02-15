@@ -27,16 +27,13 @@ date:   2017-02-11
 
 #### 存储
 
-* 
-
 #### IO
 
 * [IO模型](/topic/linux/io-model.html)
 
 #### Java
 
-* [IO](/topic/java/io.html)
-* [NIO](/topic/java/nio.html)
+* [Java](/topic/java/java.html)
 
 #### 负载均衡
 
