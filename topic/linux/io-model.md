@@ -102,13 +102,3 @@ I/O多路复用的原理是一个线程管理多个Socket，有三种实现: sel
 select和poll需要自己不断轮询所有fd集合，epoll基于事件回调
 
 select和poll的IO效率会随着fd数量增加而线性下降，epoll则不会
-
-#### Reactor模式
-
-![Reactor模式](/images/topic/linux/reactor.png =480x)
-
-* MainReactor: 注册accept事件
-* Acceptor: accept新的连接，注册read事件
-* SubReactor: 分发read、write
-* Task Queue: 任务队列
-* Thread Pool: 任务执行线程池
