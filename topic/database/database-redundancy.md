@@ -1,7 +1,7 @@
 ---
 layout: topic
 module: 数据库
-title:  冗余表
+title:  数据库冗余
 date:   2017-01-19
 ---
 

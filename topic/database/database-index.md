@@ -1,7 +1,7 @@
 ---
 layout: topic
 module: 数据库
-title:  MySQL索引
+title:  数据库索引
 date:   2016-12-10
 ---
 

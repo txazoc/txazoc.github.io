@@ -1,7 +1,7 @@
 ---
 layout: topic
 module: 数据库
-title:  分库分表
+title:  数据库拆分
 date:   2017-01-28
 ---
 
