@@ -31,7 +31,7 @@ date:   2017-02-15
     * LockSupport.parkUntil(timeout)
 * `TERMINATED`: 终止状态
 
-`jstack`查看:
+使用`jstack`查看线程状态:
 
 ```console
 1. RUNNING
