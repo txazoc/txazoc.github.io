@@ -29,8 +29,6 @@ date:   2016-12-14
 
 市场投放时，只投放综合链接 [http://www.dp.com/link?id=1245](http://www.dp.com/link?id=1245) ，当Android版本升级或更换渠道投放时，打新的渠道包并更新渠道包下载链接即可
 
-![综合链接](/images/topic/project/channel-apk-update-1.png =540x)
-
 #### 传统的渠道包更新方式
 
 * 打渠道包: 渠道名 + 版本号

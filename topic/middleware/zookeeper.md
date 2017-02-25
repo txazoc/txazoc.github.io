@@ -48,7 +48,7 @@ Zookeeper有三种角色:
 * Follower
 * Observer
 
-![zkservice](/images/topic/middleware/zookeeper/zkservice.jpg =480x)
+<img src="/images/topic/middleware/zookeeper/zkservice.jpg" alt="Zookeeper服务" width="480" style="padding: 10px">
 
 ***客户端***
 
@@ -58,7 +58,7 @@ Zookeeper有三种角色:
 
 #### <a id="data-model">Zookeeper数据模型</a>
 
-![Zookeeper命名空间](/images/topic/middleware/zookeeper/zknamespace.jpg =360x)
+<img src="/images/topic/middleware/zookeeper/zknamespace.jpg" alt="Zookeeper命名空间" width="360" style="padding: 10px">
 
 ***节点***
 
