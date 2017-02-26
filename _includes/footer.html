@@ -8,7 +8,7 @@
     </div>
 </footer>
 {% if site.localDebug == 'true' %}
-{% for js in site.localJs %}<script src="{{ js | prepend: site.baseurl }}"></script>
+{% for js in site.localJs %}{% if js contains '/js/load.js' %}<script src="{{ js | append: '?' | append:site.randomVersion | prepend: site.baseurl }}"></script>{% else %}<script src="{{ js | prepend: site.baseurl }}"></script>{% endif %}
 {% endfor %}{% else %}
-{% for js in site.js %}<script src="{{ js | prepend: site.baseurl }}"></script>
+{% for js in site.js %}{% if js contains '/js/load.js' %}<script src="{{ js | append: '?' | append:site.randomVersion | prepend: site.baseurl }}"></script>{% else %}<script src="{{ js | prepend: site.baseurl }}"></script>{% endif %}
 {% endfor %}{% endif %}
