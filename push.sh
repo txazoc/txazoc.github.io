@@ -1,6 +1,7 @@
 #!/bin/bash
 
 python script/topic.py
+python script/topic-copy.py
 
 git add .
 git cm 'update'
