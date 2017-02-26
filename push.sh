@@ -4,7 +4,7 @@ python script/topic.py
 python script/topic-copy.py
 
 git add .
-git cm 'update'
+git cm 'auto commit'
 git push origin master
 
 echo '--------------------------------------------------'
