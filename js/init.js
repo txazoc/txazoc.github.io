@@ -68,7 +68,7 @@ define(function (require, exports, module) {
                 Share.shareToWeixin();
             });
 
-            $('#main').find('.article a').each(function () {
+            $('#main').find('.article .md-primary a').each(function () {
                 var href = $(this).attr('href');
                 if (href != null && href.substr(0, 1) != '/' && href.substr(0, 1) != '#') {
                     $(this).attr('target', '_blank');
