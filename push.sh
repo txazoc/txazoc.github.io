@@ -2,6 +2,7 @@
 
 python script/topic.py
 python script/topic-copy.py
+python script/config_replace.py
 
 git add .
 git cm 'auto commit'

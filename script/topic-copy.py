@@ -73,7 +73,7 @@ def main():
     print '[python] copy topic to publish begin.'
     initPath(publishPath)
     copyPublishTopic()
-    print '[python] copy topic to publish begin success.'
+    print '[python] copy topic to publish success.'
     print '--------------------------------------------------'
 
 main()

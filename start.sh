@@ -2,6 +2,7 @@
 
 python script/topic.py
 python script/topic-copy.py
+python script/config_replace.py true
 
 open -g http://127.0.0.1:4000/
 
