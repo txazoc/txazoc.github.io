@@ -19,12 +19,11 @@ slab class   1: chunk size        96 perslab   10922
 slab class   2: chunk size       120 perslab    8738
 slab class   3: chunk size       152 perslab    6898
 slab class   4: chunk size       192 perslab    5461
-slab class   5: chunk size       240 perslab    4369
-slab class   6: chunk size       304 perslab    3449
-slab class   7: chunk size       384 perslab    2730
-slab class   8: chunk size       480 perslab    2184
-slab class   9: chunk size       600 perslab    1747
-slab class  10: chunk size       752 perslab    1394
+...
+slab class  39: chunk size    493552 perslab       2
+slab class  40: chunk size    616944 perslab       1
+slab class  41: chunk size    771184 perslab       1
+slab class  42: chunk size   1048576 perslab       1
 ```
 
 #### O(1)
@@ -95,7 +94,9 @@ STORED
 
 I/O多路复用
 
-#### 简单的文本协议
+#### 协议
+
+简单的文本协议
 
 #### 客户端分布式
 
