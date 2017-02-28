@@ -9,9 +9,9 @@ TCP(Transmission Control Protocol)，传输控制协议，一种面向连接的�
 
 #### 三次握手
 
-* SYN_SEND: SYN(seq=x)
-* SYN_RECV: SYN-ACK(seq=y ack=x+1)
-* Established: ACK(ack=y+1)  
+* SYN_SEND: `SYN`(seq=x)
+* SYN_RECV: `SYN-ACK`(seq=y ack=x+1)，半连接状态
+* Established: `ACK`(ack=y+1)  
 
 Wireshark抓包分析:
 
@@ -32,7 +32,7 @@ $ tcpdump -iany tcp and net 151.101.100.133
 
 #### 四次挥手
 
-FIN > ACK > FIN > ACK
+`FIN` > `ACK` > `FIN` > `ACK`
 
 Wireshark抓包分析:
 
