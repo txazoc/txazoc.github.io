@@ -1,7 +1,6 @@
 ---
 layout: topic
 module: Java
-title:  线程池
+title:  Future/Callable
 date:   2017-02-15
 ---
-
