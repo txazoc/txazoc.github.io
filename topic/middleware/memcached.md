@@ -29,7 +29,7 @@ slab class  42: chunk size   1048576 perslab       1
 #### O(1)
 
 * 哈希表
-* set
+* set，设置key-value，置于LRU顶部
 
 ```bash
 set name 0 0 7
@@ -37,7 +37,7 @@ manager
 STORED
 ```
 
-* add
+* add，key不存在就添加key-value，置于LRU顶部
 
 ```bash
 add name 0 0 5
@@ -45,7 +45,7 @@ admin
 STORED
 ```
 
-* replace
+* replace，key存在才替换value
 
 ```bash
 replace name 0 0 4
@@ -53,14 +53,14 @@ root
 STORED
 ```
 
-* delete
+* delete，删除key-value
 
 ```bash
 delete name
 DELETED
 ```
 
-* get
+* get，获取key对应的value值
 
 ```bash
 get name
@@ -69,7 +69,7 @@ admin
 END
 ```
 
-* gets
+* gets，获取key对应的value值，并返回CAS标识符(64位数字)，用于`cas`命令
 
 ```bash
 gets name
@@ -78,13 +78,41 @@ manager
 END
 ```
 
-* cas
+* cas，Compare And Swap，原子更新
 
 ```bash
 cas name 0 0 5 10 
 admin
 STORED
 ```
+
+* incr/decr，自增/自减，前提是value是64位整数的字符串表示，并且自增/自减的值只能是正整数，不能是负数
+
+```bash
+set id 0 0 2
+10
+STORED
+get id
+VALUE id 0 2
+10
+END
+incr id 5
+15
+decr id 10
+5
+```
+
+#### Multi-Get
+
+批量get操作，由Client实现
+
+最简单的方案就是以串行的方式循环get每个key，时间复杂度O(keys)
+
+分组优化，计算所有的key落到哪些节点上，得到一个Map<Node, List<Key>>，然后遍历Node进行mget操作，时间复杂度O(nodes)
+
+继续优化，并行处理每个Node的mget操作，时间复杂度O(1)
+
+#### Memcached统计
 
 #### LRU
 
