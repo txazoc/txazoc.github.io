@@ -7,7 +7,7 @@ date:   2016-12-10
 
 #### 表锁(Table-Level Lock)
 
-Myisam和InnoDB都支持表锁，表锁不允许并发写
+表锁，锁对象是整个表，Myisam和InnoDB都支持表锁，表锁不允许并发写
 
 ***MyISAM并发插入***
 
