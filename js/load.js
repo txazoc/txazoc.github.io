@@ -4,7 +4,7 @@
 {% if site.localDebug == 'true' %}seajs.config({
     base: '/js',
     alias: {
-        'init': '{{ '/js/init.js' | prepend: site.localDomain }}',
+        'init': '{{ '/js/init.min.js' | prepend: site.localDomain }}',
         'data': '{{ '/js/data.js?' | append: site.randomVersion | prepend: site.localDomain }}',
         'topic': '{{ '/js/topic.js?' | append: site.randomVersion | prepend: site.localDomain }}',
         'input-css': '{{ '/css/input.min.css' | prepend: site.localDomain }}'

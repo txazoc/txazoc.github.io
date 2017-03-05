@@ -68,7 +68,7 @@ def main():
             print '    ' + t['path']
 
     writeFile(topicJs, 'w', readTopics())
-    writeFile(topicJs, 'a', '\nvar TopicModule = ')
+    writeFile(topicJs, 'a', 'var TopicModule = ')
     json.dump(topicModule, open(topicJs, 'a'))
     writeFile(topicJs, 'a', ';')
 
