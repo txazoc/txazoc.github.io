@@ -1,8 +1,7 @@
 ---
 # load.js
 ---
-{% if site.localDebug == 'true' %}
-seajs.config({
+{% if site.localDebug == 'true' %}seajs.config({
     base: '/js',
     alias: {
         'init': '{{ '/js/init.js' | prepend: site.localDomain }}',
