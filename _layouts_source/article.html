@@ -1,0 +1,29 @@
+---
+layout: default
+---
+
+<div class="article">
+    <div class="title">
+        <h1>{{ page.title }}</h1>
+    </div>
+    <div class="tag">
+        {% for tag in page.tags %}
+        <div class="item">
+            <a href="/tags.html?tag={{ tag }}">{{ tag }}</a>
+        </div>
+        {% endfor %}
+    </div>
+    <div class="info">
+        <span class="publish">发表于</span>
+        <span class="datetime">
+            {{ page.date | date: "%Y年%m月%d日" }}
+        </span>
+    </div>
+    <div class="{{ site.markdownStyle }}">
+        {{ content }}
+    </div>
+    <div class="share">
+        <a class="iconfont icon-sina" href="javascript:;" title="分享到新浪微博"></a>
+        <a class="iconfont icon-qq" href="javascript:;" title="分享到QQ空间"></a>
+    </div>
+</div>
