@@ -8,8 +8,8 @@ define(function (require, exports, module) {
 
     var Init = {
         lastWindowWidth: 0,
-        sourceDomain: 'http://github.txazo.com',
-        indexSpeedDomain: 'http://www.txazo.com',
+        sourceDomain: '//github.txazo.com',
+        indexSpeedDomain: '//www.txazo.com',
 
         init: function (sourceDomain, indexSpeedDomain) {
             Init.sourceDomain = sourceDomain;

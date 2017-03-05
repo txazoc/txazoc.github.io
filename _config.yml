@@ -28,13 +28,13 @@ highlightstyle: hljs-txazo
 localDebug: "false"
 
 # 本地域名
-localDomain: "http://127.0.0.1:4000"
+localDomain: "//127.0.0.1:4000"
 # 源站域名
-sourceDomain: "http://www.txazo.com"
+sourceDomain: "//www.txazo.com"
 # 首页加速域名
-indexSpeedDomain: 'http://www.txazo.com'
+indexSpeedDomain: '//www.txazo.com'
 # 静态加速域名
-staticSpeedDomain: 'http://www.txazo.com'
+staticSpeedDomain: '//www.txazo.com'
 
 # 百度统计开关
 hmSwitch: "true"
@@ -64,4 +64,4 @@ paginate: 10
 paginate_path: "index/:num"
 
 # 随机版本号
-randomVersion: "6c257b01ef3e67d32f560adeba55f78d"
+randomVersion: "bc7b5b5f1f86c4aefc5ec62585b68713"
