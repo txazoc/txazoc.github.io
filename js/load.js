@@ -14,7 +14,7 @@
 seajs.config({
     base: '/js',
     alias: {
-        'init': '{{ '/js/init.js' | prepend: site.staticSpeedDomain }}',
+        'init': '{{ '/js/init.min.js' | prepend: site.staticSpeedDomain }}',
         'data': '{{ '/js/data.js?' | append: site.randomVersion | prepend: site.staticSpeedDomain }}',
         'topic': '{{ '/js/topic.js?' | append: site.randomVersion | prepend: site.staticSpeedDomain }}',
         'input-css': '{{ '/css/input.min.css' | prepend: site.staticSpeedDomain }}'
