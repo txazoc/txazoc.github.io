@@ -1,0 +1,23 @@
+---
+layout: default
+---
+
+<div class="list">
+    <ul>
+        {% for post in paginator.posts %}
+        <li>
+            <h3 class="list-title">
+                <a href="{% if site.localDebug == 'true' %}{{ post.url | prepend: site.baseurl | prepend: site.localDomain }}{% else %}{{ post.url | prepend: site.baseurl | prepend: site.sourceDomain }}{% endif %}">{{ post.title }}</a>
+            </h3>
+            <div class="list-content">
+                <p>{{ post.content | strip_html | strip_newlines | truncate: 150 }}</p>
+            </div>
+            <div class="list-info">
+                <span class="datetime">{{ post.date | date: "%Y年%m月%d日" }}</span>
+            </div>
+        </li>
+        {% endfor %}
+    </ul>
+</div>
+
+<div class="page" page="{{ paginator.page }}#{{ paginator.total_pages }}"></div>

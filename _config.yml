@@ -45,8 +45,8 @@ gaSwitch: "false"
 css: ["//cdn.bootcss.com/bootstrap/3.3.6/css/bootstrap.min.css", "//www.txazo.com/css/core.css"]
 localCss: ["/css/lib/bootstrap.min.css", "/css/core.css"]
 # js引入
-js: ["//cdn.bootcss.com/jquery/1.12.1/jquery.min.js", "//cdn.bootcss.com/bootstrap/3.3.6/js/bootstrap.min.js", "//cdn.bootcss.com/seajs/3.0.2/sea.js", "//www.txazo.com/js/lib/seajs-css.js", "//cdn.bootcss.com/highlight.js/9.9.0/highlight.min.js", "//www.txazo.com/js/load.js"]
-localJs: ["/js/lib/jquery.min.js", "/js/lib/bootstrap.min.js", "/js/lib/sea.js", "/js/lib/seajs-css.js", "/js/lib/highlight.min.js", "/js/load.js"]
+js: ["//cdn.bootcss.com/jquery/1.12.1/jquery.min.js", "//cdn.bootcss.com/bootstrap/3.3.6/js/bootstrap.min.js", "//cdn.bootcss.com/seajs/3.0.2/sea.js", "//www.txazo.com/js/lib/seajs-css.js", "//cdn.bootcss.com/highlight.js/9.9.0/highlight.min.js", "//www.txazo.com/js/load.min.js"]
+localJs: ["/js/lib/jquery.min.js", "/js/lib/bootstrap.min.js", "/js/lib/sea.js", "/js/lib/seajs-css.js", "/js/lib/highlight.min.js", "/js/load.min.js"]
 
 # rss
 rssxml: "/feed.xml"
@@ -64,4 +64,4 @@ paginate: 10
 paginate_path: "index/:num"
 
 # 随机版本号
-randomVersion: "7482a95bff1a52d9caf7675402976f86"
+randomVersion: "dffc3b25c0d0d39d3ac04983019715fc"

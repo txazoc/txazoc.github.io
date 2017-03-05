@@ -3,7 +3,7 @@
 python script/config_replace.py true
 python script/topic.py
 python script/topic-copy.py
-python script/js-compress.py
+python script/compress.py false
 
 open -g http://127.0.0.1:4000/
 
