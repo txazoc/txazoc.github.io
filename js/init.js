@@ -56,6 +56,13 @@ define(function (require, exports, module) {
                 Init.resize();
             });
 
+            $('.article .item a').bind('click', function () {
+                var that = this;
+                require.async('md5', function () {
+                    Init.redirectUrl(Init.wrapSourceDomain('/tags.html?' + md5($(that).html())));
+                });
+            });
+
             $('.icon-qq').on('click', function () {
                 Share.shareToQQZone();
             });
