@@ -235,7 +235,10 @@ define(function (require, exports, module) {
                     $items.append($('<div class="item"></div>').append($('<span></span>').attr('tag', t.name).attr('color', Color[i % Color.length]).addClass(Color[i % Color.length]).html(t.name + '(' + t.size + ')')));
                 });
                 $tags.delegate('.item span', 'click', function () {
-                    Init.redirectUrl(Init.wrapSourceDomain('/tags.html?tag=' + $(this).attr('tag')));
+                    var that = this;
+                    require.async('md5', function () {
+                        Init.redirectUrl(Init.wrapSourceDomain('/tags.html?' + md5($(that).attr('tag'))));
+                    });
                 }).show();
             });
         },
@@ -247,21 +250,26 @@ define(function (require, exports, module) {
         },
 
         initTags: function () {
-            var tag = Init.getUrlParamValue('tag');
+            var tag = Init.getUrlParams();
             if (tag == null || (tag = tag.trim()) == '') {
                 Init.redirectUrl(Init.wrapSourceDomain('/404.html'));
                 return;
             }
 
-            require.async('data', function () {
+            var tagName = '';
+            require.async(['data', 'md5'], function (d, m) {
                 var postArray = [];
                 $.each(Post, function (i, p) {
                     var tagArray = p.tags.trim().split(' ');
-                    if ($.inArray(tag, tagArray) >= 0) {
-                        postArray.push(p);
-                    }
+                    $.each(tagArray, function (j, v) {
+                        if (tag == md5(v)) {
+                            tagName = v;
+                            postArray.push(p);
+                            return false;
+                        }
+                    });
                 });
-                Init.displayTag(tag, postArray.length);
+                Init.displayTag(tagName, postArray.length);
                 Init.displayPost(postArray);
             });
         },
@@ -335,6 +343,10 @@ define(function (require, exports, module) {
                 )
             );
             $archive.show();
+        },
+
+        getUrlParams: function () {
+            return window.location.search.substr(1);
         },
 
         getUrlParamValue: function (param) {
