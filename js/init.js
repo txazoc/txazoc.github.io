@@ -594,6 +594,7 @@ define(function (require, exports, module) {
                                 newContent += HighLight.wrapSpan(line, 'output');
                             } else {
                                 var dollar = 0;
+                                var pipe = 0;
                                 var words = line.split(' ');
                                 $.each(words, function (j, word) {
                                         if (j == 0) {
@@ -608,6 +609,12 @@ define(function (require, exports, module) {
                                             }
                                         } else if (j == 1 && dollar == 1) {
                                             newContent += HighLight.wrapSpan(word, 'keyword');
+                                        } else if (pipe == 1) {
+                                            pipe = 0;
+                                            newContent += HighLight.wrapSpan(word, 'keyword');
+                                        } else if (word == '|') {
+                                            pipe = 1;
+                                            newContent += HighLight.wrapSpan(word, 'pipe');
                                         } else if (word.charAt(0) == '-') {
                                             newContent += HighLight.wrapSpan(word, 'option');
                                         } else if (HighLight.quoteRegex.test(word) || HighLight.doubleQuoteRegex.test(word)) {
