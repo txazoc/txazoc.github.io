@@ -135,8 +135,31 @@
     color: #f92672;
 }
 
+// linux
 .language-linux {
-    color: #a6e22e;
+    .hljs-prompt {
+        color: #e6db74 !important;
+    }
+
+    .hljs-keyword {
+        color: #f92672 !important;
+    }
+
+    .hljs-option {
+        color: #a6e22e !important;
+    }
+
+    .hljs-string {
+        color: #66d9ef !important;
+    }
+
+    .hljs-param {
+        color: #FF8785 !important;
+    }
+
+    .hljs-output {
+        color: #299999 !important;
+    }
 }
 
 .language-javap {

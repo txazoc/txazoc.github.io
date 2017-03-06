@@ -267,7 +267,7 @@ jdb有两种使用方式:
 
 以debug方式启动Java程序:
 
-```console
+```linux
 $ java -Xdebug -Xrunjdwp:transport=dt_socket,address=8787,server=y,suspend=n org.txazo.Test
 ```
 
@@ -275,7 +275,7 @@ $ java -Xdebug -Xrunjdwp:transport=dt_socket,address=8787,server=y,suspend=n org
 
 `jdb -attach 192.168.224.111:8787`
 
-```console
+```linux
 $ jdb -classpath . org.txazo.Test
 正在初始化jdb...
 > stop in org.txazo.Test.main
@@ -337,7 +337,7 @@ Java Process Status Tool，Java进程状态工具
 
 * `jps`: 默认方式, 显示pid + 主类名
 
-```console
+```linux
 $ jps
 42424 RemoteMavenServer
 58990 Jps
@@ -346,7 +346,7 @@ $ jps
 
 * `jps -l`: 显示pid + 主类名全称
 
-```console
+```linux
 $ jps -l
 42424 org.jetbrains.idea.maven.server.RemoteMavenServer
 42214 
@@ -355,7 +355,7 @@ $ jps -l
 
 * `jps -v`: 显示pid + java参数
 
-```console
+```linux
 $ jps -v
 42424 RemoteMavenServer -Djava.awt.headless=true -Didea.version==15.0.2 -Xmx512m -Didea.maven.embedder.version=3.0.5 -Dfile.encoding=UTF-8
 59673 Jps -Denv.class.path=/Library/Java/JavaVirtualMachines/current.jdk/Contents/Home/lib -Dapplication.home=/Library/Java/JavaVirtualMachines/jdk1.7.0_80.jdk/Contents/Home -Xms8m
@@ -375,7 +375,7 @@ Java Virtual Machine Statistics Monitoring Tool，Java虚拟机统计监控工�
 
 `jstat -options`输出的选项:
 
-```console
+```linux
 $ jstat -options
 -class
 -compiler
@@ -395,7 +395,7 @@ $ jstat -options
 
 * `jstat -class`: 类加载统计
 
-```console
+```linux
 $ jstat -class 8705
 Loaded  Bytes  Unloaded  Bytes     Time   
   8233 16680.3        0     0.0      12.33
@@ -403,7 +403,7 @@ Loaded  Bytes  Unloaded  Bytes     Time
 
 * `jstat -compiler`: JIT编译统计
 
-```console
+```linux
 $ jstat -compiler 8705
 Compiled Failed Invalid   Time   FailedType FailedMethod
     1945      0       0    24.28          0
@@ -411,7 +411,7 @@ Compiled Failed Invalid   Time   FailedType FailedMethod
 
 * `jstat -gc`: 堆内存和gc统计
 
-```console
+```linux
 $ jstat -gc 8705
  S0C    S1C    S0U    S1U      EC       EU        OC         OU       PC     PU    YGC     YGCT    FGC    FGCT     GCT   
 13312.0 12288.0 2560.0  0.0   117760.0 78743.0   307200.0   202786.7  49664.0 49175.5     56    0.680   0      0.000    0.680
@@ -419,7 +419,7 @@ $ jstat -gc 8705
 
 * `jstat -gccapacity`: 堆内存容量统计
 
-```console
+```linux
 $ jstat -gccapacity 8705
  NGCMN    NGCMX     NGC     S0C   S1C       EC      OGCMN      OGCMX       OGC         OC      PGCMN    PGCMX     PGC       PC     YGC    FGC 
 143360.0 143360.0 143360.0 11776.0 12288.0 117760.0   307200.0   307200.0   307200.0   307200.0  21504.0  83968.0  49664.0  49664.0     57     0
@@ -427,7 +427,7 @@ $ jstat -gccapacity 8705
 
 * `jstat -gccause`: 输出同`-gcutil`，多最后一次gc的原因和当前gc的原因
 
-```console
+```linux
 $ jstat -gccause 8705
   S0     S1     E      O      P     YGC     YGCT    FGC    FGCT     GCT    LGCC                 GCC                 
   0.00  11.20  94.86  66.02  99.02     57    0.685     0    0.000    0.685 Allocation Failure   No GC
@@ -435,7 +435,7 @@ $ jstat -gccause 8705
 
 * `jstat -gcnew`: 新生代统计
 
-```console
+```linux
 $ jstat -gcnew 8705
  S0C    S1C    S0U    S1U   TT MTT  DSS      EC       EU     YGC     YGCT  
 11776.0 10752.0 3104.0    0.0  1  15 10752.0 120832.0  84236.4     58    0.692
@@ -443,7 +443,7 @@ $ jstat -gcnew 8705
 
 * `jstat -gcnewcapacity`: 新生代容量统计
 
-```console
+```linux
 $ jstat -gcnewcapacity 8705
   NGCMN      NGCMX       NGC      S0CMX     S0C     S1CMX     S1C       ECMX        EC      YGC   FGC 
   143360.0   143360.0   143360.0  20480.0  10240.0  20480.0  10752.0   142336.0   120832.0    59     0
@@ -451,7 +451,7 @@ $ jstat -gcnewcapacity 8705
 
 * `jstat -gcold`: 老年代统计
 
-```console
+```linux
 $ jstat -gcold 8705
    PC       PU        OC          OU       YGC    FGC    FGCT     GCT   
  49664.0  49183.4    307200.0    202874.7     59     0    0.000    0.699
@@ -459,7 +459,7 @@ $ jstat -gcold 8705
 
 * `jstat -gcoldcapacity`: 老年代容量统计
 
-```console
+```linux
 $ jstat -gcoldcapacity 8705
    OGCMN       OGCMX        OGC         OC       YGC   FGC    FGCT     GCT   
    307200.0    307200.0    307200.0    307200.0    60     0    0.000    0.707
@@ -467,7 +467,7 @@ $ jstat -gcoldcapacity 8705
 
 * `jstat -gcpermcapacity`: 持久代容量统计
 
-```console
+```linux
 $ jstat -gcpermcapacity 8705
   PGCMN      PGCMX       PGC         PC      YGC   FGC    FGCT     GCT   
    21504.0    83968.0    49664.0    49664.0    60     0    0.000    0.707
@@ -475,7 +475,7 @@ $ jstat -gcpermcapacity 8705
 
 * `jstat -gcutil`: 堆内存百分比和gc统计
 
-```console
+```linux
 $ jstat -gcutil 8705
   S0     S1     E      O      P     YGC     YGCT    FGC    FGCT     GCT   
   0.00  31.58  45.52  66.05  99.04     61    0.713     0    0.000    0.713
@@ -483,7 +483,7 @@ $ jstat -gcutil 8705
 
 * `jstat -printcompilation`
 
-```console
+```linux
 $ jstat -printcompilation 8705
 Compiled  Size  Type Method
     2042      5    1 com/dianping/mobile/framework/io/ResponseContent getStatusCode
@@ -491,7 +491,7 @@ Compiled  Size  Type Method
 
 * `jstat ... interval count`: 每间隔`interval`ms输出一次，总共输出`count`次
 
-```console
+```linux
 $ jstat -gcnew -t 8705 1000 5
 Timestamp        S0C    S1C    S0U    S1U   TT MTT  DSS      EC       EU     YGC     YGCT  
           682.9 8192.0 8704.0    0.0 2336.0  1  15 8192.0 125440.0  45636.5     63    0.723
@@ -520,7 +520,7 @@ Java Monitoring and Management Console，Java监视和管理控制台
 * `jconsole pid`
 * `jconsole host:port`
 
-```console
+```linux
 -Dcom.sun.management.jmxremote.port=9999
 -Dcom.sun.management.jmxremote.authenticate=false
 -Dcom.sun.management.jmxremote.ssl=false
@@ -545,7 +545,7 @@ Java Memory Map，Java内存映射
 
 * `jmap -heap <pid>`: 打印堆的摘要信息
 
-```console
+```linux
 $ jmap -heap 8705
 
 using thread-local object allocation.
@@ -597,7 +597,7 @@ PS Perm Generation
 
 * `jmap [-F] -histo[:live] <pid>`: 打印堆的柱状图，包括实例数、内存大小和类型签名
 
-```console
+```linux
 $ jmap -histo:live 8705 | head -10
 
  num     #instances         #bytes  class name
@@ -642,14 +642,14 @@ Java Configuration Info，Java配置信息
 * `jinfo <pid>`: 输出Java系统属性和JVM参数
 * `jinfo -flag <name> <pid>`: 输出指定名称的JVM参数的值
 
-```console
+```linux
 $ jinfo -flag NewSize 8705
 -XX:NewSize=146800640
 ```
 
 * `jinfo -flag [+|-]<name> <pid>`: 启用/禁用指定名称的JVM参数
 
-```console
+```linux
 $ jinfo -flag +PrintGC 8705
 $ jinfo -flag PrintGC 8705
 -XX:+PrintGC
@@ -660,7 +660,7 @@ $ jinfo -flag PrintGC 8705
 
 * `jinfo -flag <name>=<value> <pid>`: 设置指定名称的JVM参数的值
 
-```console
+```linux
 $ jinfo -flag MaxHeapFreeRatio 8705
 -XX:MaxHeapFreeRatio=100
 $ jinfo -flag MaxHeapFreeRatio=80 8705
@@ -669,14 +669,14 @@ $ jinfo -flag MaxHeapFreeRatio=80 8705
 
 * `jinfo -flags <pid>`: 输出JVM参数
 
-```console
+```linux
 $ jinfo -flags 8705
 -Djava.util.logging.config.file=/Users/txazo/Library/Caches/IntelliJIdea15/tomcat/Unnamed_txazo_3/conf/logging.properties -Djava.util.logging.manager=org.apache.juli.ClassLoaderLogManager -Xms440m -Xmx440m -XX:NewSize=140m -XX:MaxNewSize=140m -XX:SurvivorRatio=5 -Dcom.sun.management.jmxremote= -Dcom.sun.management.jmxremote.port=1099 -Dcom.sun.management.jmxremote.ssl=false -Dcom.sun.management.jmxremote.authenticate=false -Djava.rmi.server.hostname=127.0.0.1 -Djava.endorsed.dirs=/usr/local/tomcat/endorsed -Dcatalina.base=/Users/txazo/Library/Caches/IntelliJIdea15/tomcat/Unnamed_txazo_3 -Dcatalina.home=/usr/local/tomcat -Djava.io.tmpdir=/usr/local/tomcat/temp
 ```
 
 * `jinfo -sysprops <pid>`: 输出Java系统属性
 
-```console
+```linux
 $ jinfo -sysprops 8705
 java.vendor = Oracle Corporation
 sun.java.launcher = SUN_STANDARD
@@ -689,7 +689,7 @@ os.name = Mac OS X
 
 可以在运行时通过`jinfo`动态修改的JVM参数:
 
-```console
+```linux
 $ java -XX:+PrintFlagsFinal | grep manageable
  intx CMSAbortablePrecleanWaitMillis            = 100             {manageable}        
  intx CMSWaitDuration                           = 2000            {manageable}        
@@ -713,7 +713,7 @@ uintx MinHeapFreeRatio                          = 0               {manageable}
 
 * `jcmd [-l]`: 输出所有Java进程状态，同`jps -ml`
 
-```console
+```linux
 $ jcmd -l
 45576 com.intellij.rt.execution.application.AppMain JstatTest
 45552 org.apache.catalina.startup.Bootstrap start
@@ -722,7 +722,7 @@ $ jcmd -l
 
 * `jcmd <pid | main class> PerfCounter.print`: 输出进程的性能计数器
 
-```console
+```linux
 $ jcmd 8705 PerfCounter.print
 8705:
 java.ci.totalTime=26703829
@@ -735,7 +735,7 @@ java.cls.unloadedClasses=0
 
 * `jcmd <pid | main class> <command>`: `command`为`jcmd <pid | main class> help`输出的选项
 
-```console
+```linux
 $ jcmd 8705 help
 8705:
 The following commands are available:
@@ -764,7 +764,7 @@ help
 * `jcmd <pid | main class> GC.heap_dump [-all] <filename>`: 创建堆转储，同`jmap [-F] -dump:[live,]format=b,file=<filename> <pid>`，`-all`代表输出所有对象
 * `jcmd <pid | main class> VM.flags`: 输出JVM使用的参数和值
 
-```console
+```linux
 $ jcmd 8705 VM.flags
 8705:
 -XX:InitialHeapSize=461373440 -XX:+ManagementServer -XX:MaxHeapSize=461373440 -XX:MaxNewSize=146800640 -XX:NewSize=146800640 -XX:SurvivorRatio=5 -XX:+UnlockCommercialFeatures -XX:+UseCompressedOops -XX:+UseParallelGC
@@ -772,7 +772,7 @@ $ jcmd 8705 VM.flags
 
 * `jcmd <pid | main class> VM.flags -all`: 输出所有JVM支持的参数
 
-```console
+```linux
 $ jcmd 8705 VM.flags -all
 8705:
 [Global flags]
@@ -787,7 +787,7 @@ $ jcmd 8705 VM.flags -all
 * `jcmd <pid | main class> VM.system_properties`: 输出系统属性
 * `jcmd <pid | main class> VM.command_line`: 输出进程启动参数
 
-```console
+```linux
 $ jcmd 8705 VM.command_line
 8705:
 VM Arguments:
@@ -798,7 +798,7 @@ Launcher Type: SUN_STANDARD
 
 * `jcmd 0 <command>`: 输出所有Java进程相关信息
 
-```console
+```linux
 $ jcmd 0 VM.version
 46642:
 Java HotSpot(TM) 64-Bit Server VM version 24.80-b11
@@ -818,6 +818,6 @@ Java Mission Control，Java任务控制
 
 Java Flight Recorder，Java飞行记录器
 
-```console
+```linux
 java -XX:+UnlockCommercialFeatures -XX:+FlightRecorder -XX:StartFlightRecording=duration=60s,filename=myrecording.jfr MyApp
 ```

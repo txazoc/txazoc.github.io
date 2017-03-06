@@ -104,7 +104,11 @@ define(function (require, exports, module) {
                 preCode.each(function (i, e) {
                     var language = $(this).attr('class').trim();
                     $(this).removeClass(language).addClass('language-' + language);
-                    hljs.highlightBlock(e);
+                    if (HighLight.match(language)) {
+                        HighLight.highLight(language, e);
+                    } else {
+                        hljs.highlightBlock(e);
+                    }
                     $(this).parent().addClass('hljs-dark').show();
                 });
             }
@@ -564,6 +568,75 @@ define(function (require, exports, module) {
         }
     };
 
+    var HighLight = {
+            languages: ['linux'],
+            quoteRegex: new RegExp('^\'[^\']*\'$'),
+            doubleQuoteRegex: new RegExp('^"[^"]*"$'),
+            match: function (language) {
+                return $.inArray(language, HighLight.languages) >= 0;
+            },
+
+            highLight: function (language, target) {
+                HighLight[language](target);
+            },
+
+            linux: function (target) {
+                var $target = $(target);
+                var content = $target.html();
+                var lines = content.split('\n');
+                if (lines != null && lines.length > 0) {
+                    var newContent = '';
+                    $.each(lines, function (i, line) {
+                            line = line.trim();
+                            if (line == null || line == '') {
+                                newContent += line;
+                            } else if (line.charAt(0) != '$' && i != 0) {
+                                newContent += HighLight.wrapSpan(line, 'output');
+                            } else {
+                                var dollar = 0;
+                                var words = line.split(' ');
+                                $.each(words, function (j, word) {
+                                        if (j == 0) {
+                                            if (word == "$") {
+                                                dollar = 1;
+                                                newContent += HighLight.wrapSpan('$', 'prompt');
+                                            } else {
+                                                dollar = 1;
+                                                newContent += HighLight.wrapSpan('$', 'prompt');
+                                                newContent += ' ';
+                                                newContent += HighLight.wrapSpan(word, 'keyword');
+                                            }
+                                        } else if (j == 1 && dollar == 1) {
+                                            newContent += HighLight.wrapSpan(word, 'keyword');
+                                        } else if (word.charAt(0) == '-') {
+                                            newContent += HighLight.wrapSpan(word, 'option');
+                                        } else if (HighLight.quoteRegex.test(word) || HighLight.doubleQuoteRegex.test(word)) {
+                                            newContent += HighLight.wrapSpan(word, 'string');
+                                        } else {
+                                            newContent += HighLight.wrapSpan(word, 'param');
+                                        }
+                                        if (j != words.length - 1) {
+                                            newContent += ' ';
+                                        }
+                                    }
+                                );
+                            }
+                            if (i != lines.length - 1) {
+                                newContent += '\n';
+                            }
+                        }
+                    );
+                    $target.html(newContent);
+                }
+            },
+
+            wrapSpan: function (text, classStyle) {
+                return '<span class="hljs-' + classStyle + '">' + text + '</span>';
+            }
+        }
+        ;
+
     exports.init = Init.init;
 
-});
+})
+;
