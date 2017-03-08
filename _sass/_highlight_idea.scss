@@ -190,3 +190,10 @@
 .language-http .hljs-attribute {
     color: #66d9ef;
 }
+
+// sql
+.language-sql {
+    .hljs-keyword {
+        color: #a6e22e !important;
+    }
+}
