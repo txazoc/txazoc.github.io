@@ -1,3 +1,6 @@
+#!/usr/bin/python2
+# -*- coding:utf-8 -*-
+
 import cdn
 import time
 
