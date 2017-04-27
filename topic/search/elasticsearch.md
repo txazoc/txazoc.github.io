@@ -2,6 +2,7 @@
 layout: topic
 module: 搜索
 title:  ElasticSearch
+tags:   ['elasticsearch', 'kibana']
 date:   2017-04-18
 ---
 
@@ -22,11 +23,11 @@ date:   2017-04-18
 先安装JDK，推荐JDK 8，低版本JDK可能会不兼容
 
 ```linux
-$ wget https://artifacts.elastic.co/downloads/elasticsearch/elasticsearch-5.3.1.tar.gz
-$ tar -zxvf elasticsearch-5.3.1.tar.gz
-$ mv elasticsearch-5.3.1 /usr/local
+$ wget https://artifacts.elastic.co/downloads/elasticsearch/elasticsearch-5.3.0.tar.gz
+$ tar -zxvf elasticsearch-5.3.0.tar.gz
+$ mv elasticsearch-5.3.0 /usr/local
 $ cd /usr/local
-$ ln -s elasticsearch-5.3.1 elasticsearch
+$ ln -s elasticsearch-5.3.0 elasticsearch
 ```
 
 #### 安装Kibana
@@ -41,17 +42,150 @@ $ ln -s kibana-5.3.0 kibana
 
 修改config/kibana.yml文件，取消`elasticsearch.url: "http://localhost:9200"`前面注释
 
-#### 启动
+#### 启动ElasticSearch
 
 ```linux
 $ cd /usr/local/elasticsearch
-$ ./bin/elasticsearch
+$ bin/elasticsearch
 ```
 
-健康状态: `curl http://127.0.0.1:9200/_cat/health\?v`
+浏览器访问 [http://localhost:5601](http://127.0.0.1:9200)
 
-节点列表: `curl http://127.0.0.1:9200/_cat/nodes\?v`
+#### 启动Kibana
 
-索引列表: `curl http://127.0.0.1:9200/_cat/indices\?v`
+```linux
+$ cd /usr/local/kibana
+$ bin/kibana
+```
 
-创建索引: `curl -XPUT http://127.0.0.1:9200/customer?pretty`
+#### 集群
+
+* 集群状态: `_cat/health?format=json`
+
+```js
+[
+  {
+    "epoch": "1493192065",
+    "timestamp": "15:34:25",
+    "cluster": "elasticsearch",
+    "status": "yellow",
+    "node.total": "1",
+    "node.data": "1",
+    "shards": "6",
+    "pri": "6",
+    "relo": "0",
+    "init": "0",
+    "unassign": "6",
+    "pending_tasks": "0",
+    "max_task_wait_time": "-",
+    "active_shards_percent": "50.0%"
+  }
+]
+```
+
+* 节点状态: `_cat/nodes?format=json`
+
+```js
+[
+  {
+    "ip": "127.0.0.1",
+    "heap.percent": "9",
+    "ram.percent": "100",
+    "cpu": "20",
+    "load_1m": "2.27",
+    "load_5m": null,
+    "load_15m": null,
+    "node.role": "mdi",
+    "master": "*",
+    "name": "wk7M8z6"
+  }
+]
+```
+
+* 索引列表: `GET /_cat/indices?v`
+
+```console
+health status index    uuid                   pri rep docs.count docs.deleted store.size pri.store.size
+yellow open   customer Fdd8PaoERJSbKbE3Nsj8TQ   5   1          0            0       650b           650b
+yellow open   .kibana  CxctjEmXTFGE9y2nBjoN4g   1   1          1            0      3.1kb          3.1kb
+yellow open   test     bZIKn_aTTfS0m00qhjKeKA   5   1          0            0       650b           650b
+```
+
+* 创建索引: `PUT /test?pretty`
+
+```js
+{
+  "acknowledged": true,
+  "shards_acknowledged": true
+}
+```
+
+* 索引文档
+
+```js
+PUT /test/user/1?pretty
+{
+    "name": "root"
+}
+```
+
+```js
+{
+  "_index": "test",
+  "_type": "user",
+  "_id": "1",
+  "_version": 3,
+  "result": "updated",
+  "_shards": {
+    "total": 2,
+    "successful": 1,
+    "failed": 0
+  },
+  "created": false
+}
+```
+
+#### 检索文档
+
+```js
+GET /test/user/1?pretty
+```
+
+```js
+{
+  "_index": "test",
+  "_type": "user",
+  "_id": "1",
+  "_version": 3,
+  "found": true,
+  "_source": {
+    "name": "root"
+  }
+}
+```
+
+#### 删除索引: `DELETE /test?pretty`
+
+```js
+{
+  "acknowledged": true
+}
+```
+
+#### 删除文档: `DELETE /test/user/1?pretty`
+
+```json
+{
+  "found": true,
+  "_index": "test",
+  "_type": "user",
+  "_id": "1",
+  "_version": 17,
+  "result": "deleted",
+  "_shards": {
+    "total": 2,
+    "successful": 1,
+    "failed": 0
+  }
+}
+```
