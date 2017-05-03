@@ -1,4 +1,5 @@
-# -*- coding: utf-8 -*-
+#!/usr/bin/python2
+# -*- coding:utf-8 -*-
 
 import os
 import shutil
@@ -20,6 +21,7 @@ def getFileName(file):
 
 def copyPublishTopic():
     for line in open(config):
+        line = line.strip()
         print '    ' + line
         rewriteTopicHeader(rootPath + line, publishPath, getFileName(line))
 
