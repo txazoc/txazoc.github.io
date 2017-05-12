@@ -123,25 +123,11 @@ define(function (require, exports, module) {
                             } else {
                                 hljs.highlightBlock(newCode);
                             }
-                            newPre.show();
+                            newPre.css('display', 'block').show();
                         }
                     }
                 });
             }
-
-            //var preCode = $('pre > code');
-            //if (preCode.length > 0) {
-            //    preCode.each(function (i, e) {
-            //        var language = $(this).attr('class').trim().split('-')[1];
-            //        // $(this).removeClass(language).addClass('language-' + language);
-            //        if (HighLight.match(language)) {
-            //            HighLight.highLight(language, e);
-            //        } else {
-            //            hljs.highlightBlock(e);
-            //        }
-            //        $(this).parent().addClass('hljs-dark').show();
-            //    });
-            //}
         },
 
         initBrowser: function () {
