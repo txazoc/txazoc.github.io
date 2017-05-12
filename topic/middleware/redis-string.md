@@ -47,4 +47,4 @@ struct __attribute__ ((__packed__)) sdshdr64 {
 
 SDS按长度划分为sdshdr8、sdshdr16、sdshdr32、sdshdr64
 
-![SDS](/images/topic/middleware/redis/string.png =480x)
+<img src="/images/topic/middleware/redis/string.png" style="width: 480px" title="SDS" />

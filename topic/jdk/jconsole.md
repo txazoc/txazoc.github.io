@@ -15,7 +15,7 @@ jconsole包含以下几部分:
 
 ####  概览
 
-![概览](/images/topic/jdk/console/overview.png =664x)
+<img src="/images/topic/jdk/console/overview.png" style="width: 664px" title="概览" />
 
 * 堆内存使用量
 * 线程
@@ -24,7 +24,7 @@ jconsole包含以下几部分:
 
 #### 内存
 
-![内存](/images/topic/jdk/console/memory.png =664x)
+<img src="/images/topic/jdk/console/memory.png" style="width: 664px" title="内存" />
 
 * 堆内存
     * Eden Space
@@ -40,7 +40,7 @@ jconsole包含以下几部分:
 
 #### 线程
 
-![线程](/images/topic/jdk/console/thread.png =664x)
+<img src="/images/topic/jdk/console/thread.png" style="width: 664px" title="线程" />
 
 * 线程数
     * 活动线程
@@ -55,7 +55,7 @@ jconsole包含以下几部分:
 
 #### 类
 
-![类](/images/topic/jdk/console/class.png =664x)
+<img src="/images/topic/jdk/console/class.png" style="width: 664px" title="类" />
 
 * 当前加载类数
 * 已加载类总数
@@ -63,7 +63,7 @@ jconsole包含以下几部分:
 
 #### VM概要
 
-![VM概要](/images/topic/jdk/console/vm-summary.png =664x)
+<img src="/images/topic/jdk/console/vm-summary.png" style="width: 664px" title="VM概要" />
 
 * 概要
     * 运行时间
@@ -96,7 +96,7 @@ jconsole包含以下几部分:
 
 #### <a id="mbean">MBean</a>
 
-![MBean](/images/topic/jdk/console/mbean.png =664x)
+<img src="/images/topic/jdk/console/mbean.png" style="width: 664px" title="MBean" />
 
 参见 [JMX MBean](/topic/jdk/jmx.html#mbean)
 

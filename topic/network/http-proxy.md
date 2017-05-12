@@ -9,7 +9,7 @@ date:   2016-12-08
 
 ***Http代理原理***:
 
-![Http代理](/images/topic/network/httpproxy/index.png =540x)
+<img src="/images/topic/network/httpproxy/index.png" style="width: 540px" title="Http代理" />
 
 * 浏览器连接到代理服务器
 * 代理服务器解析服务器的主机和端口号, 连接到服务器

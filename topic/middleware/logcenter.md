@@ -62,7 +62,7 @@ public class LogTest {
 
 为兼容其它日志组件的API
 
-![日志中心](/images/topic/middleware/logcenter/log.png =480x)
+<img src="/images/topic/middleware/logcenter/log.png" style="width: 480px" title="日志中心" />
 
 Log4j 2配置文件示例:
 
@@ -135,4 +135,4 @@ Log4j 2配置文件示例:
 </Configuration>
 ```
 
-![日志中心](/images/topic/middleware/logcenter/logcenter.png =540x)
+<img src="/images/topic/middleware/logcenter/logcenter.png" style="width: 540px" title="日志中心" />

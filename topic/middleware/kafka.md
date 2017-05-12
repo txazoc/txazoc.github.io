@@ -114,13 +114,13 @@ $ ls /tmp/kafka-logs-1/my-partition-replication-topic-1
 
 Topic生产:
 
-![Topic生产](/images/topic/middleware/kafka/topic_log.png =400x)
+<img src="/images/topic/middleware/kafka/topic_log.png" style="width: 400px" title="Topic生产" />
 
 `bin/kafka-console-producer.sh --broker-list 127.0.0.1:9092 --topic my-topic`
 
 Topic消费:
 
-![Topic消费](/images/topic/middleware/kafka/topic_consumer.png =400x)
+<img src="/images/topic/middleware/kafka/topic_consumer.png" style="width: 400px" title="Topic消费" />
 
 `bin/kafka-console-consumer.sh --zookeeper 127.0.0.1:2181 --topic my-topic --from-beginning`
 
@@ -134,7 +134,7 @@ Topic消费:
 
 * 消费组
 
-![消费组](/images/topic/middleware/kafka/consumer-groups.png =400x)
+<img src="/images/topic/middleware/kafka/consumer-groups.png" style="width: 400px" title="消费组" />
 
 #### 消息系统
 

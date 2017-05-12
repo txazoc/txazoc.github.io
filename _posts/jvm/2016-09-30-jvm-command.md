@@ -633,7 +633,7 @@ options:
 
 浏览器访问 [http://127.0.0.1:7888](http://127.0.0.1:7888) 查看分析结果
 
-![堆转储分析结果](/images/java/jhat.png =540x)
+<img src="/images/java/jhat.png" style="width: 540px" title="堆转储分析结果" />
 
 #### <a id="jinfo">jinfo</a>
 

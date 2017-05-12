@@ -12,7 +12,7 @@ date:   2017-01-06
 * `Nginx Proxy 2`: 192.168.1.102
 * `Server`: 192.168.1.20
 
-![Nginx真实IP](/images/topic/server/nginx-real-ip.png =200x)
+<img src="/images/topic/server/nginx-real-ip.png" style="width: 200px" title="Nginx真实IP" />
 
 ***Nginx Proxy 1: 192.168.1.101***
 

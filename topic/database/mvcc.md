@@ -18,7 +18,7 @@ InnoDB的行结构，除了存储字段，还存储一些额外的信息:
 * `DB_ROW_ID`: 
 * `DELETE BIT`: 标识记录是否被删除，只是标记删除，在commit时才真正删除
 
-![行结构](/images/topic/database/mvcc/mvcc_row1.png =600x)
+<img src="/images/topic/database/mvcc/mvcc_row1.png" style="width: 600px" title="行结构" />
 
 ***insert***
 

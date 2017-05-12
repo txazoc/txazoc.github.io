@@ -9,15 +9,15 @@ date:   2017-02-12
 
 ***导航***
 
-![导航](/images/topic/project/operatingplatform/icon.png =320x)
+<img src="/images/topic/project/operatingplatform/icon.png" style="width: 320px" title="导航" />
 
 ***模块***
 
-![模块](/images/topic/project/operatingplatform/module.png =320x)
+<img src="/images/topic/project/operatingplatform/module.png" style="width: 320px" title="模块" />
 
 ***列表***
 
-![列表](/images/topic/project/operatingplatform/list.png =320x)
+<img src="/images/topic/project/operatingplatform/list.png" style="width: 320px" title="列表" />
 
 App上类似上面的功能需求比较多，传统的做法是写死在后端代码中，每次修改都重新发布。好一点的做法是放在配置中心上进行配置，但没办法解决不同版本、城市、时间等问题。
 

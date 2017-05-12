@@ -9,7 +9,7 @@ WebSocket是HTML5一种新的协议，实现了浏览器和服务器全双工通
 
 WebSocket协议的通讯过程:
 
-![WebSocket](/images/topic/network/websocket.png =480x)
+<img src="/images/topic/network/websocket.png" style="width: 480px" title="WebSocket" />
 
 WebSocket是为了解决浏览器和服务器间的实时通讯问题。在WebSocket之前，实时通讯使用`轮询`和`Comet`。
 

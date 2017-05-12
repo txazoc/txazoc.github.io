@@ -25,4 +25,4 @@ date:   2017-02-16
 * Task Queue: 任务队列
 * Thread Pool: 任务执行线程池
 
-![Reactor模式](/images/topic/performance/reactor.png =480x)
+<img src="/images/topic/performance/reactor.png" style="width: 480px" title="Reactor模式" />

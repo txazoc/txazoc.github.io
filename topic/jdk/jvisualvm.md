@@ -22,7 +22,7 @@ $ jvisualvm
 
 #### 应用程序和起始页
 
-![起始页](/images/topic/jdk/jvisualvm/startpage.png =664x)
+<img src="/images/topic/jdk/jvisualvm/startpage.png" style="width: 664px" title="起始页" />
 
 * 应用程序
     * 本地: 本地Java进程
@@ -46,7 +46,7 @@ $ jvisualvm
 
 #### 概述
 
-![概述](/images/topic/jdk/jvisualvm/overview.png =664x)
+<img src="/images/topic/jdk/jvisualvm/overview.png" style="width: 664px" title="概述" />
 
 * 概述
     * PID、主机、主类、参数
@@ -60,7 +60,7 @@ $ jvisualvm
 
 #### 监视
 
-![监视](/images/topic/jdk/jvisualvm/monitor.png =664x)
+<img src="/images/topic/jdk/jvisualvm/monitor.png" style="width: 664px" title="监视" />
 
 * 正常运行时间
 * 执行垃圾回收
@@ -82,7 +82,7 @@ $ jvisualvm
 
 #### 线程
 
-![线程](/images/topic/jdk/jvisualvm/thread.png =664x)
+<img src="/images/topic/jdk/jvisualvm/thread.png" style="width: 664px" title="线程" />
 
 * 实时线程
 * 守护线程
@@ -106,7 +106,7 @@ $ jvisualvm
 
 #### 抽样器
 
-![抽样器](/images/topic/jdk/jvisualvm/sampler.png =664x)
+<img src="/images/topic/jdk/jvisualvm/sampler.png" style="width: 664px" title="抽样器" />
 
 * 设置
     * CPU设置
@@ -129,18 +129,18 @@ $ jvisualvm
 
 #### Profiler
 
-![Profiler](/images/topic/jdk/jvisualvm/profiler.png =664x)
+<img src="/images/topic/jdk/jvisualvm/profiler.png" style="width: 664px" title="Profiler" />
 
 #### <a id="threaddump">线程Dump</a>
 
-![线程Dump](/images/topic/jdk/jvisualvm/threaddump.png =664x)
+<img src="/images/topic/jdk/jvisualvm/threaddump.png" style="width: 664px" title="线程Dump" />
 
 * 鼠标右键
     * 另存为: \*.tdump
 
 #### <a id="heapdump">堆Dump</a>
 
-![堆Dump](/images/topic/jdk/jvisualvm/heapdump.png =664x)
+<img src="/images/topic/jdk/jvisualvm/heapdump.png" style="width: 664px" title="堆Dump" />
 
 * 鼠标右键
     * 另存为: \*.hprof
@@ -173,15 +173,15 @@ $ jvisualvm
 
 Java VisualVM支持插件功能，选择菜单: 工具－插件
 
-![插件](/images/topic/jdk/jvisualvm/plugin.png =664x)
+<img src="/images/topic/jdk/jvisualvm/plugin.png" style="width: 664px" title="插件" />
 
 #### MBeans插件
 
-![MBeans插件](/images/topic/jdk/jvisualvm/mbean.png =664x)
+<img src="/images/topic/jdk/jvisualvm/mbean.png" style="width: 664px" title="MBeans插件" />
 
 #### SA Plugin插件
 
-![SA Plugin插件](/images/topic/jdk/jvisualvm/sa.png =664x)
+<img src="/images/topic/jdk/jvisualvm/sa.png" style="width: 664px" title="SA Plugin插件" />
 
 \[参考\]:
 
