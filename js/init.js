@@ -113,28 +113,35 @@ define(function (require, exports, module) {
                         });
 
                         if (language != '') {
-                            var newPre = $('<pre style="display: block;"></pre>').addClass('hljs-dark');
+                            var newPre = $('<pre></pre>').addClass('hljs-dark');
                             var newCode = $('<code></code>').addClass('language-' + language);
                             newPre.append(newCode.html($(this).html().replace(/<(?:.|\s)*?>/g, '')));
                             $(this).parent().parent().after(newPre).remove();
+
+                            if (HighLight.match(language)) {
+                                HighLight.highLight(language, newCode);
+                            } else {
+                                hljs.highlightBlock(newCode);
+                            }
+                            newPre.show();
                         }
                     }
                 });
             }
 
-            var preCode = $('pre > code');
-            if (preCode.length > 0) {
-                preCode.each(function (i, e) {
-                    var language = $(this).attr('class').trim().split('-')[1];
-                    // $(this).removeClass(language).addClass('language-' + language);
-                    if (HighLight.match(language)) {
-                        HighLight.highLight(language, e);
-                    } else {
-                        hljs.highlightBlock(e);
-                    }
-                    $(this).parent().addClass('hljs-dark').show();
-                });
-            }
+            //var preCode = $('pre > code');
+            //if (preCode.length > 0) {
+            //    preCode.each(function (i, e) {
+            //        var language = $(this).attr('class').trim().split('-')[1];
+            //        // $(this).removeClass(language).addClass('language-' + language);
+            //        if (HighLight.match(language)) {
+            //            HighLight.highLight(language, e);
+            //        } else {
+            //            hljs.highlightBlock(e);
+            //        }
+            //        $(this).parent().addClass('hljs-dark').show();
+            //    });
+            //}
         },
 
         initBrowser: function () {
