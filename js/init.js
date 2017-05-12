@@ -113,7 +113,7 @@ define(function (require, exports, module) {
                         });
 
                         if (language != '') {
-                            var newPre = $('<pre></pre>').addClass('hljs-dark');
+                            var newPre = $('<pre></pre>');
                             var newCode = $('<code></code>').addClass('language-' + language);
                             newPre.append(newCode.html($(this).html().replace(/<(?:.|\s)*?>/g, '')));
                             $(this).parent().parent().after(newPre).remove();
@@ -123,7 +123,7 @@ define(function (require, exports, module) {
                             } else {
                                 hljs.highlightBlock(newCode);
                             }
-                            newPre.css('display', 'block').show();
+                            newPre.addClass('hljs-dark').show();
                         }
                     }
                 });
