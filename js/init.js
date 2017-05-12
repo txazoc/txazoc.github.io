@@ -99,11 +99,34 @@ define(function (require, exports, module) {
         },
 
         initHighlight: function () {
+            var preCode = $('div > pre > code');
+            if (preCode.length > 0) {
+                preCode.each(function (i, e) {
+                    if ($(this).parent().hasClass('highlight')
+                        && $(this).parent().parent().hasClass('highlighter-rouge')) {
+                        var language = '';
+                        var divClasses = $(this).parent().parent().attr('class').trim().split(' ');
+                        $.each(divClasses, function (i, v) {
+                            if (v.substr(0, 9) == 'language-') {
+                                language = v.substr(9, v.length);
+                            }
+                        });
+
+                        if (language != '') {
+                            var newPre = $('<pre style="display: block;"></pre>').addClass('hljs-dark');
+                            var newCode = $('<code></code>').addClass('language-' + language);
+                            newPre.append(newCode.html($(this).html().replace(/<(?:.|\s)*?>/g, '')));
+                            $(this).parent().parent().after(newPre).remove();
+                        }
+                    }
+                });
+            }
+
             var preCode = $('pre > code');
             if (preCode.length > 0) {
                 preCode.each(function (i, e) {
-                    var language = $(this).attr('class').trim();
-                    $(this).removeClass(language).addClass('language-' + language);
+                    var language = $(this).attr('class').trim().split('-')[1];
+                    // $(this).removeClass(language).addClass('language-' + language);
                     if (HighLight.match(language)) {
                         HighLight.highLight(language, e);
                     } else {
