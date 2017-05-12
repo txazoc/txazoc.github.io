@@ -59,7 +59,7 @@ Code:
 
 可以看出，`passParameter()`方法调用是通过`invokevirtual`指令实现的。
 
-![invokevirtual](/images/opcode/invokevirtual.png =540x)
+<img src="/images/opcode/invokevirtual.png" style="width: 540px" title="invokevirtual" />
 
 上图是`invokevirtual`指令的说明，图中的`Operand Stack`为操作数栈，可以看出，`invokevirtual`指令的参数为`objectref, [arg1, [arg2 ...]]`，其中`objectref`为被调用方法的对象的引用，`arg{n}`为第`n`个方法参数。在执行`invokevirtual`指令前，方法参数被压入操作数栈，对应上面的字节码指令`iload_1`和`aload_2`。
 
