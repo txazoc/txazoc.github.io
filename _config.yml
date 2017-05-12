@@ -18,20 +18,8 @@ url: "http://www.txazo.com"
 
 # Markdown引擎
 # kramdown, maruku, rdiscount, redcarpet
-markdown:      kramdown
+markdown:      rdiscount
 markdownStyle: md-primary
-
-kramdown:
-  input: GFM
-  extensions:
-    - autolink
-    - footnotes
-    - smart
-  use_coderay: true
-  toc_levels: 1..6
-  syntax_highlighter: rouge
-  coderay:
-    coderay_line_numbers:  nil
 
 # highlight高亮样式
 highlightstyle: hljs-txazo
@@ -76,4 +64,4 @@ paginate: 10
 paginate_path: "index/:num"
 
 # 随机版本号
-randomVersion: "dbbee8bb37b9acde0b5605c2e8967c5b"
+randomVersion: "e87fd257a0092a5e1924a9fd6846eb4a"
