@@ -29,10 +29,10 @@ c:
 
 #### 运行DOSBox
 
-![DOSBox](/images/topic/assembly/dosbox.png =480x)
+<img src="/images/topic/assembly/dosbox.png" style="width: 480px" title="DOSBox" />
 
 #### 汇编编辑器
 
 下载`Sublime Text 3`，安装插件`FASM x86`
 
-![Sublime Text 3](/images/topic/assembly/sublime.png =480x)
+<img src="/images/topic/assembly/sublime.png" style="width: 480px" title="Sublime Text 3" />

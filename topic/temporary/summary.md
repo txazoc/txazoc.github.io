@@ -5,8 +5,6 @@ title:  总结
 date:   2017-02-11
 ---
 
-***要素: 数据结构、算法、通信***
-
 #### 网络通信
 
 ***网络协议***
@@ -20,14 +18,6 @@ date:   2017-02-11
 ***[Socket](/topic/linux/socket.html)***
 
 ***[Client/Server](/topic/network/client-server.html)***
-
-***通讯模型***
-
-* Web <-> Server
-* App <-> Server
-* Server <-> Server
-
-#### 存储
 
 #### IO
 
@@ -45,16 +35,6 @@ date:   2017-02-11
 * 直接路由(LVS-DR): 修改目标mac地址
 * IP隧道(LVS-TUN): 转发ip数据包
 
-#### 框架
-
-***Spring***
-
-***MyBatis***
-
-#### 中间件
-
 #### 分布式
 
 * [RPC](/topic/middleware/rpc.html)
-
-#### 架构
