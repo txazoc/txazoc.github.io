@@ -37,7 +37,7 @@ kramdown:
 highlightstyle: hljs-txazo
 
 # 是否本地调试
-localDebug: "true"
+localDebug: "false"
 
 # 本地域名
 localDomain: "//127.0.0.1:4000"
@@ -76,4 +76,4 @@ paginate: 10
 paginate_path: "index/:num"
 
 # 随机版本号
-randomVersion: "aeca03eded43d3b5d05b659615a68a03"
+randomVersion: "7f7b46c805a040b05d675a961d7d180c"
