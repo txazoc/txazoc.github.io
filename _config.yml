@@ -25,7 +25,7 @@ markdownStyle: md-primary
 highlightstyle: hljs-txazo
 
 # 是否本地调试
-localDebug: "false"
+localDebug: "true"
 
 # 本地域名
 localDomain: "//127.0.0.1:4000"
@@ -53,11 +53,16 @@ rssxml: "/feed.xml"
 
 # 导航条菜单
 menu:
+    # 首页: /
+    # 标签: /tag.html
+    # 归档: /archive.html
+    # 专题: /topics.html
+    # 关于: /about.html
     首页: /
-    标签: /tag.html
-    归档: /archive.html
-    专题: /topics.html
-    关于: /about.html
+    标签: /
+    归档: /
+    专题: /
+    关于: /
 
 # 分页
 paginate: 10
