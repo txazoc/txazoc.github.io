@@ -6,7 +6,7 @@ title:  MySQL
 * 字段属性
     * Field: 字段名
     * Type: 字段类型
-        * int(1) int(11)
+        * int(1) int(11): zerofill
         * varchar(5) varchar(10)
     * Null: YES、NO
     * Default: 0、'1970-01-01 00:00:00'、current_timestamp
@@ -34,3 +34,7 @@ title:  MySQL
     * count(1): 扫描主键，包含NULL值
     * count(*): 扫描全表，包含NULL值
     * count(column): 扫描字段，不包含NULL值
+
+* join
+
+* explain
