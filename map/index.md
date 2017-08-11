@@ -3,4 +3,4 @@ layout: map
 title:  思维脑图
 ---
 
-[MySQL](/map/mysql.html)
+* [MySQL](/map/mysql.html)
