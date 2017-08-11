@@ -1,6 +1,6 @@
 ---
 layout: map
-title:  导图
+title:  思维脑图
 ---
 
 [MySQL](/map/mysql.html)
