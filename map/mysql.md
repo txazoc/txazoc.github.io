@@ -3,30 +3,43 @@ layout: map
 title:  MySQL
 ---
 
-#### 表结构文件
+#### 表结构
 
-* .frm
-* .idb
+* 库表: information_schema.schemata
+* 表表: information_schema.tables
+    * engine
+    * auto_increment
+    * 字符
+* 字段表: information_schema.columns
+    * [字段属性](#字段属性)
+* 索引表: information_schema.statistics
+* [表物理结构](#表物理结构)
 
-#### 日志文件
+#### <a id="表物理结构">表物理结构</a>
 
-#### 字段属性
+* InnoDB
+    * .idb: 数据和索引
+* MyISAM
+    * tbl_name.frm: 表结构定义文件
+    * tbl_name.MYD: 数据文件
+    * tbl_name.MYI: 索引文件
+
+#### <a id="字段属性">字段属性</a>
 
 * Field: 字段名
-* Type:字段类型
-    * int(1)、int(11): zerofill
-    * varchar(5)、varchar(10)
-* Null: YES、NO
-* Default: 0、'1970-01-01 00:00:00'、current_timestamp
+    * 字段名为关键字: `` `column_name` ``
+* Type: 字段类型
+    * int(n): 定长显示，配合`zerofill`使用
+    * varchar(n): 字符串长度
+* Null: 是否可为空，取值 YES、NO
+* Default: 默认值，例如 0、'1970-01-01 00:00:00'、current_timestamp
 * Key: 索引
     * PRI(主键索引)
     * UNI(唯一索引)
     * MUL(可重复索引)
-* Extra
+* Extra: 其它信息
     * auto_increment
     * on update current_timestamp
-
-`select * from information_schema.columns where table_schema = 'db' and table_name = 'table'`
 
 #### 执行计划
 
