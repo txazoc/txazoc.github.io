@@ -61,6 +61,18 @@ title:  MySQL
 
 #### <a id="存储引擎">存储引擎</a>
 
+* MyISAM
+    * 不支持事务，强调性能
+    * 锁类型: 表锁
+    * 索引: 非聚集索引
+* InnoDB
+    * 支持事务
+    * 锁类型: 表锁、行锁
+    * 索引: 聚集索引(主键)
+    * 支持 [MVCC](#MVCC)
+* [InnoDB事务](#InnoDB事务)
+* [MySQL锁机制](#MySQL锁机制)
+
 #### <a id="auto_increment">auto_increment</a>
 
 * auto_increment_offset: 自增偏移
@@ -70,32 +82,70 @@ title:  MySQL
 
 #### <a id="执行计划">执行计划(explain)</a>
 
-* 输出格式
-    * id: select语句id
-    * select_type: select语句类型
-    * table: 行输出来源的表名，可能多个
-    * type: join类型
-        * system: 表仅有一行，const的特例
-        * const: 最多匹配一行
-            * `select * from t where [primary_key | unique_key] = value`
-        * eq_ref: 多表关联时，最多匹配一行，关联字段为`primary_key`或`unique_key`
-            * `select * from t1, t2 where t1.[primary_key | unique_key] = t2.[primary_key | unique_key]`
-        * ref: 关联非`primary_key`或`unique_key`索引字段
-            * `select * from t where key = value`
-            * `select * from t1, t2 where t1.key = t2.key`
-        * index_merge: 多个索引查询合并
-            * `select * from t where t.key1 = value1 or t.key2 = value2`
-        * range: 单表，索引字段和`=、<>、>、>=、<、<=、<=>、IS NULL、IN()、BETWEEN()`
-        * index: 扫描`Index Tree`
-            * `select key from t`
-        * ALL: 全表扫描，`最坏情况`
-            * `select * from t`
-    * possible_keys: 可能选择的索引
-    * key: 实际选择的索引
-    * key_len: 选择的索引长度
-    * ref
-    * rows: 估计要扫描的行数，越小越好
-    * Extra: 其它信息
+* id: select语句id
+* select_type: select语句类型
+* table: 行输出来源的表名，可能多个
+* type: join类型
+    * system: 表仅有一行，`const`的特例
+    * const: 单表`primary_key`或`unique_key`查询，最多匹配一行，操作符 `=`
+    * eq_ref: 多表`primary_key`或`unique_key`关联查询，最多匹配一行，操作符 `=`，`最好的关联类型`
+    * ref: 单表索引查询或多表索引关联查询，操作符 `=`
+    * ref_or_null: 在`ref`的基础上对`NULL`值做额外搜索
+    * index_merge: 多个索引查询合并，操作符 `OR`
+    * range: 单表索引范围查询，操作符 `!=、<>、>、>=、<、<=、IN()、BETWEEN()`
+    * index: 全表扫描`index tree`
+    * ALL: 全表扫描，`最坏的情况`，尽量避免
+    * 总结
+        * `主键或唯一索引` &gt; `普通索引` &gt; `无索引`
+        * `=` &gt; `OR` &gt; `范围查询` &gt; `全表扫描`
+* possible_keys: 可能选择的索引
+* key: 实际选择的索引
+* key_len: 选择的索引长度
+* ref: 和`key`指定的索引做比较的行或`const`
+* rows: 估计要扫描的行数，越小越好
+* Extra: 其它信息
+    * Using index: 只使用索引，避免访问表
+    * Using filesort: 使用额外排序
+    * Using index condition: 使用索引条件
+    * Using temporary: 使用临时表
+    * Using where: 使用where
+
+#### <a id="InnoDB事务">InnoDB事务</a>
+
+* 事务的ACID特性
+    * A 原子性: 一个事务中的所有操作，要么全部执行，要么全部不执行，不会停留在某个中间状态，允许回滚
+        * [MVCC](#MVCC)
+        * autocommit
+        * commit、rollback
+    * C 一致性: 事务从一个一致性状态切换到另一个一致性状态，事务的中间状态不会被其它事务看到
+        * doublewrite buffer
+        * crash recovery
+    * I 隔离性: 事务之间互相影响的程度，适当的破坏`一致性`来提升并发度
+        * autocommit
+        * [事务隔离级别](#事务隔离级别)
+        * 行锁
+    * D 持久性: 事务提交后，数据会被持久化到数据库，不会丢失
+        * doublewrite buffer
+        * innodb_flush_log_at_trx_commit
+        * sync_binlog
+        * innodb_file_per_table
+* 并发事务产生的问题
+    * 脏读: 一个事务读取了另一个事务`未提交`的数据，读到脏数据
+    * 不可重复读: 一个事务读取了另一个事务`提交后`的数据，多次读取结果不同
+    * 幻读: 一个事务读取了另一个事务插入的记录，多次读取结果不同
+* <a id="事务隔离级别">事务隔离级别</a>
+    * Read Uncommitted: 读未提交
+    * Read Committed: 读已提交，解决`脏读`
+    * Repeatable Read: 可重复读，解决`脏读`、`不可重复读`，InnoDB默认隔离级别
+    * Serializable: 串行化，解决所有并发问题
+
+#### <a id="MySQL锁机制">MySQL锁机制</a>
+
+#### <a id="MVCC">多版本并发控制(MVCC)</a>
+
+* 
+
+#### More
 
 * 函数用在不同地方(column_names where group order)
 
