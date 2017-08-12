@@ -137,13 +137,25 @@ title:  MySQL
     * Read Uncommitted: 读未提交
     * Read Committed: 读已提交，解决`脏读`
     * Repeatable Read: 可重复读，解决`脏读`、`不可重复读`，InnoDB默认隔离级别
+        * [MVCC](#MVCC)
     * Serializable: 串行化，解决所有并发问题
 
 #### <a id="MySQL锁机制">MySQL锁机制</a>
 
 #### <a id="MVCC">多版本并发控制(MVCC)</a>
 
-* 
+* 行记录隐藏字段
+    * DB_TRX_ID: 最新`insert`或`update`行记录的事务id
+    * DB_ROLL_PTR: 行记录在`rollback segment`中的`undo log`记录的指针
+    * DB_ROW_ID: 
+    * DELETE_BIT: 行记录的删除标识，默认为0
+* transaction_id: 事务id，递增
+* insert: `DB_TRX_ID` = `transaction_id`
+* delete: `DELETE_BIT` = 1
+* update: copy行记录
+    * 老行: `DELETE_BIT` = 1
+    * 新行: `DB_TRX_ID` = `transaction_id`
+* select: `DB_TRX_ID` <= `transaction_id` and `DELETE_BIT` = 0
 
 #### More
 
