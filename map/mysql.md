@@ -131,16 +131,28 @@ title:  MySQL
         * innodb_file_per_table
 * 并发事务产生的问题
     * 脏读: 一个事务读取了另一个事务`未提交`的数据，读到脏数据
+        * 问题来源: 读写并发
+        * 解决方案: [MySQL锁机制](#MySQL锁机制)
     * 不可重复读: 一个事务读取了另一个事务`提交后`的数据，多次读取结果不同
+        * 问题来源: 事务并发
+        * 解决方案: [MVCC](#MVCC)
     * 幻读: 一个事务读取了另一个事务插入的记录，多次读取结果不同
+        * 问题来源: 读事务无法对`insert`的行加锁
+        * 解决方案: 事务串行化
 * <a id="事务隔离级别">事务隔离级别</a>
     * Read Uncommitted: 读未提交
     * Read Committed: 读已提交，解决`脏读`
+        * [MySQL锁机制](#MySQL锁机制)
     * Repeatable Read: 可重复读，解决`脏读`、`不可重复读`，InnoDB默认隔离级别
         * [MVCC](#MVCC)
     * Serializable: 串行化，解决所有并发问题
 
 #### <a id="MySQL锁机制">MySQL锁机制</a>
+
+* 共享锁(S)
+* 独占锁(X)
+* 表锁
+* 行锁
 
 #### <a id="MVCC">多版本并发控制(MVCC)</a>
 
