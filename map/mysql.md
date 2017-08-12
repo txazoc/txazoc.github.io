@@ -77,14 +77,24 @@ title:  MySQL
     * type: join类型
         * system: 表仅有一行，const的特例
         * const: 最多匹配一行
-            * `select * from table_name where primary_key = const_value`
-            * `select * from table_name where unique_key = const_value`
-        * eq_ref: 
+            * `select * from t where [primary_key | unique_key] = value`
+        * eq_ref: 多表关联时，最多匹配一行，关联字段为`primary_key`或`unique_key`
+            * `select * from t1, t2 where t1.[primary_key | unique_key] = t2.[primary_key | unique_key]`
+        * ref: 关联非`primary_key`或`unique_key`索引字段
+            * `select * from t where key = value`
+            * `select * from t1, t2 where t1.key = t2.key`
+        * index_merge: 多个索引查询合并
+            * `select * from t where t.key1 = value1 or t.key2 = value2`
+        * range: 单表，索引字段和`=、<>、>、>=、<、<=、<=>、IS NULL、IN()、BETWEEN()`
+        * index: 扫描`Index Tree`
+            * `select key from t`
+        * ALL: 全表扫描，`最坏情况`
+            * `select * from t`
     * possible_keys: 可能选择的索引
     * key: 实际选择的索引
     * key_len: 选择的索引长度
     * ref
-    * rows: 估计要扫描的行数
+    * rows: 估计要扫描的行数，越小越好
     * Extra: 其它信息
 
 * 函数用在不同地方(column_names where group order)
