@@ -81,8 +81,16 @@ title:  MySQL
 #### <a id="索引">索引</a>
 
 * 索引分类
-    * 聚集索引
-    * 非聚集索引
+    * 聚集索引: InnoDB，索引和数据在同一个文件中
+        * 聚集索引: 主键索引、唯一索引或隐藏主键索引(InnoDB自动生成)
+            * 索引数据项: 行数据
+            * 查询: 聚集索引 -> 行数据
+        * 辅助索引: 除聚集索引之外的索引
+            * 索引数据项: 聚集索引的值
+            * 查询: 辅助索引 -> 聚集索引 -> 行数据
+    * 非聚集索引: MyISAM，索引和数据在不同文件中
+        * 索引数据项: 行数据的物理地址
+        * 查询: 索引 -> 行数据的物理地址 -> 行数据
 * B+Tree
 
 #### <a id="执行计划">执行计划(explain)</a>
@@ -191,6 +199,14 @@ title:  MySQL
 | S  | - | - | + | + |
 | IS | - | + | + | + |
 
+* InnoDB锁
+    * 读写一致性 -> 表共享读锁和表独占写锁
+    * 提高并发度 -> 行锁(共享锁和独占锁)
+    * 表锁和行锁冲突 -> 意向锁
+    * 幻读问题 -> 间隙锁和Next-Key Lock
+    * 插入冲突 -> 插入意向锁
+    * 继续提高并发度 -> MVCC
+
 #### <a id="MVCC">多版本并发控制(MVCC)</a>
 
 * 行记录隐藏字段
@@ -206,7 +222,23 @@ title:  MySQL
     * 新行: `DB_TRX_ID` = `transaction_id`
 * select: `DB_TRX_ID` <= `transaction_id` and `DELETE_BIT` = 0
 
-#### More
+#### <a id="InnoDB日志文件">InnoDB日志文件</a>
+
+* 重做日志(Redo Log)
+* 双写缓存(Doublewrite Buffer)
+* 撤销日志(Undo Log)
+
+#### <a id="DML">数据操作语言(DML)</a>
+
+* insert
+    * batch insert
+* delete
+    * 使用带where条件的索引，尽量避免锁表
+* update
+    * 使用带where条件的索引，尽量避免锁表
+* select
+
+#### <a id="DML">数据操作语言(DML)</a>
 
 * 函数用在不同地方(column_names where group order)
 
