@@ -10,10 +10,14 @@ define(function (require, exports, module) {
         lastWindowWidth: 0,
         sourceDomain: '//github.txazo.com',
         indexSpeedDomain: '//www.txazo.com',
+        mapReg: new RegExp(/^\/map\/[^\.\/#]+\.html/),
 
         init: function (sourceDomain, indexSpeedDomain) {
             Init.sourceDomain = sourceDomain;
             Init.indexSpeedDomain = indexSpeedDomain;
+
+            // 目录
+            Init.initDirectory();
 
             // 事件
             Init.initEvent();
@@ -560,6 +564,29 @@ define(function (require, exports, module) {
                     });
                 });
             });
+        },
+
+        initDirectory: function () {
+            // 思维脑图页面
+            if (Init.mapReg.test(window.location.pathname)) {
+                var h4Array = [];
+                var $article = $('.md-primary');
+                $article.find('h1,h2,h3,h4,h5,h6').each(function() {
+                    var title = $(this).html();
+                    $(this).html('').append($('<a>').attr('id', title).html(title));
+                    if ($(this)[0].tagName == 'H4') {
+                        h4Array.push(title);
+                    }
+                });
+                if (h4Array.length > 0) {
+                    var $list = $('<ul>');
+                    $.each(h4Array, function(i) {
+                        $list.append($('<li>').append($('<a>').html(h4Array[i]).attr('href', '#' + h4Array[i])));
+                    });
+                    $article.prepend($list);
+                    $article.prepend($('<h4>').append($('<strong>').append($('<em>').html('目录'))));
+                }
+            }
         }
     };
 

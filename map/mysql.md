@@ -21,7 +21,7 @@ title:  MySQL
     * [索引](#索引)
 * [表物理结构](#表物理结构)
 
-#### <a id="表物理结构">表物理结构</a>
+#### 表物理结构
 
 * InnoDB
     * tbl_name.frm: 表结构定义文件
@@ -31,7 +31,7 @@ title:  MySQL
     * tbl_name.MYD: 数据文件
     * tbl_name.MYI: 索引文件
 
-#### <a id="字段属性">字段属性</a>
+#### 字段属性
 
 * Field: 字段名
     * 字段名为关键字: `` `column_name` ``
@@ -59,7 +59,7 @@ title:  MySQL
     * auto_increment
     * on update current_timestamp
 
-#### <a id="存储引擎">存储引擎</a>
+#### 存储引擎
 
 * MyISAM
     * 不支持事务，强调性能
@@ -73,12 +73,12 @@ title:  MySQL
 * [InnoDB事务](#InnoDB事务)
 * [MySQL锁机制](#MySQL锁机制)
 
-#### <a id="auto_increment">auto_increment</a>
+#### auto_increment
 
 * auto_increment_offset: 自增偏移
 * auto_increment_increment: 自增增量
 
-#### <a id="索引">索引</a>
+#### 索引
 
 * 索引分类
     * 聚集索引: InnoDB，索引和数据在同一个文件中
@@ -86,14 +86,24 @@ title:  MySQL
             * 索引数据项: 行数据
             * 查询: 聚集索引 -> 行数据
         * 辅助索引: 除聚集索引之外的索引
-            * 索引数据项: 聚集索引的值
+            * 索引数据项: 聚集索引`值列表`
             * 查询: 辅助索引 -> 聚集索引 -> 行数据
     * 非聚集索引: MyISAM，索引和数据在不同文件中
         * 索引数据项: 行数据的物理地址
         * 查询: 索引 -> 行数据的物理地址 -> 行数据
 * B+Tree
+    * 作用: 加速数据检索
+    * 由来: 顺序查找 -> 二分查找 -> 二叉树查找
+    * 结构
+        * 度数: d
+        * 高度: h
+        * 渐进复杂度: O(logdN)
+        * 非叶子节点: 索引值 + 指针
+        * 叶子节点: 索引值 + data域
+        * 一个节点大小设为一页(4k)
+            * max(d) = floor(pageSize / keySize + dataSize + pointerSize)，非叶子节点的`d`可以很大，叶子节点的`max(d)`和`data域`的大小有关
 
-#### <a id="执行计划">执行计划(explain)</a>
+#### 执行计划
 
 * id: select语句id
 * select_type: select语句类型
@@ -123,7 +133,7 @@ title:  MySQL
     * Using temporary: 使用临时表
     * Using where: 使用where
 
-#### <a id="InnoDB事务">InnoDB事务</a>
+#### InnoDB事务
 
 * 事务的ACID特性
     * A 原子性: 一个事务中的所有操作，要么全部执行，要么全部不执行，不会停留在某个中间状态，允许回滚
@@ -135,7 +145,7 @@ title:  MySQL
         * crash recovery
     * I 隔离性: 事务之间互相影响的程度，适当的破坏`一致性`来提升并发度
         * autocommit
-        * [事务隔离级别](#事务隔离级别)
+        * 事务隔离级别
         * 行锁
     * D 持久性: 事务提交后，数据会被持久化到数据库，不会丢失
         * doublewrite buffer
@@ -152,7 +162,7 @@ title:  MySQL
     * 幻读: 一个事务读取了另一个事务插入的记录，多次读取结果不同
         * 问题来源: 读事务无法对`insert`的行加锁
         * 解决方案: 事务串行化
-* <a id="事务隔离级别">事务隔离级别</a>
+* 事务隔离级别
     * Read Uncommitted: 读未提交
     * Read Committed: 读已提交，解决`脏读`
         * [MySQL锁机制](#MySQL锁机制)
@@ -160,7 +170,7 @@ title:  MySQL
         * [MVCC](#MVCC)
     * Serializable: 串行化，解决所有并发问题
 
-#### <a id="MySQL锁机制">MySQL锁机制</a>
+#### MySQL锁机制
 
 * 按读写分类
     * 共享锁(S锁)
@@ -169,10 +179,10 @@ title:  MySQL
     * 表锁: 锁表，加锁快，开销小，无死锁，锁粒度大，并发度低
     * 页锁: 介于两者之间，有死锁
     * 行锁: 锁行，加锁慢，开销大，有死锁，锁粒度小，并发度高
-* MyISAM
+* MyISAM锁
     * 表锁
     * 写请求优先级更高，适合读多写少的场景
-* InnoDB
+* InnoDB锁
     * 表锁: `锁表`
         * 表共享读锁: `lock tables ... read`
         * 表独占写锁: `lock tables ... write`
@@ -184,12 +194,16 @@ title:  MySQL
         * 意向独占锁(IX锁): 事务准备给表中的行加独占锁
         * 作用: 快速检测`表锁和行锁之间的冲突`，实现表锁和行锁的共存
     * 记录锁(Record Lock): `锁索引项`，索引查询才有效
-        * 作用:
     * 间隙锁(Gap Lock): `锁索引项之间的间隙`，`... )`、`( )`、`( ...`
         * 作用: 阻止其它事务插入间隙，解决`RR隔离级别`的幻读问题
     * Next-Key Lock: `锁索引项和索引项前的一个间隙`，`( ]`，记录锁和间隙锁的结合
         * 作用: 阻止其它事务插入间隙，解决`RR隔离级别`的幻读问题
     * 插入意向锁(Insert Intention Lock)
+* InnoDB锁流程
+    * insert: 插入意向锁
+    * delete/update/select
+        * 无索引: 表锁
+        * 有索引: 意向锁 -> 非聚集索引(记录锁 + 间隙锁) -> 聚集索引(记录锁 + 间隙锁)
 * 表锁和意向锁兼容矩阵
 
 | --- | --- | --- |
@@ -207,8 +221,9 @@ title:  MySQL
     * 插入冲突 -> 插入意向锁
     * 继续提高并发度 -> MVCC
 
-#### <a id="MVCC">多版本并发控制(MVCC)</a>
+#### MVCC
 
+* MVCC，多版本并发控制
 * 行记录隐藏字段
     * DB_TRX_ID: 最新`insert`或`update`行记录的事务id
     * DB_ROLL_PTR: 行记录在`rollback segment`中的`undo log`记录的指针
@@ -222,13 +237,13 @@ title:  MySQL
     * 新行: `DB_TRX_ID` = `transaction_id`
 * select: `DB_TRX_ID` <= `transaction_id` and `DELETE_BIT` = 0
 
-#### <a id="InnoDB日志文件">InnoDB日志文件</a>
+#### InnoDB日志文件
 
 * 重做日志(Redo Log)
 * 双写缓存(Doublewrite Buffer)
 * 撤销日志(Undo Log)
 
-#### <a id="DML">数据操作语言(DML)</a>
+#### 数据操作语言
 
 * insert
     * batch insert
@@ -237,60 +252,28 @@ title:  MySQL
 * update
     * 使用带where条件的索引，尽量避免锁表
 * select
+    * count()
+        * count(1): 扫描主键，包含NULL值
+        * count(*): 扫描全表
+        * count(column)
 
-#### <a id="DML">数据操作语言(DML)</a>
+#### 数据库切分
 
-* 函数用在不同地方(column_names where group order)
+* 分库: 表拆分到多个库
+* 分表: 表拆分为多个子表
+* 垂直切分: `不同的表`拆分到不同的库
+* 水平切分: `同一个表`拆分到多个库或多个子表
+* 数据库切分带来的问题
+    * 跨库
+    * 主键id
+        * 自增，步长不同
+        * 单独自增表，批量获取id
+        * UUID
+    * 表路由
+    * 扩容
+        * hash扩容: 数据迁移
+        * 增量扩容
 
+#### 主从同步
 
-* null值
-
-
-* like
-
-
-* count
-    * count(1): 扫描主键，包含NULL值
-    * count(*): 扫描全表，包含NULL值
-    * count(column): 扫描字段，不包含NULL值
-
-
-* join
-
-
-* explain
-
-* 日志
-    * 慢查询日志
-
-* explain
-
-* SQL优化
-
-* InnoDB
-    * 事务
-    * 锁
-    * MVCC
-    * B+树
-
-* ACID
-    * 原子性
-        * commit
-        * rollback
-        * autocommit
-    * 一致性
-        * doublewrite buffer
-        * crash recovery
-    * 隔离性
-        * autocommit
-        * 事务隔离级别
-    * 持久性
-        * doublewrite buffer
-        * sync_binlog
-
-
-#### MVCC
-
-* DB_TRX_ID
-* DB_ROLL_PTR
-* DB_ROW_ID
+* 作用: 读写分离，负载均衡
