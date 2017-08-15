@@ -169,6 +169,21 @@ title:  MySQL
     * Repeatable Read: 可重复读，解决`脏读`、`不可重复读`，InnoDB默认隔离级别
         * [MVCC](#MVCC)
     * Serializable: 串行化，解决所有并发问题
+* 事务并发模型
+    * 读读
+    * 读写
+    * 写读
+    * 写写
+* 事务进化
+    * 事务串行化: 内存存储，例如 Redis
+    * 读写分离，允许并行读: 表读写锁
+    * 减小锁粒度: 行锁
+    * 写时可读: MVCC
+    * 本质: 减少锁的覆盖范围
+* 单机事务优化点
+    * 减少锁的覆盖范围
+    * 提高并发度
+    * 悲观锁和乐观锁的选择
 
 #### MySQL锁机制
 
@@ -179,6 +194,10 @@ title:  MySQL
     * 表锁: 锁表，加锁快，开销小，无死锁，锁粒度大，并发度低
     * 页锁: 介于两者之间，有死锁
     * 行锁: 锁行，加锁慢，开销大，有死锁，锁粒度小，并发度高
+* 其它分类
+    * 悲观锁: 并发争抢高
+    * 乐观锁: 并发争抢低
+        * 自旋和切换上下文的时钟周期
 * MyISAM锁
     * 表锁
     * 写请求优先级更高，适合读多写少的场景
@@ -261,7 +280,7 @@ title:  MySQL
     * where
     * group by
     * having
-    * order by
+    * order by: 尽量利用索引排序
     * limit: 先扫描，在再截取，`offset`越大效率越低
 
 #### SQL执行过程
@@ -277,6 +296,12 @@ title:  MySQL
     * select distinct &lt;select_list&gt;
     * order by &lt;order_by_list&gt;
     * limit &lt;limit_number&gt;
+
+#### 参数配置
+
+* innodb_flush_log_at_trx_commit
+* sync_binlog
+* tmp_table_size: 内存临时表的最大值
 
 #### 数据库切分
 
@@ -298,3 +323,13 @@ title:  MySQL
 #### 主从同步
 
 * 作用: 读写分离，负载均衡
+* 主从复制模式
+    * 异步复制
+    * 半同步复制
+
+#### 分布式数据库中间件
+
+* 注册中心
+* 管理系统
+* 中间件框架
+* 数据库集群
