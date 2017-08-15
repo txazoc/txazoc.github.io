@@ -256,6 +256,27 @@ title:  MySQL
         * count(1): 扫描主键，包含NULL值
         * count(*): 扫描全表
         * count(column)
+    * from
+    * join
+    * where
+    * group by
+    * having
+    * order by
+    * limit: 先扫描，在再截取，`offset`越大效率越低
+
+#### SQL执行过程
+* select语句
+    * `select distinct <select_list> from <left_table> <join_type> <right_table> on <join_condtion> where <where_condtion> group by <group_by_list> having <having_condtion> order by <order_by_list> limit <limit_number>`
+* select执行顺序
+    * from &lt;left_table&gt;
+    * &lt;join_type&gt; join &lt;right_table&gt;
+    * on &lt;join_condtion&gt;
+    * where &lt;where_condtion&gt;
+    * group by &lt;group_by_list&gt;
+    * having &lt;having_condtion&gt;
+    * select distinct &lt;select_list&gt;
+    * order by &lt;order_by_list&gt;
+    * limit &lt;limit_number&gt;
 
 #### 数据库切分
 
