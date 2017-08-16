@@ -43,8 +43,8 @@ title:  Redis
 
 * 数据结构
     * struct list: 列表
-        * listNode *head: 表头节点
-        * listNode *tail: 表尾节点
+        * listNode *head: 表头节点指针
+        * listNode *tail: 表尾节点指针
         * unsigned long len: 节点数
     * struct listNode: 列表节点
         * struct listNode *prev: 前置节点
@@ -117,19 +117,50 @@ title:  Redis
 
 * 数据结构
     * struct zskiplist
-        * struct zskiplistNode *header
-        * struct zskiplistNode *tail
-        * unsigned long length
-        * int level
+        * struct zskiplistNode *header: 表头节点指针
+        * struct zskiplistNode *tail: 表尾节点指针，用于表尾遍历
+        * unsigned long length: 节点数(不包括表头节点)
+        * int level: 最大层数(不包括表头节点的层数)
     * struct zskiplistNode
-        * robj *obj;
-        * double score;
-        * struct zskiplistNode *backward;
-        * struct zskiplistLevel level[]
-            * struct zskiplistNode *forward
-            * unsigned int span
+        * robj *obj: 节点成员对象，`必须唯一`
+        * double score: 节点分值，节点按节点分值从小到大排序，节点分值可以相同
+        * struct zskiplistNode *backward: 后退指针，方便`区间查找`
+        * struct zskiplistLevel level[]: 层，层的高度为`1 ~ 32`之间的随机数
+            * struct zskiplistNode *forward: 前进指针，加速查找，`跳跃表的核心`
+            * unsigned int span: 跨度，用于计算`score`
 * 特点
     * 空间换时间
-    * 节点数据顺序存放
-    * 查找的时间复杂度为O(logN)
-    * 
+    * 节点集合有序
+    * 节点查找的时间复杂度为O(logN)
+    * 区间查找的时间复杂度为O(logN)
+
+#### 整数集合
+
+* 数据结构
+    * struct intset
+        * uint32_t encoding: 编码方式，可取值2、4、8，决定集合的元素类型分别为int16_t、int32_t、int64_t
+        * uint32_t length: 元素数量
+        * int8_t contents[]: 元素数组
+* 特点
+    * 集合元素有序
+    * 尽可能的节约内存
+    * 支持类型升级，不支持降级
+* 类型升级
+    * int16_t -> int32_t -> int64_t
+    * 分配新的内存空间
+    * 集合中元素copy到新的内存空间
+
+#### 压缩列表
+
+* 数据结构
+    * ziplist
+        * uint32_t zlbytes: 压缩列表的内存字节数
+        * uint32_t zltail: 压缩列表表尾节点距离起始地址的字节数
+        * uint16_t zllen: 压缩列表的节点数
+        * struct zlentry: 压缩列表节点
+            * unsigned int prevrawlensize, prevrawlen;
+            * unsigned int lensize, len;
+            * unsigned int headersize;
+            * unsigned char encoding;
+            * unsigned char *p;
+        * uint8_t zlend: `0xFF`，标记压缩列表的末端
