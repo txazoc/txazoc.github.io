@@ -16,17 +16,29 @@ title:  Redis
 * 内存分布
     * sdshdr{n} = [len][alloc][flags][sds]
     * sds = [buf][\0][alloc - len]
-    * sdshdr.flags = sds[-1]
-* 特点
+    * sdshdr->flags = sds[-1]
+    * sds = (char *) sdshdr + sizeof(struct sdshdr{n})
+* 特点(对比C语言字符串)
     * 获取字符串长度: 时间复杂度为`O(1)`
     * 杜绝缓冲区溢出: 字符串拼接时，先进行内存空间检查，内存空间不够自动扩容
     * 减少字符串修改时内存重分配的次数
         * 增长: 空间预分配
-            * len <= 1M，扩容后，alloc = 2 * len
-            * len > 1M，扩容后，alloc = len + 1M
+            * len <= 1M -> 扩容后 -> alloc = 2 * len
+            * len > 1M -> 扩容后 -> alloc = len + 1M
         * 缩短: 惰性空间释放
-    * 二进制安全: 以二进制格式处理文本、图片、视频等数据
+    * 二进制安全: 以二进制格式存储文本、图片、视频等数据
     * 兼容部分C语言字符串函数: 同C语言字符串，以`\0`结尾，可重用部分C语言字符串函数
+* 相关命令
+    * set: O(1)
+    * setex: O(1)，key存在才set
+    * setnx: O(1)，key不存在才set
+    * del: O(1)
+    * get: O(1)
+    * getset: O(1)
+    * append: O(1)，追加字符串
+    * strlen: O(1)，字符串长度
+    * mset: O(N)，批量set
+    * mget: O(N)，批量get
 
 #### 列表
 
@@ -39,9 +51,6 @@ title:  Redis
         * struct listNode *prev: 前置节点
         * struct listNode *next: 后置节点
         * void *value: 节点的值
-        * void *(*dup)(void *ptr): 节点值复制函数
-        * void (*free)(void *ptr): 节点值释放函数
-        * int (*match)(void *ptr, void *key): 节点值对比函数
     * 双向无环链表
 
 #### 字典
@@ -68,11 +77,11 @@ title:  Redis
         * struct dictEntry *next: 下一个节点指针，构成链表，解决hash键冲突
 * hash
     * hash算法: MurmurHash2
-    * hash键冲突: `next`链表
+    * hash键冲突: 链地址法
     * rehash: 键值对rehash到ht[1]，ht[0] = ht[1]
     * 负载因子: ht[0].used / ht[0].size
     * 渐进式rehash
         * insert: 写到ht[1]
-        * get: 先读ht[0]，未找到，再读ht[1]
+        * get: 先读ht[0]，再读ht[1]
         * set、delete: 同时更新ht[0]和ht[1]
-        * ht[0]只减不增，最终成为空表，rehash结束
+        * ht[0]逐步copy到ht[1]，只减不增，最终成为空表，rehash结束
