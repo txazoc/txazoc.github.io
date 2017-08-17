@@ -78,7 +78,7 @@ title:  Redis
         * int iterators: 正在迭代的迭代器数量
     * struct dictht: hash表
         * dictEntry **table: hash表数组
-        * unsigned long size: hash表大小
+        * unsigned long size: hash表大小，2的n次方
         * unsigned long sizemask: hash表大小掩码，等于size - 1
         * unsigned long used: hash表中已有的节点数
     * struct dictEntry: hash表节点
@@ -89,6 +89,8 @@ title:  Redis
             * int64_t s64
             * double d
         * struct dictEntry *next: 下一个节点指针，构成链表，解决hash键冲突
+* 特点
+    * put、set、delete的时间复杂度都为O(1)
 * hash
     * hash算法: MurmurHash2
     * index = hash(key) & ht[0].sizemask
@@ -130,9 +132,13 @@ title:  Redis
             * unsigned int span: 跨度，用于计算`score`
 * 特点
     * 空间换时间
-    * 节点集合有序
+    * 表中节点有序
     * 节点查找的时间复杂度为O(logN)
     * 区间查找的时间复杂度为O(logN)
+* 对比红黑树
+    * 二者都有序，查找的时间复杂度都为O(logN)
+    * 节点变更时，跳跃表维护的成本更低
+    * 区间查找时，跳跃表的效率更高
 
 #### 整数集合
 
@@ -142,25 +148,105 @@ title:  Redis
         * uint32_t length: 元素数量
         * int8_t contents[]: 元素数组
 * 特点
-    * 集合元素有序
+    * 集合元素有序递增，无重复
     * 尽可能的节约内存
     * 支持类型升级，不支持降级
+    * get
+        * 按index: 数组下标访问，时间复杂度O(1)
+        * 按值: 二分查找，时间复杂度O(logN)
+    * insert、delete、set: `get` + `移位`
 * 类型升级
     * int16_t -> int32_t -> int64_t
     * 分配新的内存空间
-    * 集合中元素copy到新的内存空间
+    * 集合中元素copy到新的内存空间，扩容前元素，扩容倍数n
 
 #### 压缩列表
 
 * 数据结构
     * ziplist
-        * uint32_t zlbytes: 压缩列表的内存字节数
-        * uint32_t zltail: 压缩列表表尾节点距离起始地址的字节数
-        * uint16_t zllen: 压缩列表的节点数
-        * struct zlentry: 压缩列表节点
-            * unsigned int prevrawlensize, prevrawlen;
-            * unsigned int lensize, len;
-            * unsigned int headersize;
-            * unsigned char encoding;
-            * unsigned char *p;
-        * uint8_t zlend: `0xFF`，标记压缩列表的末端
+        * uint32_t zlbytes: 整个压缩列表的内存字节数，用于内存重分配和定位`zlend`
+        * uint32_t zltail: 压缩列表表尾节点距离起始地址的偏移，用于定位`表尾节点`
+        * uint16_t zllen: 压缩列表的节点数，等于`65535`时，要遍历整个压缩列表才能计算出真实的节点数
+        * struct zlentry[]: 压缩列表节点
+            * unsigned int prevrawlensize: `prevrawlen`占用的字节数
+            * unsigned int prevrawlen: 前一个节点的长度，用于向前遍历
+            * unsigned int lensize: `len`占用的字节数
+            * unsigned int len: 当前节点的长度
+            * unsigned int headersize: 当前节点的头部大小
+            * unsigned char encoding: 当前节点内容编码
+            * unsigned char *p: 当前节点内容指针
+        * uint8_t zlend: 特殊值`0xFF`，标记压缩列表的末端
+* 特点
+    * 特殊双向链表
+    * 头部尾部push和pop的时间复杂度为O(1)
+    * 节省内存，节省指针链表的内存空间
+    * 缺点: 每次insert、delete和部分update操作会导致内存重分配
+
+#### Redis对象
+
+* 数据结构
+    * struct redisObject: Redis对象
+        * unsigned type:4: 数据类型
+            * OBJ_STRING: string
+            * OBJ_LIST: list
+            * OBJ_SET: set
+            * OBJ_ZSET: sorted set
+            * OBJ_HASH: hash
+        * unsigned encoding:4: 编码方式
+            * OBJ_ENCODING_RAW: `sds`
+            * OBJ_ENCODING_INT: `long`
+            * OBJ_ENCODING_HT: `dict`
+            * OBJ_ENCODING_ZIPLIST: `ziplist`
+            * OBJ_ENCODING_INTSET: `intset`
+            * OBJ_ENCODING_SKIPLIST: `zset`(dict + zskiplist)
+            * OBJ_ENCODING_EMBSTR: `sdshdr`
+            * OBJ_ENCODING_QUICKLIST: `quicklist`
+        * unsigned lru:24
+        * int refcount: 引用计数，支持对象共享
+        * void *ptr: 数据指针，指向实际的存储结构
+* 数据类型编码
+    * string
+        * OBJ_ENCODING_INT: 字符串长度小于等于`21`且是long型字符串
+        * OBJ_ENCODING_EMBSTR: 字符串长度小于等于`44`，sds(alloc = len)
+        * OBJ_ENCODING_RAW: 其它，空闲空间大于`10%`，释放空闲空间
+    * list
+        * OBJ_ENCODING_QUICKLIST
+    * set
+        * 控制参数
+            * set_max_intset_entries: `intset`编码方式的最大集合大小，默认为512
+        * OBJ_ENCODING_INTSET: 
+        * OBJ_ENCODING_HT: 集合大小大于`set_max_intset_entries`或包括非long型字符串
+    * zset
+        * 控制参数
+            * zset_max_ziplist_entries: `ziplist`编码方式的最大集合大小，默认为128
+            * zset_max_ziplist_value: `ziplist`编码方式的最大元素长度，默认为64
+        * OBJ_ENCODING_ZIPLIST
+        * OBJ_ENCODING_SKIPLIST: 集合大小大于`zset_max_ziplist_entries`或元素长度大于`zset_max_ziplist_value`
+    * hash
+        * 控制参数
+            * hash_max_ziplist_entries: `ziplist`编码方式的最大集合大小，默认为512
+            * hash_max_ziplist_value: `ziplist`编码方式的最大元素长度，默认为64
+        * OBJ_ENCODING_ZIPLIST
+        * OBJ_ENCODING_HT: 集合大小大于`hash_max_ziplist_entries`或元素长度大于`hash_max_ziplist_value`
+
+#### Redis事务
+
+* 事务命令
+    * multi: 标记事务开始，`client`添加事务标记`CLIENT_MULTI`
+    * watch: 监视key，`client`添加到`key`的监视集合中
+    * unwatch: 取消对key的监视，将`client`从`key`的监视集合中移除
+    * discard: 取消执行事务，清除`client`的事务标记，将`client`从`key`的监视集合中移除
+    * exec: 提交执行事务，先检查事务标记，然后开始执行事务中的命令
+    * 事务标记
+        * CLIENT_MULTI: 标记事务开始
+        * CLIENT_DIRTY_CAS: 监视的`key`被修改，`exec`执行失败
+        * CLIENT_DIRTY_EXEC: 命令入队失败，`exec`执行失败
+        * 事务执行条件: CLIENT_MULTI && !(CLIENT_DIRTY_CAS \| CLIENT_DIRTY_EXEC)
+* 事务特性
+    * 事务中全部命令顺序执行
+    * 事务中命令要么全部执行，要么全部不执行
+    * 事务中一个命令执行失败，不会回滚，其它命令继续执行
+
+#### Redis AOF
+
+#### Redis RDB
