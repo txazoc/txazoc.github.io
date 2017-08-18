@@ -211,18 +211,31 @@ Redis版本: `3.2.1`
     * 头部尾部push和pop的时间复杂度为O(1)
     * 增删改查效率低
 
+#### 快速列表－quicklist
+
+* 数据结构
+    * struct quicklist
+        * quicklistNode *head
+        * quicklistNode *tail
+        * unsigned long count
+        * unsigned int len
+        * int fill:16
+        * unsigned int compress:16
+
 #### Redis对象
 
-* Redis对象: Redis内部不同类型的`value`，提供一种统一的表示方式
+* Redis对象
+    * Redis内部string类型的`key`
+    * Redis内部不同类型的`value`，提供一种统一的表示方式
 * 数据结构
     * struct redisObject: Redis对象
         * unsigned type:4: 数据类型
-            * OBJ_STRING: string
-            * OBJ_LIST: list
-            * OBJ_SET: set
-            * OBJ_ZSET: zset
-            * OBJ_HASH: hash
-        * unsigned encoding:4: 编码方式，允许同一种数据类型采用不同的内部表示，`以节省内存`
+            * OBJ_STRING: string，字符串
+            * OBJ_LIST: list，列表
+            * OBJ_SET: set，集合
+            * OBJ_ZSET: zset，有序集合
+            * OBJ_HASH: hash，哈希表
+        * unsigned encoding:4: 编码方式
             * OBJ_ENCODING_RAW: `sds`
             * OBJ_ENCODING_INT: `long`
                 * 未启用`LRU`且0 &lt;= value &lt; 10000，使用共享数字对象`shared.integers`表示
@@ -240,11 +253,14 @@ Redis版本: `3.2.1`
                     * sizeof(sds): &lt;= `44`
                     * sizeof('\0'): 1
                 * sds不可变: alloc = len，无空闲内存空间
+                * 执行`append`操作，转为`OBJ_ENCODING_RAW`类型
             * OBJ_ENCODING_QUICKLIST: `quicklist`
-        * unsigned lru:24
-        * int refcount: 引用计数，支持对象共享
+        * unsigned lru:24: 对象最后一次被访问的时间
+        * int refcount: 引用计数
         * void *ptr: 数据指针，指向实际的存储结构
-* 数据类型编码
+* 编码方式
+    * 允许同一种数据类型采用不同的内部表示
+    * 目的: 尽可能的`节省内存`，牺牲时间换取空间
     * string
         * OBJ_ENCODING_INT
             * 字符串长度小于等于`21`且是long型字符串
@@ -271,6 +287,53 @@ Redis版本: `3.2.1`
             * hash_max_ziplist_value: `ziplist`编码方式的最大元素长度，默认为64
         * OBJ_ENCODING_ZIPLIST
         * OBJ_ENCODING_HT: 集合大小大于`hash_max_ziplist_entries`或元素长度大于`hash_max_ziplist_value`
+* 相关命令
+    * type: 查看对象的数据类型
+    * object encoding: 查看对象的编码方式
+    * debug object: 查看对象的调试信息
+* refcount的作用
+    * 内存回收: refcount为0时，释放对象的内存空间
+    * 对象共享
+        * 节省内存: 共享同一个对象，refcount++
+        * 只共享了整数的字符串对象`shared.integers`
+        * 开启`LRU`后，关闭对象共享
+
+#### Redis数据库
+
+* struct redisServer
+    * int dbnum: 数据库数量，默认为16
+    * redisDb *db: redis数据库
+        * dict *dict: 数据库键空间，存放键值对
+            * 键: `key`，string类型的redisObject
+            * 值: `value`，任意类型的redisObject
+        * dict *expires: 存放键的过期时间，不包含无过期时间的`key`
+            * 键: `key`
+            * 值: `key`的过期时间，unix时间戳，单位为毫秒
+        * dict *blocking_keys: 处于阻塞状态的键
+        * dict *ready_keys: 准备解除阻塞状态的键
+        * dict *watched_keys: 被`watch`监视的键
+* key过期删除
+    * 惰性删除
+        * expireIfNeeded: 所有读写命令执行前调用
+            * 无过期时间，直接返回
+            * 当前节点为slave节点，`key`的过期操作由master节点控制，只返回正确状态即可
+            * master节点: 未过期直接返回，否则删除`key`，并向slave节点发送`del`命令删除`key`
+                * dictDelete(db-&gt;expires, key-&gt;ptr)
+                * dictDelete(db-&gt;dict, key-&gt;ptr)
+    * 定期删除
+        * activeExpireCycle
+            * 在周期性函数serverCron被调用时调用
+            * 可控制周期执行时间快慢和一次执行的时间上限
+            * 执行时，随机从`expires`中拿取`key`检查是否过期，过期则执行删除，`同上`
+* 相关命令
+    * select: 切换redis数据库
+    * persist: 移除key的过期时间，持久化
+    * expire: 设置key的过期时间，单位为秒
+    * expireat: 设置key的过期时间点，unix时间戳，单位为秒
+    * pexpire: 设置key的过期时间，单位为毫秒
+    * pexpireat: 设置key的过期时间点，unix时间戳，单位为毫秒
+    * ttl: 返回key的剩余过期时间，单位为秒
+    * pttl: 返回key的剩余过期时间，单位为毫秒
 
 #### Redis事务
 
@@ -293,3 +356,5 @@ Redis版本: `3.2.1`
 #### Redis AOF
 
 #### Redis RDB
+
+#### Redis请求入口
