@@ -248,8 +248,8 @@ Redis版本: `3.2.1`
     * string
         * OBJ_ENCODING_INT
             * 字符串长度小于等于`21`且是long型字符串
-            * 执行`incr`和`decr`
-            * `OBJ_ENCODING_INT`编码类型字符串上执行`append`、`setbit`、`getrange`，先转为`OBJ_ENCODING_EMBSTR`或`OBJ_ENCODING_RAW`编码类型
+            * 执行`incr`和`decr`操作
+            * `OBJ_ENCODING_INT`编码类型字符串上执行`append`、`setbit`、`getrange`操作，先转为`OBJ_ENCODING_EMBSTR`或`OBJ_ENCODING_RAW`编码类型
         * OBJ_ENCODING_EMBSTR: 字符串长度小于等于`44`
         * OBJ_ENCODING_RAW: 其它，空闲空间大于`10%`，释放空闲空间
     * list
@@ -257,7 +257,7 @@ Redis版本: `3.2.1`
     * set
         * 控制参数
             * set_max_intset_entries: `intset`编码方式的最大集合大小，默认为512
-        * OBJ_ENCODING_INTSET: 
+        * OBJ_ENCODING_INTSET
         * OBJ_ENCODING_HT: 集合大小大于`set_max_intset_entries`或包括非long型字符串
     * zset
         * 控制参数
@@ -279,7 +279,7 @@ Redis版本: `3.2.1`
     * watch: 监视key，`client`添加到`key`的监视集合中
     * unwatch: 取消对key的监视，将`client`从`key`的监视集合中移除
     * discard: 取消执行事务，清除`client`的事务标记，将`client`从`key`的监视集合中移除
-    * exec: 提交执行事务，先检查事务标记，然后开始执行事务中的命令
+    * exec: 提交执行事务，先检查事务标记，`unwatch`所有的`key`，然后开始执行事务中的命令
     * 事务标记
         * CLIENT_MULTI: 标记事务开始
         * CLIENT_DIRTY_CAS: 监视的`key`被修改，`exec`执行失败
