@@ -9,8 +9,8 @@ Redis版本: `3.2.1`
 
 * 数据结构
     * sdshdr{n}: sds结构体
-        * uint{n}_t len: 当前长度
-        * uint{n}_t alloc: 分配总长度，用来确定是否进行内存重分配
+        * uint{n}_t len: 当前长度，确定字符串结尾而非依赖于`\0`
+        * uint{n}_t alloc: 分配总长度，用于空间预分配
         * unsigned char flags: 类型标记，低三位有效
         * char buf[]: 字符数组
         * `注`: n可取值8、16、32、64
@@ -103,12 +103,32 @@ Redis版本: `3.2.1`
     * hash键冲突: 链地址法
     * 负载因子: used / size，决定是否扩容/缩容
     * rehash: hash表扩容/缩容，ht[0]中键值对转移到ht[1]
-    * 渐进式rehash
-        * insert: 写到ht[1]
-        * get: 先读ht[0]，再读ht[1]
-        * set、delete: 同时更新ht[0]和ht[1]
-        * ht[0]逐步copy到ht[1]，只减不增，最终成为空表，rehash结束
+    * 扩容条件
+        * 条件一: ht[0].used &gt; ht[0].size
+        * 条件二: dict_can_resize \|\| ht[0].used / ht[0].size &gt; dict_force_resize_ratio
+        * dict_can_resize: 是否可以扩容，默认为1代表可以扩容
+        * dict_force_resize_ratio: 强制扩容的比率，默认为5
+    * 缩容条件
+        * used * 100 / size &lt; HASHTABLE_MIN_FILL(10): 下限10%
+    * 渐进式rehash过程
+        * 判断是否在`rehash`: `rehashidx`不为-1代表正在进行`rehash`
+        * 循环处理ht[0]中的`桶`直到`ht[0].used`为0，桶下标`rehashidx`
+            * 空桶直接略过
+            * 非空桶
+                * 遍历桶中的节点，计算落到ht[1]中桶的index并添加到对应的桶中
+                * ht[0].used--
+                * ht[1].used++
+                * ht[0].table[rehashidx] = NULL
+            * rehashidx++
+        * 释放`ht[0].table`
         * ht[0] = ht[1]
+        * ht[1]复位为空白hash表
+        * rehashidx = -1
+    * 渐进式rehash时操作
+        * insert: 写到ht[1]
+        * delete: 先删ht[0]，未成功再删ht[1]
+        * get: 先读ht[0]，未成功再读ht[1]
+        * set: 先`get`再更新
 * 相关命令
     * hdel: O(1)
     * hexists: O(1)
@@ -142,6 +162,7 @@ Redis版本: `3.2.1`
     * 表中节点有序
     * 节点查找的时间复杂度为O(logN)
     * 区间查找的时间复杂度为O(logN)
+    * 排序对比时，先对比`score`，再对比`obj`
 * 对比红黑树
     * 二者都有序，查找的时间复杂度都为O(logN)
     * 节点变更时，跳跃表维护的成本更低
@@ -186,12 +207,13 @@ Redis版本: `3.2.1`
         * uint8_t zlend: 特殊值`0xFF`，标记压缩列表的末端
 * 特点
     * 特殊双向链表
-    * 节省内存
+    * 连续内存存储，内存利用率高
     * 头部尾部push和pop的时间复杂度为O(1)
-    * 缺点: 每次insert、delete和部分update操作会导致内存重分配
+    * 增删改查效率低
 
 #### Redis对象
 
+* Redis对象: Redis内部不同类型的`value`，提供一种统一的表示方式
 * 数据结构
     * struct redisObject: Redis对象
         * unsigned type:4: 数据类型
@@ -200,18 +222,22 @@ Redis版本: `3.2.1`
             * OBJ_SET: set
             * OBJ_ZSET: zset
             * OBJ_HASH: hash
-        * unsigned encoding:4: 编码方式
+        * unsigned encoding:4: 编码方式，允许同一种数据类型采用不同的内部表示，`以节省内存`
             * OBJ_ENCODING_RAW: `sds`
             * OBJ_ENCODING_INT: `long`
+                * 未启用`LRU`且0 &lt;= value &lt; 10000，使用共享数字对象`shared.integers`表示
+                * 否则，`ptr`直接存储long值
             * OBJ_ENCODING_HT: `dict`
             * OBJ_ENCODING_ZIPLIST: `ziplist`
+                * `zset`和`dict`: 集合大小较小且元素长度较小时节省内存的编码方式
             * OBJ_ENCODING_INTSET: `intset`
             * OBJ_ENCODING_SKIPLIST: `zset`(dict + zskiplist)
             * OBJ_ENCODING_EMBSTR: `embedded string`
-                * embedded string: 嵌入字符串
-                * sds和redisObject一起分配在同一个内存块中，节省空间，提高缓存命中
+                * embedded string: 嵌入式字符串
+                * sds和redisObject一起分配在同一个内存块(不超过64字节)中，节省空间，提高缓存命中
                     * sizeof(redisObject): 16
-                    * sizeof(sdshdr): 8
+                    * sizeof(sdshdr8): 3
+                    * sizeof(sds): &lt;= `44`
                     * sizeof('\0'): 1
                 * sds不可变: alloc = len，无空闲内存空间
             * OBJ_ENCODING_QUICKLIST: `quicklist`
@@ -220,7 +246,10 @@ Redis版本: `3.2.1`
         * void *ptr: 数据指针，指向实际的存储结构
 * 数据类型编码
     * string
-        * OBJ_ENCODING_INT: 字符串长度小于等于`21`且是long型字符串
+        * OBJ_ENCODING_INT
+            * 字符串长度小于等于`21`且是long型字符串
+            * 执行`incr`和`decr`
+            * `OBJ_ENCODING_INT`编码类型字符串上执行`append`、`setbit`、`getrange`，先转为`OBJ_ENCODING_EMBSTR`或`OBJ_ENCODING_RAW`编码类型
         * OBJ_ENCODING_EMBSTR: 字符串长度小于等于`44`
         * OBJ_ENCODING_RAW: 其它，空闲空间大于`10%`，释放空闲空间
     * list
