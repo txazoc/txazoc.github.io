@@ -3,43 +3,49 @@ layout: map
 title:  Redis
 ---
 
-#### 字符串
+Redis版本: `3.2.1`
+
+#### 简单动态字符串－sds
 
 * 数据结构
-    * sdshdr{n}
+    * sdshdr{n}: sds结构体
         * uint{n}_t len: 当前长度
-        * uint{n}_t alloc: 分配总长度
+        * uint{n}_t alloc: 分配总长度，用来确定是否进行内存重分配
         * unsigned char flags: 类型标记，低三位有效
         * char buf[]: 字符数组
-        * `注`: n可取值8(byte)、16(short)、32(int)、64(long)
+        * `注`: n可取值8、16、32、64
+    * sds: 简单动态字符串
+        * typedef char *sds: 字符串指针
 * 内存分布
-    * sdshdr{n} = [len][alloc][flags][sds]
-    * sds = [buf][\0][alloc - len]
-    * sdshdr->flags = sds[-1]
-    * sds = (char *) sdshdr + sizeof(struct sdshdr{n})
+    * 连续内存存储，可加速内存访问
+    * sdshdr = [len][alloc][flags][buf]
+    * buf = [sds][\0][alloc - len]
+    * sds和sds结构体可以互相转换
+        * sds = (char *) (sdshdr + sizeof(struct sdshdr))
+        * sdshdr = (void *) (sds - sizeof(struct sdshdr))
 * 特点(对比C语言字符串)
     * 空间换时间
-    * 获取字符串长度: 时间复杂度为`O(1)`
+    * 获取字符串长度的时间复杂度为`O(1)`
     * 杜绝缓冲区溢出: 字符串拼接时，先进行内存空间检查，内存空间不够自动扩容
     * 减少字符串修改时内存重分配的次数
         * 增长: 空间预分配
-            * len <= 1M -> 扩容后 -> alloc = 2 * len
-            * len > 1M -> 扩容后 -> alloc = len + 1M
+            * len &lt;= 1M，扩容后，alloc = 2 * len
+            * len &gt; 1M，扩容后，alloc = len + 1M
         * 缩短: 惰性空间释放
     * 二进制安全: 以二进制格式存储文本、图片、视频等数据
     * 兼容部分C语言字符串函数: 同C语言字符串，以`\0`结尾，可重用部分C语言字符串函数
 * 相关命令
-    * append: O(1)，追加字符串，`memcpy`
+    * append: O(1)，追加字符串
     * get: O(1)
     * getset: O(1)
     * mget: O(N)，批量get
     * mset: O(N)，批量set
-    * set: O(1)，`memcpy`
+    * set: O(1)
     * setex: O(1)，key存在才set
     * setnx: O(1)，key不存在才set
     * strlen: O(1)，字符串长度
 
-#### 列表
+#### 列表－list
 
 * 数据结构
     * struct list: 列表
@@ -47,13 +53,13 @@ title:  Redis
         * listNode *tail: 表尾节点指针
         * unsigned long len: 节点数
     * struct listNode: 列表节点
-        * struct listNode *prev: 前置节点
-        * struct listNode *next: 后置节点
-        * void *value: 节点的值
-    * 双向无环链表
+        * struct listNode *prev: 前置节点指针
+        * struct listNode *next: 后置节点指针
+        * void *value: 节点的值指针
 * 特点
-    * 支持表头表尾push、pop，效率高
-    * 列表中新增、删除、查找，会导致表头或表尾遍历，效率低
+    * 双向无环链表
+    * 表头表尾push、pop的时间复杂度为`O(1)`
+    * 列表中insert、delete、update、get，会导致从表头或表尾遍历，时间复杂度为O(N)
     * 可用作双向队列或堆栈
 * 相关命令
     * blpop: O(1)，表头阻塞pop
@@ -67,15 +73,15 @@ title:  Redis
     * rpop: O(1)，表尾pop
     * rpush: O(1)，表尾push
 
-#### 字典
+#### 字典－dict
 
 * 数据结构
     * struct dict: 字典
         * dictType *type: 类型函数
         * void *privdata: 私有数据
         * dictht ht[2]: hash表数组，大小为2，ht[0]用来读写，ht[1]用来rehash
-        * long rehashidx: rehash索引，记录rehash的进度，为-1时表示没有在rehash
-        * int iterators: 正在迭代的迭代器数量
+        * long rehashidx: rehash索引，即table下标，记录rehash的进度，为-1时表示没有在rehash
+        * int iterators: 正在迭代中的迭代器数量
     * struct dictht: hash表
         * dictEntry **table: hash表数组
         * unsigned long size: hash表大小，2的n次方
@@ -90,42 +96,43 @@ title:  Redis
             * double d
         * struct dictEntry *next: 下一个节点指针，构成链表，解决hash键冲突
 * 特点
-    * put、set、delete的时间复杂度都为O(1)
+    * get、set、del的时间复杂度都为O(1)
 * hash
     * hash算法: MurmurHash2
-    * index = hash(key) & ht[0].sizemask
+    * index = hash(key) & sizemask
     * hash键冲突: 链地址法
-    * 负载因子: ht[0].used / ht[0].size，决定是否扩容/缩容
-    * rehash: hash表扩容/缩容，键值对rehash到ht[1]，ht[0] = ht[1]
+    * 负载因子: used / size，决定是否扩容/缩容
+    * rehash: hash表扩容/缩容，ht[0]中键值对转移到ht[1]
     * 渐进式rehash
         * insert: 写到ht[1]
         * get: 先读ht[0]，再读ht[1]
         * set、delete: 同时更新ht[0]和ht[1]
         * ht[0]逐步copy到ht[1]，只减不增，最终成为空表，rehash结束
+        * ht[0] = ht[1]
 * 相关命令
     * hdel: O(1)
     * hexists: O(1)
     * hget: O(1)
     * hgetall: O(N)
     * hkeys: O(N)
-    * hlen: O(N)
+    * hlen: O(1)
     * hmget: O(N)
     * hmset: O(N)
     * hset: O(1)
     * hsetnx: O(1)，key不存在才set
     * hvals: O(N)
 
-#### 跳跃表
+#### 跳跃表－zskiplist
 
 * 数据结构
-    * struct zskiplist
+    * struct zskiplist: 跳跃表
         * struct zskiplistNode *header: 表头节点指针
         * struct zskiplistNode *tail: 表尾节点指针，用于表尾遍历
         * unsigned long length: 节点数(不包括表头节点)
         * int level: 最大层数(不包括表头节点的层数)
-    * struct zskiplistNode
+    * struct zskiplistNode: 跳跃表节点
         * robj *obj: 节点成员对象，`必须唯一`
-        * double score: 节点分值，节点按节点分值从小到大排序，节点分值可以相同
+        * double score: 节点分值，节点按分值从小到大排序，节点分值可以相同
         * struct zskiplistNode *backward: 后退指针，方便`区间查找`
         * struct zskiplistLevel level[]: 层，层的高度为`1 ~ 32`之间的随机数
             * struct zskiplistNode *forward: 前进指针，加速查找，`跳跃表的核心`
@@ -140,16 +147,17 @@ title:  Redis
     * 节点变更时，跳跃表维护的成本更低
     * 区间查找时，跳跃表的效率更高
 
-#### 整数集合
+#### 整数集合－intset
 
 * 数据结构
     * struct intset
-        * uint32_t encoding: 编码方式，可取值2、4、8，决定集合的元素类型分别为int16_t、int32_t、int64_t
+        * uint32_t encoding: 编码方式，可取值2(int16_t)、4(int32_t)、8(int64_t)
         * uint32_t length: 元素数量
         * int8_t contents[]: 元素数组
 * 特点
+    * 连续内存存储，可加速内存访问
     * 集合元素有序递增，无重复
-    * 尽可能的节约内存
+    * 尽可能的节省内存
     * 支持类型升级，不支持降级
     * get
         * 按index: 数组下标访问，时间复杂度O(1)
@@ -158,9 +166,9 @@ title:  Redis
 * 类型升级
     * int16_t -> int32_t -> int64_t
     * 分配新的内存空间
-    * 集合中元素copy到新的内存空间，扩容前元素，扩容倍数n
+    * 集合中元素copy到新的内存空间
 
-#### 压缩列表
+#### 压缩列表－ziplist
 
 * 数据结构
     * ziplist
@@ -171,15 +179,15 @@ title:  Redis
             * unsigned int prevrawlensize: `prevrawlen`占用的字节数
             * unsigned int prevrawlen: 前一个节点的长度，用于向前遍历
             * unsigned int lensize: `len`占用的字节数
-            * unsigned int len: 当前节点的长度
+            * unsigned int len: 当前节点的长度，用于确定节点内容及向后遍历
             * unsigned int headersize: 当前节点的头部大小
             * unsigned char encoding: 当前节点内容编码
             * unsigned char *p: 当前节点内容指针
         * uint8_t zlend: 特殊值`0xFF`，标记压缩列表的末端
 * 特点
     * 特殊双向链表
+    * 节省内存
     * 头部尾部push和pop的时间复杂度为O(1)
-    * 节省内存，节省指针链表的内存空间
     * 缺点: 每次insert、delete和部分update操作会导致内存重分配
 
 #### Redis对象
@@ -190,7 +198,7 @@ title:  Redis
             * OBJ_STRING: string
             * OBJ_LIST: list
             * OBJ_SET: set
-            * OBJ_ZSET: sorted set
+            * OBJ_ZSET: zset
             * OBJ_HASH: hash
         * unsigned encoding:4: 编码方式
             * OBJ_ENCODING_RAW: `sds`
@@ -199,7 +207,13 @@ title:  Redis
             * OBJ_ENCODING_ZIPLIST: `ziplist`
             * OBJ_ENCODING_INTSET: `intset`
             * OBJ_ENCODING_SKIPLIST: `zset`(dict + zskiplist)
-            * OBJ_ENCODING_EMBSTR: `sdshdr`
+            * OBJ_ENCODING_EMBSTR: `embedded string`
+                * embedded string: 嵌入字符串
+                * sds和redisObject一起分配在同一个内存块中，节省空间，提高缓存命中
+                    * sizeof(redisObject): 16
+                    * sizeof(sdshdr): 8
+                    * sizeof('\0'): 1
+                * sds不可变: alloc = len，无空闲内存空间
             * OBJ_ENCODING_QUICKLIST: `quicklist`
         * unsigned lru:24
         * int refcount: 引用计数，支持对象共享
@@ -207,7 +221,7 @@ title:  Redis
 * 数据类型编码
     * string
         * OBJ_ENCODING_INT: 字符串长度小于等于`21`且是long型字符串
-        * OBJ_ENCODING_EMBSTR: 字符串长度小于等于`44`，sds(alloc = len)
+        * OBJ_ENCODING_EMBSTR: 字符串长度小于等于`44`
         * OBJ_ENCODING_RAW: 其它，空闲空间大于`10%`，释放空闲空间
     * list
         * OBJ_ENCODING_QUICKLIST
