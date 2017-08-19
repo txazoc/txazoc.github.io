@@ -25,7 +25,7 @@ markdownStyle: md-primary
 highlightstyle: hljs-txazo
 
 # 是否本地调试
-localDebug: "false"
+localDebug: "true"
 
 # 本地域名
 localDomain: "//127.0.0.1:4000"
@@ -69,4 +69,4 @@ paginate: 10
 paginate_path: "index/:num"
 
 # 随机版本号
-randomVersion: "649f6f24ba1269bb154a33d0cc7cccba"
+randomVersion: "0bc15fe3b0e3e45a4c37c03dd7fe9d45"
