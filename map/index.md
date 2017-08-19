@@ -15,3 +15,4 @@ title:  思维脑图
 * [搜索引擎](/map/search-engine.html)
 * [日志系统](/map/log-system.html)
 * [Java](/map/java.html)
+* [机器学习](/map/machine-learning.html)
