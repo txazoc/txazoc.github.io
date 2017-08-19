@@ -335,6 +335,89 @@ Redis版本: `3.2.1`
     * ttl: 返回key的剩余过期时间，单位为秒
     * pttl: 返回key的剩余过期时间，单位为毫秒
 
+#### Redis持久化
+
+* RDB
+    * RDB写入
+        * redis数据库 -&gt; RDB文件
+    * RDB文件结构
+        * REDIS: "REDIS"字符串
+        * RDB_VERSION: RDB版本号，四字节，例如0007
+        * DB-DATA: redis数据库
+            * SELECT-DB: redis数据库标识
+            * KEY-VALUE-PAIRS: redis数据库中的键值对
+                * OPTIONAL-EXPIRE-TIME: 键的过期时间，可选
+                * TYPE-OF-VALUE: `VALUE`的编码方式
+                * KEY: 键
+                * VALUE: 值
+        * EOF: redis数据库内容结尾标识
+        * CHECK-SUM: 校验和
+* AOF(Append Only File)
+    * AOF写入
+        * 写命令 -&gt; AOF文件
+        * AOF同步写: 保证数据实时持久化
+            * 写命令 -&gt; AOF缓冲区 -&gt; AOF文件
+        * AOF重写: 解决AOF文件大小不断增长的问题
+            * redis数据库 -&gt; 写命令 -&gt; AOF文件
+            * AOF重写期间的写命令 -&gt; AOF重写缓冲区 -&gt; AOF文件
+    * AOF文件结构
+        * 写命令行: redis请求命令格式
+* redis启动磁盘加载
+    * AOF开启: 加载AOF
+        * AOF文件 -&gt; redis数据库
+    * AOF关闭: 加载RDB
+        * RDB文件 -&gt; redis数据库
+* 对比
+    * RDB: 全量持久化
+    * AOF: 增量持久化，数据更实时
+* 相关命令
+    * save: 同步写RDB
+    * bgsave: 异步写RDB
+
+#### Redis事件驱动
+
+* 事件类型
+    * 文件事件
+    * 时间事件
+* 事件驱动实现: `I/O多路复用`
+* Redis命令请求执行过程
+    * Redis初始化(server.c/initServer)
+        * 监听TCP端口
+        * 注册时间事件: 事件回调函数`serverCron`
+        * `fd`上注册客户端连接事件: 事件回调函数`acceptTcpHandler`
+    * Redis事件主循环(server.c/aeMain): 串行执行
+        * beforeSleep
+            * 写AOF缓冲区数据到AOF文件
+            * 处理客户端响应，遍历有等待写数据的`client`
+                * `client`写缓冲区的数据写入客户端
+                * 还有待写的数据，注册客户端写事件，事件回调函数`sendReplyToClient`
+        * `poll`已就绪的文件事件并遍历
+            * 读文件事件: 执行读文件事件回调函数
+            * 写文件事件: 执行写文件事件回调函数
+        * 遍历时间事件
+            * 时间事件已就绪: 执行时间事件回调函数
+        * 一次循环完成
+    * 事件回调函数
+        * serverCron
+        * acceptTcpHandler
+            * `accept`客户端连接
+            * 创建客户端上下文对象`client`并初始化
+            * 注册客户端读事件: 事件回调函数`readQueryFromClient`
+            * 选择`0`号redis数据库
+        * readQueryFromClient
+            * 读数据到`querybuf`
+            * 循环处理直到`querybuf`为空
+                * 从`querybuf`读redis请求命令并封装为redis对象，赋值给`client.argv`
+                * 从redis命令表`redisCommandTable`中查询命令，赋值给`client.cmd`
+                * 有事务上下文且非`multi`、`watch`、`disard`、`exec`命令: 添加新的命令到`client`的事务命令队列
+                * 其它命令
+                    * 执行命令: `c->cmd->proc(c)`
+                    * 写慢查询日志
+                    * 写命令: 同步到AOF文件，同步给slave节点
+                    * 命令执行计数+1
+                * `unblock`已就绪的`key`的`client`
+        * sendReplyToClient: 写缓冲区中的数据写入客户端
+
 #### Redis事务
 
 * 事务命令
@@ -353,8 +436,6 @@ Redis版本: `3.2.1`
     * 事务中命令要么全部执行，要么全部不执行
     * 事务中一个命令执行失败，不会回滚，其它命令继续执行
 
-#### Redis AOF
+#### 发布与订阅
 
-#### Redis RDB
-
-#### Redis请求入口
+#### Redis集群
