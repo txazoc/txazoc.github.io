@@ -214,13 +214,36 @@ Redis版本: `3.2.1`
 #### 快速列表－quicklist
 
 * 数据结构
-    * struct quicklist
-        * quicklistNode *head
-        * quicklistNode *tail
-        * unsigned long count
-        * unsigned int len
-        * int fill:16
-        * unsigned int compress:16
+    * struct quicklist: 快速列表
+        * quicklistNode *head: 头部节点指针
+        * quicklistNode *tail: 尾部节点指针
+        * unsigned long count: 列表中元素的数量
+        * unsigned int len: quicklist节点的数量
+        * int fill:16: 单个ziplist的最大大小，由`list_max_ziplist_size`给定，取负值时，规则如下，取正值时，表示单个ziplist的最大字节数
+            * -1: 4096，4k
+            * -2: 8192，8k，默认设置
+            * -3: 16384，16k
+            * -4: 32768，32k
+            * -5: 65536，64k
+        * unsigned int compress:16: quicklist两端节点不被压缩的深度，由`list_compress_depth`给定，默认为0表示不压缩，大于0就会对排除掉两端`compress`个quicklist节点之外的中间quicklist节点进行压缩
+    * struct quicklistNode: quicklist节点
+        * struct quicklistNode *prev: 前一个quicklist节点指针
+        * struct quicklistNode *next: 后一个quicklist节点指针
+        * unsigned char *zl: 节点内容指针，没被压缩时，指向`ziplist`结构，否则指向`quicklistLZF`结构
+        * unsigned int sz: `ziplist`占用内存大小
+        * unsigned int count:16: `ziplist`中元素个数
+        * unsigned int encoding:2: 编码方式，1-RAW，2-LZF
+        * unsigned int container:2: 1-NONE，2-ziplist
+        * unsigned int recompress:1: 解压标记，为1代表该节点正在被解压
+        * unsigned int attempted_compress:1: 测试相关
+        * unsigned int extra:10: 预留字段
+    * typedef struct quicklistLZF: quicklist压缩节点
+        * unsigned int sz: 压缩后占用的字节数
+        * char compressed[]: 压缩后的内容
+* 设计原理: 结合`双端链表`和`ziplist`各自的优点，互补不足
+* 特点
+    * 头部尾部push和pop的时间复杂度为O(1)
+    * 节点采用`ziplist`或LZF压缩存储，存储效率高
 
 #### Redis对象
 
