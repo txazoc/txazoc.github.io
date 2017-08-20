@@ -34,6 +34,9 @@ Redis版本: `3.2.1`
         * 缩短: 惰性空间释放
     * 二进制安全: 以二进制格式存储文本、图片、视频等数据
     * 兼容部分C语言字符串函数: 同C语言字符串，以`\0`结尾，可重用部分C语言字符串函数
+* 位图(bitmap)
+    * setbit、getbit
+    * 在字符串上进行位操作，节省内存空间
 * 相关命令
     * append: O(1)，追加字符串
     * get: O(1)
@@ -245,6 +248,21 @@ Redis版本: `3.2.1`
     * 头部尾部push和pop的时间复杂度为O(1)
     * 节点采用`ziplist`或LZF压缩存储，存储效率高
 
+#### 有序集合－zset
+
+* 有序集合组成: 元素member/分值score对
+* 数据结构
+    * struct zset: 有序集合
+        * dict *dict: 字典
+            * 键: member
+            * 值: score
+        * zskiplist *zsl: 跳跃表
+            * 分值: score
+            * 元素: member
+        * `注`: dict中的键和zsl中的元素指向同一个`member`，dict中的值和zsl中的分值指向同一个`score`，避免浪费内存，同时保证数据一致
+* 特点
+    * 拥有dict和zskiplist两者的优点
+
 #### Redis对象
 
 * Redis对象
@@ -348,6 +366,11 @@ Redis版本: `3.2.1`
             * 在周期性函数serverCron被调用时调用
             * 可控制周期执行时间快慢和一次执行的时间上限
             * 执行时，随机从`expires`中拿取`key`检查是否过期，过期则执行删除，`同上`
+        * 过期清理算法
+            * 循环遍历redis数据库
+                * 每次从redis数据库中随机取最多20个key，检查是否过期，若过期则删除
+                * 达到时间限制，退出清理过程
+                * 如有超过20 / 4 = 5个key过期，继续第一个步骤
 * 相关命令
     * select: 切换redis数据库
     * persist: 移除key的过期时间，持久化
@@ -357,6 +380,47 @@ Redis版本: `3.2.1`
     * pexpireat: 设置key的过期时间点，unix时间戳，单位为毫秒
     * ttl: 返回key的剩余过期时间，单位为秒
     * pttl: 返回key的剩余过期时间，单位为毫秒
+
+#### Redis内存淘汰机制
+
+* processCommand: redis命令执行的入口
+    * 如果配置了`maxmemory`，调用`freeMemoryIfNeeded`
+* freeMemoryIfNeeded
+    * 从已分配的内存大小中减去slave节点输出缓冲区和AOF缓冲区的大小，若剩余大小小于`maxmemory`，直接返回，否则下一步
+    * 是否开启内存淘汰策略`maxmemory_policy`，未开启返回错误，否则下一步
+    * 计算需要释放掉多大内存`mem_tofree`
+    * 遍历redis数据库直到释放掉的内存大于等于`mem_tofree`
+        * 根据内存淘汰策略`maxmemory_policy`释放内存
+        * volatile-lru: 从`db.expires`中挑选最近最少使用的`key`淘汰
+        * volatile-ttl: 从`db.expires`中随机挑选`maxmemory_samples`默认为5个`key`，淘汰最快过期的`key`
+        * volatile-random: 从`db.expires`中随机挑选`key`淘汰
+        * allkeys-lru: 从`db.dict`中挑选最近最少使用的`key`淘汰
+        * allkeys-random: 从`db.dict`中随机挑选`key`淘汰
+        * no-eviction: 内存淘汰关闭
+* LRU
+    * 数据结构
+        * struct redisDb: redis数据库
+            * struct evictionPoolEntry *eviction_pool: `key`的淘汰池
+        * struct evictionPoolEntry: 淘汰池元素
+            * unsigned long long idle: `key`对应的`value`的空闲时间
+            * sds key: `key`
+    * 参数控制
+        * MAXMEMORY_EVICTION_POOL_SIZE: 淘汰池的大小，16
+        * maxmemory_samples: 达到最大内存时随机抽样的个数，默认为5
+    * 淘汰池
+        * 淘汰池中的元素按`idle`由小到大排序，`idle`越大代表越最近最少未使用
+    * 算法实现
+        * 填充淘汰池
+            * 从`key对应的集合`中随机挑选`maxmemory_samples`个`key`
+            * 遍历上面挑选的`key`
+                * 计算`key`对应的`value`的空闲时间`idle`
+                * 如果淘汰池未填充满，或者`idle` > eviction_pool[0].idle，将`key`插入到淘汰池的对应位置，置换出`idle`小的`key`
+        * 倒序遍历淘汰池
+            * `key` == null，`continue`
+            * 从淘汰池中删除此`key`
+            * `key`存在于`key对应的集合`，挑选结束返回此`key`，否则`continue`
+    * 特点
+        * 近似LRU算法，目的是为了节省内存和提高性能
 
 #### Redis持久化
 
