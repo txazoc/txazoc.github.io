@@ -382,13 +382,13 @@ Redis版本: `3.2.1`
 * 事件驱动实现: `I/O多路复用`
 * Redis命令请求执行过程
     * Redis初始化(server.c/initServer)
-        * 监听TCP端口
+        * 开启TCP端口监听
         * 注册时间事件: 事件回调函数`serverCron`
-        * `fd`上注册客户端连接事件: 事件回调函数`acceptTcpHandler`
+        * 注册客户端连接事件: 事件回调函数`acceptTcpHandler`
     * Redis事件主循环(server.c/aeMain): 串行执行
         * beforeSleep
-            * 写AOF缓冲区数据到AOF文件
-            * 处理客户端响应，遍历有等待写数据的`client`
+            * AOF缓冲区数据写到AOF文件
+            * 处理客户端响应，遍历有待写数据的`client`
                 * `client`写缓冲区的数据写入客户端
                 * 还有待写的数据，注册客户端写事件，事件回调函数`sendReplyToClient`
         * `poll`已就绪的文件事件并遍历
@@ -409,7 +409,8 @@ Redis版本: `3.2.1`
             * 循环处理直到`querybuf`为空
                 * 从`querybuf`读redis请求命令并封装为redis对象，赋值给`client.argv`
                 * 从redis命令表`redisCommandTable`中查询命令，赋值给`client.cmd`
-                * 有事务上下文且非`multi`、`watch`、`disard`、`exec`命令: 添加新的命令到`client`的事务命令队列
+                * 命令校验，如果校验失败，有`CLIENT_MULTI`标记则添加`CLIENT_DIRTY_EXEC`标记，然后返回
+                * 有`CLIENT_MULTI`标记且非`multi`、`watch`、`disard`、`exec`命令: 添加新的命令到`client`的事务命令队列
                 * 其它命令
                     * 执行命令: `c->cmd->proc(c)`
                     * 写慢查询日志
@@ -420,22 +421,96 @@ Redis版本: `3.2.1`
 
 #### Redis事务
 
+* 数据结构
+    * struct client
+        * list *watched_keys: 当前`client`监视的`key`集合
+            * struct watchedKey
+                * robj *key: `key`
+                * redisDb *db: `key`对应的redis数据库
+        * redisDb *db: 当前`client`对应的redis数据库
+            * dict *watched_keys
+                * 键: `key`
+                * 值: 监视`key`的`client`列表
 * 事务命令
-    * multi: 标记事务开始，`client`添加事务标记`CLIENT_MULTI`
-    * watch: 监视key，`client`添加到`key`的监视集合中
-    * unwatch: 取消对key的监视，将`client`从`key`的监视集合中移除
-    * discard: 取消执行事务，清除`client`的事务标记，将`client`从`key`的监视集合中移除
-    * exec: 提交执行事务，先检查事务标记，`unwatch`所有的`key`，然后开始执行事务中的命令
+    * multi: 事务开始，给`client`添加事务标记`CLIENT_MULTI`
+    * watch: 监视`key`
+        * 检查`client`是否有事务标记`CLIENT_MULTI`
+        * `client`添加到监视`key`的`client`列表中
+    * unwatch: 取消对`key`的监视
+        * 检查`client`是否有事务标记`CLIENT_MULTI`
+        * 将`client`从监视`key`的`client`列表中移除
+    * discard: 取消执行事务
+        * 检查`client`是否有事务标记`CLIENT_MULTI`
+        * 清除`client`的事务标记`CLIENT_MULTI`、`CLIENT_DIRTY_CAS`、`CLIENT_DIRTY_EXEC`
+        * `unwatch`所有的`key`
+    * exec: 提交执行事务
+        * 检查`client`是否有事务标记`CLIENT_MULTI`
+        * 检查`client`是否有事务标记`CLIENT_DIRTY_CAS`或`CLIENT_DIRTY_EXEC`
+        * `unwatch`所有的`key`
+        * 循环从命令队列中获取命令并执行
+        * 执行`discard`操作
     * 事务标记
-        * CLIENT_MULTI: 标记事务开始
-        * CLIENT_DIRTY_CAS: 监视的`key`被修改，`exec`执行失败
-        * CLIENT_DIRTY_EXEC: 命令入队失败，`exec`执行失败
-        * 事务执行条件: CLIENT_MULTI && !(CLIENT_DIRTY_CAS \| CLIENT_DIRTY_EXEC)
+        * CLIENT_MULTI: 标记事务上下文
+        * CLIENT_DIRTY_CAS: 监视的`key`被修改
+        * CLIENT_DIRTY_EXEC: 命令入队失败
+        * `exec`执行命令条件: CLIENT_MULTI && !(CLIENT_DIRTY_CAS \| CLIENT_DIRTY_EXEC)
 * 事务特性
-    * 事务中全部命令顺序执行
-    * 事务中命令要么全部执行，要么全部不执行
-    * 事务中一个命令执行失败，不会回滚，其它命令继续执行
+    * 原子性: 能保证所有命令全部执行或全部不执行，但有命令执行失败不会回滚
+    * 一致性: 单进程单线程模型保证
+    * 隔离性: 单进程单线程模型保证
+    * 持久性: 通过AOF保证准实时持久化
 
-#### 发布与订阅
+#### Redis发布与订阅
+
+* 数据结构
+    * struct redisServer
+        * dict *pubsub_channels: 发布/订阅频道字典
+            * 键: 频道
+            * 值: 订阅频道的`client`列表
+        * list *pubsub_patterns: 发布/订阅模式列表
+            * struct pubsubPattern: 发布/订阅模式
+                * robj *pattern: 模式
+                * client *client: 订阅模式的`client`
+* 订阅
+    * subscribe: 订阅频道
+        * 当前`client`添加到频道订阅的`client`列表后
+    * unsubscribe: 取消订阅频道
+        * 参数处理
+            * 无参数: 取消订阅所有频道
+            * 多个频道参数: 取消订阅多个频道
+        * 遍历上面选取的频道列表，从频道订阅的`client`列表中删除当前`client`
+    * psubscribe: 订阅模式
+        * 模式和当前`client`构造为`pubsubPattern`添加到`pubsub_patterns`中
+    * punsubscribe: 取消订阅模式
+        * 参数处理
+            * 无参数: 取消订阅所有模式
+            * 多个模式参数: 取消订阅多个模式
+        * 遍历上面选取的模式列表，从`pubsub_patterns`中删除模式和当前`client`对应的`pubsubPattern`
+* 发布: publish
+    * 发送消息给订阅频道的所有`client`
+        * 从`pubsub_channels`从查找频道订阅的`client`列表
+        * 遍历`client`列表，向`client`发送消息
+        * 消息格式: message\r\n{channel}\r\n{message}
+    * 发送消息给匹配频道的所有`client`
+        * 遍历`pubsub_patterns`中的`pubsubPattern`，如果`pattern`和频道匹配，则向对应的`client`发送消息
+        * 消息格式: pmessage\r\n{pattern}\r\n{channel}\r\n{message}
+* 特点
+    * 只支持在线订阅
 
 #### Redis集群
+
+* 客户端分布式
+    * 一致性hash，同Memcached集群
+    * 主从
+* 服务端分布式
+    * 集群
+* Redis集群
+    * 去中心化
+    * 分片
+        * 16384个slot分给Redis集群中的redis节点
+        * key -&gt; hash(key) & 16384 -&gt; redis节点
+        * client -&gt; redis [-&gt; 重定向 -&gt; redis]
+    * 重新分片: 数据迁移
+    * 主从
+        * 从节点复制主节点
+        * 主节点下线，从节点切换为主节点
