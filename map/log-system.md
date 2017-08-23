@@ -52,7 +52,7 @@ debug -&gt; info -&gt; warn -&gt; error
 
 2017-08-23 12:00:00.000 [127.0.0.1] [main] [INFO] [org.test.LogTest] - [[id=1,name=root]]
 this is message
-java.lang.RuntimeException ...
+java.lang.RuntimeException . . .
 
 #### 日志输出方式
 
@@ -62,20 +62,19 @@ java.lang.RuntimeException ...
 #### 日志输出目的地
 
 * 控制台
-* 文件
+* 本地文件
 * 远程主机
 
-#### 分布式日志收集
+#### 日志收集
 
 * 离线收集: 本地日志文件 -&gt; copy -&gt; 日志中心
-* 实时收集: 日志 -&gt; Kafka -&gt; 日志中心
+* 实时收集: 日志 -&gt; Kafka/Logstash -&gt; 日志中心
 
 #### 日志查询分析
 
-* Logstash: 日志收集
 * ElasticSearch: 日志索引
 * Kibana: 日志查询分析
-
+s
 #### Log4j2
 
 * Logger
@@ -87,8 +86,7 @@ java.lang.RuntimeException ...
     * RollingFileAppender
     * KafkaAppender
     * AsyncAppender
+        * BlockingQueue + AsyncThread
     * 自定义Appender
 * Filter: 过滤器
     * ThresholdFilter
-* 异步日志
-    * AsyncAppender: BlockingQueue + AsyncThread
