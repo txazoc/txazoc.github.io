@@ -74,7 +74,7 @@ java.lang.RuntimeException . . .
 
 * ElasticSearch: 日志索引
 * Kibana: 日志查询分析
-s
+
 #### Log4j2
 
 * Logger
