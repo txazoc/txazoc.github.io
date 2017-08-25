@@ -578,14 +578,15 @@ define(function (require, exports, module) {
                         h4Array.push(title);
                     }
                 });
+                var $list = $('<ul>');
+                $list.append($('<li>').append($('<a>').html('返回上级').attr('href', '/map')));
                 if (h4Array.length > 0) {
-                    var $list = $('<ul>');
                     $.each(h4Array, function(i) {
                         $list.append($('<li>').append($('<a>').html(h4Array[i]).attr('href', '#' + h4Array[i])));
                     });
-                    $article.prepend($list);
-                    $article.prepend($('<h4>').append($('<strong>').append($('<em>').html('目录'))));
                 }
+                $article.prepend($list);
+                $article.prepend($('<h4>').append($('<strong>').append($('<em>').html('目录'))));
             }
         }
     };
