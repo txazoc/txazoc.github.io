@@ -25,14 +25,19 @@ def replace(localDebug):
             key = pair[0].strip()
             value = pair[1].strip()
             if key == 'localDebug':
-                f.write('localDebug: "' + localDebug + '"\n')
+                write(f, 'localDebug', localDebug, '"')
             elif key == 'randomVersion':
-                f.write('randomVersion: "' + md5hash(str(time.time())) + '"\n')
+                write(f, 'randomVersion', md5hash(str(time.time())), '"')
+            elif key == 'markdown':
+                write(f, 'markdown', (localDebug == 'true') and 'rdiscount' or 'kramdown', '')
             else:
                 f.write(line)
         else:
             f.write(line)
     f.close()
+
+def write(f, key, value, quote):
+    f.write(key + ': ' + quote + value + quote + '\n')
 
 def main(localDebug):
     print '--------------------------------------------------'
