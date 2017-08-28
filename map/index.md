@@ -17,7 +17,7 @@ title:  思维脑图
 * [搜索引擎](/map/search-engine.html)
 * [日志系统](/map/log-system.html)
 * [Java](/map/java.html)
-* [并发](/map/concurrent.html)
+* [多核编程](/map/multi-core-program.html)
 * [机器学习](/map/machine-learning.html)
 * [http://geek.csdn.net/news/detail/74130](http://geek.csdn.net/news/detail/74130)
 * [http://www.docin.com/p-922845708.html](http://www.docin.com/p-922845708.html)
