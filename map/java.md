@@ -5,6 +5,15 @@ title:  Java
 
 #### 并发
 
+* 并发方法
+    * 多进程
+    * 多线程
+        * 线程上下文切换
+        * 共享内存
+        * 信号量
+    * I/O多路复用
+        * select
+        * 事件驱动
 * 并发读写控制
     * 并发的问题
         * 资源抢夺: 多线程
@@ -17,7 +26,7 @@ title:  Java
         * 创建后内部状态不能被修改的对象: String
     * 单线程: as-if-serial
     * 局部变量: 避免多线程共享
-        * 方法局部变量
+        * 方法参数、方法局部变量
         * 线程局部变量ThreadLocal
     * 读写串行
         * synchronized
@@ -36,14 +45,12 @@ title:  Java
     * 共享内存
         * 读写内存
     * 消息传递
-        * wait/notify: 条件互斥
-        * park/unpark
 * 线程同步: 控制执行顺序
     * 共享内存: 显式同步
         * synchronized: 互斥
         * ReentrantLock
+        * happens-before
     * 消息传递: 隐式同步
-        * 消息发送 happens-before 消息接收
 * Java内存模型(JMM)
     * 线程 - 工作内存 - JMM - 主内存
     * 工作内存: 抽象概念，并不真实存在，涵盖了CPU高速缓存、写缓冲区、硬件和编译器优化
