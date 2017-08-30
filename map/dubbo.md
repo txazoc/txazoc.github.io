@@ -136,6 +136,53 @@ Dubbo依赖关系
 * ExceptionFilter: 异常拦截器
     * 异常包装并记录日志
 
+#### 远程调用过程
+
+* 服务代理
+    * 动态代理: jdk、javassist
+* InvokerInvocationHandler
+    * 创建RpcInvocation
+    * invoke
+* MockClusterInvoker
+    * no-mock
+        * invoke
+    * force-mock
+        * doMockInvoke
+    * fail-mock
+        * invoke -&gt; 失败 -&gt; doMockInvoke
+* 集群容错Invoker
+    * 负载均衡选节点
+    * 集群容错
+    * invoke
+* Consumer拦截器
+    * ConsumerContextFilter: 设置RpcContext
+    * ActiveLimitFilter: 并发限流
+    * FutureFilter: 处理同步/异步返回的Future
+    * MonitorFilter: 收集调用信息
+* DubboInvoker
+    * 同步
+        * future.get()等待返回结果
+    * 异步
+        * RpcContext.getContext().setFuture(future)
+* HeaderExchangeChannel
+    * 创建Request
+    * 创建DefaultFuture并绑定channel
+    * 发送Request
+* Netty write
+* 网络传输
+* Netty read
+* HeaderExchangeHandler
+    * 创建Response
+        * Response.id = Request.id
+* Provider拦截器
+    * ContextFilter: 设置RpcContext
+    * ExecuteLimitFilter: 并发限流
+    * AccessLogFilter: 记录访问日志
+    * TimeoutFilter: 记录超时日志
+    * MonitorFilter: 收集调用信息
+    * ExceptionFilter: 包装异常
+* 调用服务实现: 反射
+
 #### 调用模型
 
 * 代理: jdk、javassist
@@ -149,10 +196,6 @@ Dubbo依赖关系
 * 线程池
 * [拦截器](#拦截器)
 * 实现
-
-#### Consumer启动
-
-#### Provider启动
 
 #### 线程模型
 
