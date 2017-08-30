@@ -20,19 +20,9 @@ Zookeeper注册中心
 
 ![Zookeeper注册中心](/images/dubbo/dubbo_zookeeper.jpg)
 
-![依赖关系](/images/dubbo/dubbo_relation.jpg)
+Dubbo依赖关系
 
-#### 监控中心
-
-* count://127.0.0.1:8080/org.test.IndexService/index?provider=127.0.0.1:20881
-* 定时上传汇总数据
-    * 当前时间戳
-    * 调用成功次数
-    * 调用失败次数
-    * 调用总耗时，用于计算平均耗时
-    * 当前并发数
-    * 最大调用耗时
-    * 最大并发数
+![Dubbo依赖关系](/images/dubbo/dubbo_relation.jpg)
 
 #### 集群容错
 
@@ -43,6 +33,7 @@ Zookeeper注册中心
     * 可调度线程池
 * forking: 并行调用，只要一个成功即返回，通常用于实时性要求较高的操作，但需要浪费更多服务资源
     * 线程池 + 阻塞队列
+* broadcast: 广播调用，逐个调用，任意一台报错则报错，通常用于通知所有提供者更新缓存或日志等本地资源信息
 
 ![集群容错](/images/dubbo/dubbo_cluster.jpg)
 
@@ -60,8 +51,8 @@ Zookeeper注册中心
     * 权重不同: 权重轮询
         * AtomicInteger.getAndIncrement() % totalWeight
         * 权重列表、乱序权重列表
-* LeastActive: 最小活跃数
-    * 筛选最小活跃数集合
+* LeastActive: 最少活跃调用数(最少并发)
+    * 筛选最少活跃调用数的节点集合
         * 权重相同: 随机
         * 权重不同: 权重随机
 * ConsistentHash: 一致性哈希
@@ -69,6 +60,7 @@ Zookeeper注册中心
         * 节点url -&gt; 分组hash -&gt; 160个虚拟节点 -&gt; TreeMap
     * 调用hash
         * 调用方法的参数 -&gt; hash
+        * 相同参数的请求总是发到同一提供者
     * 选择节点
         * TreeMap查找比调用hash大的最小虚拟节点
 
@@ -77,34 +69,72 @@ Zookeeper注册中心
 **Consumer拦截器**
 
 * ConsumerContextFilter: Consumer上下文拦截器
-    * ThreadLocal保存上下文对象RpcContext
-* ActiveLimitFilter: 并发限流拦截器，配置`actives`才启用
-    * actives = 10
-    * 并发计数器: AtomicInteger
-    * 达到最大并发数限制，wait直到
-        * 当前并发数小于最大并发数，继续执行
-        * 超时抛出异常
+    * ThreadLocal中上下文对象RpcContext初始化
+* ActiveLimitFilter: 并发限流拦截器
+    * 开启拦截器: actives=100
+    * 并发计数
+        * 执行前: AtomicInteger.incrementAndGet()
+        * 执行后: AtomicInteger.decrementAndGet()
+    * 最大并发拦截
+        * wait直到
+            * 超时抛出异常
+            * 当前并发数小于最大并发数
 * FutureFilter: Future拦截器
 * MonitorFilter: 监控拦截器
+    * 收集: 成功/失败、调用耗时、当前并发数
+    * 汇总
+        * 汇总纬度: application/service/method/client/server
+        * 汇总信息: 调用成功次数、调用失败次数、调用总耗时、当前并发数、最大调用耗时、最大并发数
+    * 定时(默认60s)上报监控中心
 
 **Provider拦截器**
 
-* ContextFilter
-* ExecuteLimitFilter: 并发限流拦截器，配置`actives`才启用
-    * actives = 10
-    * 并发计数器: AtomicInteger
-    * 达到最大并发数限制，直接抛异常
-* AccessLogFilter: 访问日志拦截器，配置`accesslog`才启用
-    * accesslog = /var/log/dubbo/access.log
-    * 组装日志
-    * 添加日志到日志缓冲，每个日志文件限制5000条缓冲日志
-    * 定时刷新日志缓冲到文件
-* TimeoutFilter: 超时拦截器
-    * 执行超时，记录warn日志
-* MonitorFilter: 监控拦截器
-* ExceptionFilter: 异常拦截器
-    * 包装异常
+* ContextFilter: 上下文拦截器
+    * ThreadLocal中上下文对象RpcContext初始化
 * TpsLimitFilter: tps限流拦截器
+    * META-INF/dubbo/com.alibaba.dubbo.rpc.Filter
+        * tps=com.alibaba.dubbo.rpc.filter.TpsLimitFilter
+    * 配置tps限流规则
+        * tps=1000，间隔时间内最大调用次数
+        * tps.interval=10000，间隔时间
+    * tps限流器
+        * long lastResetTime: 最近一次复位时间
+        * AtomicInteger token: 令牌数
+    * 复位: now > lastResetTime + tps.interval
+        * token.set(tps)
+        * lastResetTime = now
+    * 获取令牌
+        * 自旋直到CAS成功或value为0
+            * value = token.get()
+            * token.compareAndSet(value, value - 1)
+    * 令牌获取失败
+        * 抛出异常
+* ExecuteLimitFilter: 并发限流拦截器
+    * 开启拦截器: executes=100
+    * 并发计数
+        * 执行前: AtomicInteger.incrementAndGet()
+        * 执行后: AtomicInteger.decrementAndGet()
+    * 最大并发拦截
+        * 抛出异常
+* AccessLogFilter: 访问日志拦截器
+    * 开启拦截器: accesslog=/var/log/dubbo/access.log
+    * 组装日志
+    * 写日志到日志缓冲区
+    * 日志缓冲区
+        * ConcurrentHashSet: 去重
+        * 大小限制5000
+    * 定时(5s)刷新缓冲区中日志到日志文件
+    * 访问日志格式
+
+```console
+[2017-08-30 11:08:30] 10.32.66.148:64189 -> 10.32.66.148:20881 - test.dubbo.service.VersionService getVersion(int) [1156]
+```
+
+* TimeoutFilter: 超时拦截器
+    * 执行超时: 记录warn日志
+* MonitorFilter: 同上
+* ExceptionFilter: 异常拦截器
+    * 异常包装并记录日志
 
 #### 调用模型
 
@@ -120,4 +150,22 @@ Zookeeper注册中心
 * [拦截器](#拦截器)
 * 实现
 
+#### Consumer启动
+
+#### Provider启动
+
+#### 线程模型
+
 ![线程模型](/images/dubbo/dubbo_protocol.jpg)
+
+#### 同步/异步
+
+![异步调用](/images/dubbo/dubbo_async.jpg)
+
+#### 日志适配
+
+* 适配日志框架(缺省查找顺序)
+    * Log4j
+    * Slf4j
+    * JCL
+    * JUL
