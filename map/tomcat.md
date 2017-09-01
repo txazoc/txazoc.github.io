@@ -14,3 +14,5 @@ title:  Tomcat
     * events.offer(event)
     * run
         * events.poll()
+* Http11Processor.finishResponse()
+* NioSelectorPool.write()
