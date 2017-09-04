@@ -12,6 +12,7 @@ title:  Tomcat
     * System类加载器
         * $CATALINA_HOME/bin/bootstrap.jar
         * $CATALINA_HOME/bin/tomcat-juli.jar
+        * $CATALINA_HOME/bin/commons-daemon.jar
     * Common类加载器
         * $CATALINA_HOME/lib/*.jar
     * Webapp类加载器: 隔离不同的Webapp
