@@ -99,3 +99,6 @@ title:  Tomcat
 * lastModifiedTime
 
 #### jsp编译
+
+* jsp -&gt; compile -&gt; servlet(*_jsp.java)
+* extends org.apache.jasper.runtime.HttpJspBase

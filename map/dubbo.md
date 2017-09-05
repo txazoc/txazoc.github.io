@@ -18,6 +18,9 @@ title:  Dubbo
 
 Zookeeper注册中心
 
+* register &lt;-&gt; unregister
+* subscribe &lt;-&gt; notify
+
 ![Zookeeper注册中心](/images/dubbo/dubbo_zookeeper.jpg)
 
 Dubbo依赖关系
@@ -32,10 +35,16 @@ Dubbo依赖关系
 * failback: 失败自动恢复，后台记录失败请求，定时重发，直到成功，通常用于消息通知操作
     * 可调度线程池
 * forking: 并行调用，只要一个成功即返回，通常用于实时性要求较高的操作，但需要浪费更多服务资源
-    * 线程池 + 阻塞队列
+    * 可缓存线程池 + 阻塞队列
 * broadcast: 广播调用，逐个调用，任意一台报错则报错，通常用于通知所有提供者更新缓存或日志等本地资源信息
 
 ![集群容错](/images/dubbo/dubbo_cluster.jpg)
+
+* merge: 合并结果
+* list: 节点列表
+* route: 路由，节点过滤
+* select: 选择节点，负载均衡
+* invoke: 调用
 
 #### 负载均衡
 
@@ -52,16 +61,17 @@ Dubbo依赖关系
         * AtomicInteger.getAndIncrement() % totalWeight
         * 权重列表、乱序权重列表
 * LeastActive: 最少活跃调用数(最少并发)
-    * 筛选最少活跃调用数的节点集合
+    * 筛选出活跃调用数最少的节点集合
         * 权重相同: 随机
         * 权重不同: 权重随机
 * ConsistentHash: 一致性哈希
-    * 节点hash
+    * 节点hash -&gt; hash环
         * 节点url -&gt; 分组hash -&gt; 160个虚拟节点 -&gt; TreeMap
-    * 调用hash
+    * 调用hash -&gt; hash环
         * 调用方法的参数 -&gt; hash
         * 相同参数的请求总是发到同一提供者
     * 选择节点
+        * 顺时针方向选择最近的虚拟节点
         * TreeMap查找比调用hash大的最小虚拟节点
 
 #### 拦截器
@@ -80,6 +90,13 @@ Dubbo依赖关系
             * 超时抛出异常
             * 当前并发数小于最大并发数
 * FutureFilter: Future拦截器
+    * 注册回调: 区分同步回调和异步回调
+        * 调用回调
+            * oninvoke.method、oninvoke.instance
+        * 返回回调
+            * onreturn.method、onreturn.instance
+        * 异常回调
+            * onthrow.method、onthrow.instance
 * MonitorFilter: 监控拦截器
     * 收集: 成功/失败、调用耗时、当前并发数
     * 汇总
