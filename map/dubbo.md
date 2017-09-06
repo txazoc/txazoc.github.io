@@ -18,6 +18,7 @@ title:  Dubbo
 
 Zookeeper注册中心
 
+* 临时节点
 * register &lt;-&gt; unregister
 * subscribe &lt;-&gt; notify
 
@@ -36,13 +37,13 @@ Dubbo依赖关系
     * 可调度线程池
 * forking: 并行调用，只要一个成功即返回，通常用于实时性要求较高的操作，但需要浪费更多服务资源
     * 可缓存线程池 + 阻塞队列
-* broadcast: 广播调用，逐个调用，任意一台报错则报错，通常用于通知所有提供者更新缓存或日志等本地资源信息
+* broadcast: 广播调用，逐个调用，任意一台报错则报错，返回最后一个结果或异常，通常用于通知所有提供者更新缓存或日志等本地资源信息
 
 ![集群容错](/images/dubbo/dubbo_cluster.jpg)
 
 * merge: 合并结果
 * list: 节点列表
-* route: 路由，节点过滤
+* route: 路由规则，节点过滤
 * select: 选择节点，负载均衡
 * invoke: 调用
 
@@ -65,14 +66,13 @@ Dubbo依赖关系
         * 权重相同: 随机
         * 权重不同: 权重随机
 * ConsistentHash: 一致性哈希
-    * 节点hash -&gt; hash环
-        * 节点url -&gt; 分组hash -&gt; 160个虚拟节点 -&gt; TreeMap
-    * 调用hash -&gt; hash环
-        * 调用方法的参数 -&gt; hash
-        * 相同参数的请求总是发到同一提供者
+    * 节点
+        * 节点url -&gt; 分组hash -&gt; 160个虚拟节点(hash环) -&gt; TreeMap
+    * 调用
+        * 方法参数 -&gt; hash -&gt; hash值
     * 选择节点
         * 顺时针方向选择最近的虚拟节点
-        * TreeMap查找比调用hash大的最小虚拟节点
+        * TreeMap中查找比hash值大的最小虚拟节点
 
 #### 拦截器
 
@@ -90,12 +90,17 @@ Dubbo依赖关系
             * 超时抛出异常
             * 当前并发数小于最大并发数
 * FutureFilter: Future拦截器
-    * 注册回调: 区分同步回调和异步回调
-        * 调用回调
+    * 回调处理
+        * 同步
+            * 直接回调
+        * 异步
+            * future上注册return回调和throw回调
+    * 回调类型
+        * invoke回调
             * oninvoke.method、oninvoke.instance
-        * 返回回调
+        * return回调
             * onreturn.method、onreturn.instance
-        * 异常回调
+        * throw回调
             * onthrow.method、onthrow.instance
 * MonitorFilter: 监控拦截器
     * 收集: 成功/失败、调用耗时、当前并发数
@@ -151,7 +156,7 @@ Dubbo依赖关系
     * 执行超时: 记录warn日志
 * MonitorFilter: 同上
 * ExceptionFilter: 异常拦截器
-    * 异常包装并记录日志
+    * 包装异常并记录日志
 
 #### 远程调用过程
 
@@ -159,7 +164,6 @@ Dubbo依赖关系
     * 动态代理: jdk、javassist
 * InvokerInvocationHandler
     * 创建RpcInvocation
-    * invoke
 * MockClusterInvoker
     * no-mock
         * invoke
@@ -168,9 +172,10 @@ Dubbo依赖关系
     * fail-mock
         * invoke -&gt; 失败 -&gt; doMockInvoke
 * 集群容错Invoker
-    * 负载均衡选节点
+    * 获取服务的节点列表
+    * 节点列表应用路由规则
+    * 负载均衡选择节点
     * 集群容错
-    * invoke
 * Consumer拦截器
     * ConsumerContextFilter: 设置RpcContext
     * ActiveLimitFilter: 并发限流
@@ -199,20 +204,6 @@ Dubbo依赖关系
     * MonitorFilter: 收集调用信息
     * ExceptionFilter: 包装异常
 * 调用服务实现: 反射
-
-#### 调用模型
-
-* 代理: jdk、javassist
-* [集群容错](#集群容错)
-* [负载均衡](#负载均衡)
-* [拦截器](#拦截器)
-* 协议
-* 通信框架: netty、mina
-* 编码/解码
-* 序列化/反序列化
-* 线程池
-* [拦截器](#拦截器)
-* 实现
 
 #### 线程模型
 

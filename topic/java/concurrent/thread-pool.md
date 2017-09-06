@@ -7,9 +7,32 @@ date:   2016-12-10
 
 #### ***目录***
 
-* [执行任务](#execute)
-* [线程工厂]()
-* [拒绝策略]()
+* ThreadPoolExecutor
+    * volatile int corePoolSize: 核心线程数
+    * volatile int maximumPoolSize: 最大线程数
+    * BlockingQueue<Runnable> workQueue: 任务队列
+        * DelayedWorkQueue: 调度线程池
+        * SynchronousQueue: 可缓存线程池
+        * LinkedBlockingQueue
+    * volatile long keepAliveTime: 空闲线程的最大存活时间，当`allowCoreThreadTimeOut`为true或工作线程数大于`corePoolSize`时有效
+    * RejectedExecutionHandler handler: 拒绝策略，线程池饱和或关闭时如何处理，默认提供4种
+        * CallerRunsPolicy: 调用线程执行任务
+            * r.run()
+        * AbortPolicy: 抛出异常
+            * throw new RejectedExecutionException()
+        * DiscardPolicy: 直接丢弃任务，什么都不做
+        * DiscardOldestPolicy: 从workQueue中丢弃最旧的未处理任务并重试
+            * workQueue.poll()
+            * ThreadPoolExecutor.execute(r)
+    * HashSet<Worker> workers: 工作线程
+    * AtomicInteger ctl
+        * workerCount: 工作线程数
+        * runState: 运行状态，用来控制线程池的生命周期
+            * RUNNING: 执行状态，接收新的任务，处理队列中的任务
+            * SHUTDOWN: 关闭状态，不接收新的任务，处理队列中的任务
+            * STOP: 停止状态，不接收新的任务，不处理队列中的任务，中断正在处理的任务
+            * TIDYING: 所有任务都终止并且workerCount为0，线程池过度到该状态，并执行terminated()方法
+            * TERMINATED: 终止状态，terminated()方法执行结束后切换到该状态
 
 Java中线程池的实现类是`ThreadPoolExecutor`，先来看下构造函数:
 

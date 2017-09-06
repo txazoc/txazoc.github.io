@@ -3,6 +3,11 @@ layout: map
 title:  Java
 ---
 
+#### 线程池
+
+[线程池](/topic/java/concurrent/thread-pool.html)
+[Java线程池测试](/java/java-thread-pool-test.html)
+
 #### 并发
 
 * 并发方法
