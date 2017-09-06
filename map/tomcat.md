@@ -3,6 +3,19 @@ layout: map
 title:  Tomcat
 ---
 
+#### Tomcat体系结构
+
+* Server: 整个容器(Container)
+    * GlobalNamingResources
+    * Service[]
+        * Connector[]: 接收客户端请求
+        * Engine: 接收并处理来自Connector的请求
+            * Host: 虚拟主机
+                * Context: Web应用程序，`$CATALINA_BASE`目录
+                    * Loader
+
+#### 生命周期管理
+
 #### 环境变量
 
 * catalina.home
