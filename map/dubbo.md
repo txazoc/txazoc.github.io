@@ -190,38 +190,15 @@ Dubbo依赖关系
     * 创建Request
     * 创建DefaultFuture并绑定channel
     * 发送Request
-* encode
-    * NettyCodecAdapter$InternalEncoder
-        * encode()
-    * ExchangeCodec
-        * encodeRequest()
-            * header: 16字节
-                * 0 ~ 1: magic，`0xdabb`
-                * 2: 1字节，请求和序列化标识
-                * 4 ~ 11: 8字节，Request.id
-                * 12 ~ 15: 4字节，RpcInvocation序列化后的长度
-    * DubboCodec
-        * encodeRequestData()
-            * RpcInvocation序列化
-                * dubbo版本号
-                * 服务名
-                * 服务版本号
-                * 方法名
-                * 方法参数类型
-                * 方法参数
-                * attachments: Map
-                    * path: 服务名
-                    * interface: 服务名
-                    * version: 服务版本号
-                    * timeout: 超时时间
+* Encode Request
+    * ExchangeCodec.encodeRequest()
+    * DubboCodec.encodeRequestData()
 * Netty write
 * 网络传输
 * Netty read
-* NettyCodecAdapter$InternalDecoder
-    * messageReceived()
-* DubboCodec
-    * decodeBody()
-        * 反序列化Request
+* Decode Request
+    * ExchangeCodec.decode()
+    * DubboCodec.decodeBody()
 * Provider拦截器
     * ContextFilter: 设置RpcContext
     * ExecuteLimitFilter: 并发限流
@@ -231,31 +208,64 @@ Dubbo依赖关系
     * ExceptionFilter: 包装异常
 * 调用服务实现: 反射
 
-#### 编解码/序列化
+#### 编码解码
 
-* 请求对象Request
-    * id
-    * version
-    * flag
-    * RpcInvocation
-        * String methodName
-        * Class<?>[] parameterTypes;
-        * Object[] arguments
-        * Map<String, String> attachments
+* Request
+    * id: 请求id，id = AtomicLong.getAndIncrement()
+    * version: dubbo版本号
+    * flag: 标识
+    * RpcInvocation: Rpc调用
+        * String methodName: 方法名
+        * Class<?>[] parameterTypes: 参数类型
+        * Object[] arguments: 参数
+        * Map<String, String> attachments: 额外信息
             * path: 服务path
             * interface: 服务接口
-            * version: 版本号
+            * version: 服务版本号
             * timeout: 超时时间
-* 响应对象Response
-    * id: Response.id = Request.id
-    * version
-    * status
-    * flag
-    * errorMessage
-    * RpcResult
-        * Object result
-        * Throwable exception
-        * Map<String, String> attachments
+* Response
+    * id: 响应id，id = Request.id
+    * version: dubbo版本号，version = Request.version
+    * status: 状态码
+    * flag: 标识
+    * errorMessage: 错误信息
+    * RpcResult: Rpc结果
+        * Object result: 结果
+        * Throwable exception: 异常
+        * Map<String, String> attachments: 额外信息
+* Request编码格式
+    * header
+        * 0 ~ 1: 魔数，`0xdabb`
+        * 2: flag
+        * 4 ~ 11: 8字节，Request.id
+        * 12 ~ 15: 4字节，data长度
+    * data
+        * dubbo版本号
+        * 服务path
+        * 服务版本号
+        * 方法名
+        * 参数类型
+        * 参数
+        * 额外信息
+* Response编码格式
+    * header
+        * 0 ~ 1: 魔数，`0xdabb`
+        * 2: flag
+        * 3: status
+        * 4 ~ 11: 8字节，Response.id
+        * 12 ~ 15: 4字节，data长度
+    * data
+        * status == Response.OK
+            * exception != null
+                * 0: 1字节
+                * exception
+            * result != null
+                * 1: 1字节
+                * result
+            * result == null
+                * 2: 1字节
+        * else
+            * errorMessage
 
 #### 线程模型
 
