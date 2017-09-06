@@ -41,7 +41,7 @@ Dubbo依赖关系
 
 ![集群容错](/images/dubbo/dubbo_cluster.jpg)
 
-* merge: 合并结果
+* merge: 集群容错结合invoke
 * list: 节点列表
 * route: 路由规则，节点过滤
 * select: 选择节点，负载均衡
@@ -94,7 +94,7 @@ Dubbo依赖关系
         * 同步
             * 直接回调
         * 异步
-            * future上注册return回调和throw回调
+            * future注册return回调和throw回调
     * 回调类型
         * invoke回调
             * oninvoke.method、oninvoke.instance
@@ -190,12 +190,38 @@ Dubbo依赖关系
     * 创建Request
     * 创建DefaultFuture并绑定channel
     * 发送Request
+* encode
+    * NettyCodecAdapter$InternalEncoder
+        * encode()
+    * ExchangeCodec
+        * encodeRequest()
+            * header: 16字节
+                * 0 ~ 1: magic，`0xdabb`
+                * 2: 1字节，请求和序列化标识
+                * 4 ~ 11: 8字节，Request.id
+                * 12 ~ 15: 4字节，RpcInvocation序列化后的长度
+    * DubboCodec
+        * encodeRequestData()
+            * RpcInvocation序列化
+                * dubbo版本号
+                * 服务名
+                * 服务版本号
+                * 方法名
+                * 方法参数类型
+                * 方法参数
+                * attachments: Map
+                    * path: 服务名
+                    * interface: 服务名
+                    * version: 服务版本号
+                    * timeout: 超时时间
 * Netty write
 * 网络传输
 * Netty read
-* HeaderExchangeHandler
-    * 创建Response
-        * Response.id = Request.id
+* NettyCodecAdapter$InternalDecoder
+    * messageReceived()
+* DubboCodec
+    * decodeBody()
+        * 反序列化Request
 * Provider拦截器
     * ContextFilter: 设置RpcContext
     * ExecuteLimitFilter: 并发限流
@@ -205,11 +231,37 @@ Dubbo依赖关系
     * ExceptionFilter: 包装异常
 * 调用服务实现: 反射
 
+#### 编解码/序列化
+
+* 请求对象Request
+    * id
+    * version
+    * flag
+    * RpcInvocation
+        * String methodName
+        * Class<?>[] parameterTypes;
+        * Object[] arguments
+        * Map<String, String> attachments
+            * path: 服务path
+            * interface: 服务接口
+            * version: 版本号
+            * timeout: 超时时间
+* 响应对象Response
+    * id: Response.id = Request.id
+    * version
+    * status
+    * flag
+    * errorMessage
+    * RpcResult
+        * Object result
+        * Throwable exception
+        * Map<String, String> attachments
+
 #### 线程模型
 
 ![线程模型](/images/dubbo/dubbo_protocol.jpg)
 
-#### 同步/异步
+#### 异步调用
 
 ![异步调用](/images/dubbo/dubbo_async.jpg)
 
