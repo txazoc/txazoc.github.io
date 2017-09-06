@@ -158,6 +158,17 @@ Dubbo依赖关系
 * ExceptionFilter: 异常拦截器
     * 包装异常并记录日志
 
+#### 通信协议
+
+* dubbo(默认)
+* rmi
+* hessian
+* thrift
+* webservice
+* http
+* memcached
+* redis
+
 #### 远程调用过程
 
 * 服务代理
@@ -181,6 +192,7 @@ Dubbo依赖关系
     * ActiveLimitFilter: 并发限流
     * FutureFilter: 处理同步/异步返回的Future
     * MonitorFilter: 收集调用信息
+* 协议
 * DubboInvoker
     * 同步
         * future.get()等待返回结果
@@ -245,8 +257,8 @@ Dubbo依赖关系
         * 服务版本号
         * 方法名
         * 参数类型
-        * 参数
-        * 额外信息
+        * 参数: 序列化
+        * 额外信息: 序列化
 * Response编码格式
     * header
         * 0 ~ 1: 魔数，`0xdabb`
@@ -258,14 +270,24 @@ Dubbo依赖关系
         * status == Response.OK
             * exception != null
                 * 0: 1字节
-                * exception
+                * exception: 序列化
             * result != null
                 * 1: 1字节
-                * result
+                * result: 序列化
             * result == null
                 * 2: 1字节
         * else
             * errorMessage
+
+#### 序列化/反序列化
+
+* dubbo
+* hessian2(默认)
+* json
+* fastjson
+* java
+* nativejava
+* compactedjava
 
 #### 线程模型
 
