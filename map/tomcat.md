@@ -7,14 +7,39 @@ title:  Tomcat
 
 * Server: 整个容器(Container)
     * GlobalNamingResources
-    * Service[]
-        * Connector[]: 接收客户端请求
-        * Engine: 接收并处理来自Connector的请求
+    * Service[]: 多个Connector和一个Engine的组合
+        * Connector[]: 连接器，接收客户端请求
+        * Engine: 引擎，接收并处理来自Connector的请求
             * Host: 虚拟主机
                 * Context: Web应用程序，`$CATALINA_BASE`目录
                     * Loader
 
 #### 生命周期管理
+
+#### Tomcat启动
+
+* Bootstrap
+    * static
+        * catalina.home
+        * catalina.base
+    * main()
+    * init()
+        * initClassLoaders()
+        * Catalina.newInstance()
+        * Catalina.setParentClassLoader(commonClassLoader)
+* Catalina.load()
+    * createStartDigester()
+    * conf/server.xml + digester -&gt; parse -&gt; StandardServer
+* StandardServer.init()
+* StandardService.init()
+    * StandardEngine.init()
+    * Connector.init()
+        * Http11NioProtocol.init()
+            * NioEndpoint.init()
+* NioEndpoint.init()
+    * bind()
+    * NioSelectorPool.open()
+    * NioBlockingSelector$BlockPoller.start()
 
 #### 环境变量
 
