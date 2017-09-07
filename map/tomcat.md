@@ -18,28 +18,123 @@ title:  Tomcat
 
 #### Tomcat启动
 
-* Bootstrap
-    * static
+1. Bootstrap
+    1. static
         * catalina.home
         * catalina.base
     * main()
+        * init()
+            * initClassLoaders()
+                * commonLoader -&gt; SystemLoader: ${catalina.home}/lib/*.jar
+                * catalinaLoader -&gt; commonLoader
+                * sharedLoader -&gt; commonLoader
+            * Catalina.newInstance()
+            * Catalina.setParentClassLoader(sharedLoader)
+        * load()
+            * Catalina.load()
+        * start()
+            * Catalina.start()
+* Catalina
+    * load()
+        * digester = createStartDigester()
+        * digester.parse("conf/server.xml") -&gt; StandardServer
+        * StandardServer.init()
+    * start()
+        * StandardServer.start()
+        * await()
+            * StandardServer.await()
+        * stop()
+            * StandardServer.stop()
+            * StandardServer.destroy()
+* StandardServer
     * init()
-        * initClassLoaders()
-        * Catalina.newInstance()
-        * Catalina.setParentClassLoader(commonClassLoader)
-* Catalina.load()
-    * createStartDigester()
-    * conf/server.xml + digester -&gt; parse -&gt; StandardServer
-* StandardServer.init()
-* StandardService.init()
-    * StandardEngine.init()
-    * Connector.init()
+        * StandardService.init()
+    * start()
+        * StandardService.start()
+    * await()
+        * while (!stopAwait)
+            * 在`Server.port=8005`端口上阻塞accept()
+            * 直到请求命令为`Server.shutdown=SHUTDOWN`时break
+    * stop()
+        * StandardService.stop()
+    * destroy()
+        * StandardService.destroy()
+* StandardService
+    * init()
+        * StandardEngine.init()
+        * Connector.init()
+    * start()
+        * StandardEngine.start()
+        * Connector.start()
+    * stop()
+        * Connector.pause()
+        * StandardEngine.stop()
+        * Connector.stop()
+    * destroy()
+        * Connector.destroy()
+        * StandardEngine.destroy()
+* Connector(HTTP/1.1)
+    * new
+        * Http11NioProtocol
+            * NioEndpoint
+                * Poller
+                * NioSelectorPool
+            * ConnectionHandler
+    * init()
         * Http11NioProtocol.init()
             * NioEndpoint.init()
-* NioEndpoint.init()
-    * bind()
-    * NioSelectorPool.open()
-    * NioBlockingSelector$BlockPoller.start()
+                * ServerSocket.bind(port)
+                * NioSelectorPool.open()
+                    * NioBlockingSelector.new
+                        * BlockPoller.new
+                        * BlockPoller.start()
+    * start()
+        * Http11NioProtocol.start()
+            * NioEndpoint.start()
+                * 初始化对象池: size=128 limit=500
+                    * socketProcessorCache
+                    * pollerEventCache
+                    * nioChannelCache
+                * createExecutor()
+                    * ThreadPoolExecutor
+                        * corePoolSize: 10
+                        * maximumPoolSize: 200
+                        * keepAliveTime: 60s
+                        * TaskQueue extends LinkedBlockingQueue
+                * initializeConnectionLatch()
+                    * maxConnections: 默认为`10000`
+                * Poller[2]
+                    * Poller.new
+                    * new Thread(Poller).start()
+                * startAcceptorThreads()
+                    * Acceptor[1]
+                        * Acceptor.new
+                        * new Thread(Acceptor).start()
+            * new Thread(AsyncTimeout).start()
+    * pause()
+        * Http11NioProtocol.pause()
+            * NioEndpoint.pause()
+    * stop()
+        * Http11NioProtocol.stop()
+            * AsyncTimeout.stop()
+            * NioEndpoint.stop()
+                * releaseConnectionLatch()
+                * Poller[2]
+                    * Poller.destroy()
+                    * Poller = null
+                * shutdownExecutor()
+                    * executor.shutdownNow()
+                    * executor = null
+                * 对象池销毁
+                    * socketProcessorCache.clear()
+                    * pollerEventCache.clear()
+                    * nioChannelCache.clear()
+    * destroy()
+        * Http11NioProtocol.destroy()
+            * NioEndpoint.destroy()
+                * unbind()
+                    * ServerSocket.close()
+                    * NioSelectorPool.close()
 
 #### 环境变量
 
@@ -92,33 +187,29 @@ title:  Tomcat
     * 反射
     * new、getstatic、putstatic、invokestatic字节码指令
 
-#### NIO模型
+#### 请求调用
 
-* NioEndpoint$Acceptor
-    * 检查maxConnections
+* NioEndpoint$Acceptor.run()
+    * countUpOrAwaitConnection()
         * 达到maxConnections则wait
-    * 阻塞accept()
+        * 否则连接数加1
+    * ServerSocketChannel.accept()
+        * 阻塞accept
+    * setSocketOptions()
+        * socket.configureBlocking(false): 异步模式
+        * getPoller0().register(channel)
 * NioEndpoint$Poller
-    * 插入PollerEvent队列
-    * poll()
-        * 注册OP_READ
-    * select()
-        * socket读就绪
-        * 线程池
-* NioEndpoint$SocketProcessor
-* Http11Processor
-    * service(request, response)
-* Http11Processor.finishResponse()
-* NioBlockingSelector.write()
-    * 先尝试socket.write()
-    * 写失败或未写完，下一步
-    * NioBlockingSelector$BlockPoller
-        * 插入队列
-        * poll()
-            * 注册OP_WRITE
-        * select()
-            * socket写就绪
-            * 写数据
+    * register()
+        * event = eventCache.pop()
+        * event.interestOps = OP_REGISTER
+        * addEvent(event)
+            * events.offer(event)
+    * run()
+        * while(true)
+            * events()
+                * events.poll()
+                * PollerEvent.run()
+                * PollerEvent.reset()
 
 #### Servlet容器
 
