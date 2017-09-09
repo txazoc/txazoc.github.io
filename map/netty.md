@@ -7,6 +7,30 @@ title:  Netty
 
 **Server端启动**
 
+* NioEventLoopGroup bossGroup
+* NioEventLoopGroup workerGroup
+* 创建NioServerSocketChannel，后面用ServerChannel代替
+* ServerChannel的pipeline添加ChannelInitializer
+    * ChannelInitializer.initChannel()，此处为方法描述，暂未执行
+        * pipeline添加自定义Handler
+        * pipeline添加ServerBootstrapAcceptor
+* 从bossGroup中选择一个NioEventLoop
+    * 启动NioEventLoop线程
+    * ServerChannel的ServerSocketChannel注册到NioEventLoop的selector
+    * pipeline.`fireChannelRegistered()`
+        * ...
+        * ChannelInitializer.fireChannelRegistered(): 真正添加Handler的地方
+        * ...
+* pipeline.`bind()`
+    * ServerChannel的ServerSocketChannel的ServerSocket绑定端口
+    * pipeline.`fireChannelActive()`
+        * pipeline.`read()`
+            * ...
+            * unsafe.beginRead()
+                * selectionKey.interestOps(OP_ACCEPT)，开始接收客户端连接
+* closeFuture().sync()
+    * wait()
+
 **Server端连接**
 
 **Client端连接**
@@ -375,6 +399,26 @@ public final void bind(final SocketAddress localAddress, final ChannelPromise pr
 protected void doBind(SocketAddress localAddress) throws Exception {
     // ServerSocket绑定端口
     javaChannel().socket().bind(localAddress, config.getBacklog());
+}
+```
+
+#### ChannelInitializer
+
+```java
+public abstract class ChannelInitializer<C extends Channel> extends ChannelInboundHandlerAdapter {
+
+    protected abstract void initChannel(C ch) throws Exception;
+
+    @Override
+    public final void channelRegistered(ChannelHandlerContext ctx) throws Exception {
+        // 调用initChannel()添加自定义Handler
+        initChannel((C) ctx.channel());
+        // 删除当前Handler
+        ctx.pipeline().remove(this);
+        // 重新执行pipeline.fireChannelRegistered()
+        ctx.pipeline().fireChannelRegistered();
+    }
+
 }
 ```
 
