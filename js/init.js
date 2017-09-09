@@ -129,10 +129,11 @@ define(function (require, exports, module) {
             var preCode = $('pre > code');
             if (preCode.length > 0) {
                 preCode.each(function (i, e) {
-                    var language = $(this).attr('class').trim().split('-')[1];
+                    var language = $(this).attr('class').trim().split('-')[0];
                     if (HighLight.match(language)) {
                         HighLight.highLight(language, e);
                     } else {
+                        $(this).addClass('language-' + language);
                         hljs.highlightBlock(e);
                     }
                     $(this).parent().addClass('hljs-dark').show();
