@@ -3,6 +3,20 @@ layout: map
 title:  Netty
 ---
 
+#### Netty特点
+
+* 封装Java NIO
+* Reactor模型
+    * 线程模型可定制
+* 事件驱动
+    * Pipeline
+* 高性能
+    * 多线程
+    * DirectByteBuffer
+        * Zero Copy
+        * 内存池(PooledDirectByteBuf)
+    * 写缓冲区
+
 #### Netty处理流程
 
 **Server启动**
