@@ -5,11 +5,28 @@ title:  Netty
 
 #### Netty处理流程
 
-**Server端启动**
+**Server启动**
 
 * NioEventLoopGroup bossGroup
-* NioEventLoopGroup workerGroup
-* 创建NioServerSocketChannel，后面用ServerChannel代替
+    * NioEventLoop[]
+        * Selector selector
+        * Queue taskQueue
+        * Queue scheduledTaskQueue
+    * chooser: NioEventLoop选择器
+* NioEventLoopGroup workerGroup: 同上
+* new NioServerSocketChannel: 后面用ServerChannel代替
+    * SelectableChannel ch: java nio的Channel
+    * int readInterestOp: SelectionKey.OP_ACCEPT
+    * EventLoop eventLoop
+    * Unsafe unsafe: I/O操作实现
+    * DefaultChannelPipeline pipeline
+        * ChannelHandlerContext head
+            * ChannelHandlerContext next
+                * ChannelHandler handler
+                * boolean inbound
+                * boolean outbound
+            * ChannelHandlerContext prev
+        * ChannelHandlerContext tail
 * ServerChannel的pipeline添加ChannelInitializer
     * ChannelInitializer.initChannel()，此处为方法描述，暂未执行
         * pipeline添加自定义Handler
@@ -19,23 +36,145 @@ title:  Netty
     * ServerChannel的ServerSocketChannel注册到NioEventLoop的selector
     * pipeline.`fireChannelRegistered()`
         * ...
-        * ChannelInitializer.fireChannelRegistered(): 真正添加Handler的地方
+        * ChannelInitializer.fireChannelRegistered(): 添加Handler
+            * pipeline.addLast(handler)
+                * handler.`handlerAdded()`
+            * pipeline.remove(this)
+                * handler.`handlerRemoved()`
+            * pipeline.fireChannelRegistered(): pipeline改变
         * ...
 * pipeline.`bind()`
     * ServerChannel的ServerSocketChannel的ServerSocket绑定端口
     * pipeline.`fireChannelActive()`
-        * pipeline.`read()`
-            * ...
-            * unsafe.beginRead()
-                * selectionKey.interestOps(OP_ACCEPT)，开始接收客户端连接
-* closeFuture().sync()
+        * head.fireChannelActive()
+            * ctx.fireChannelActive()，传递给下一个Handler
+            * pipeline.`read()`: fireChannelActive()执行完成后
+                * ...
+                * unsafe.beginRead()
+                    * selectionKey.interestOps(SelectionKey.OP_ACCEPT)，注册ACCEPT事件，开始接收Client端连接
+        * ...
+* channel().closeFuture().sync()
     * wait()
 
-**Server端连接**
+**Client启动**
 
-**Client端连接**
+* NioEventLoopGroup workerGroup: 同上
+* new NioSocketChannel: 后面用SocketChannel代替
+    * int readInterestOp: SelectionKey.OP_READ
+    * 其它同NioServerSocketChannel
+* SocketChannel的pipeline添加自定义Handler
+* 从workerGroup中选择一个NioEventLoop
+    * 启动NioEventLoop线程
+    * SocketChannel的java SocketChannel注册到NioEventLoop的selector
+    * pipeline.`fireChannelRegistered()`
+        * 同Server启动
+* pipeline.`connect()`
+    * SocketChannel的java SocketChannel的Socket连接远程主机
+    * selectionKey.interestOps(SelectionKey.OP_CONNECT)，注册CONNECT事件
+* channel().closeFuture().sync()
+    * wait()
+* NioEventLoop.processSelectedKey()
+    * SelectionKey.OP_CONNECT
+        * interestOps(ops & ~SelectionKey.OP_CONNECT): 移除OP_CONNECT事件
+        * pipeline.`fireChannelActive()`
+            * head.fireChannelActive()
+                * ctx.fireChannelActive()，传递给下一个Handler
+                * pipeline.`read()`: fireChannelActive()执行完成后
+                    * ...
+                    * unsafe.beginRead()
+                        * selectionKey.interestOps(SelectionKey.OP_READ)，注册READ事件，开始接收Server端消息
+            * ...
 
-**Channel读写**
+**Server接收连接**
+
+* ServerChannel.eventLoop.processSelectedKey()
+    * SelectionKey.OP_ACCEPT
+        * accept新的连接SocketChannel
+        * 创建对应的NioSocketChannel: 后面用SocketChannel代替
+            * int readInterestOp: SelectionKey.OP_READ
+            * 其它同NioServerSocketChannel
+        * pipeline.fireChannelRead(NioSocketChannel)
+            * ServerBootstrapAcceptor.fireChannelRead()
+                * NioSocketChannel的pipeline添加自定义Handler
+                * 从workerGroup中选择一个NioEventLoop
+                    * 启动NioEventLoop线程
+                    * SocketChannel的java SocketChannel注册到NioEventLoop的selector
+                    * pipeline.fireChannelRegistered()
+                        * 同上
+                    * pipeline.fireChannelActive()
+                        * 同上
+
+**Server/Client读写**
+
+#### Handler
+
+**Server启动**
+
+```console
+handlerAdded: 添加Handler
+channelRegistered: 注册Selector
+bind: 绑定端口
+channelActive: Channel激活
+read: 监听accept事件
+```
+
+**Server Accept**
+
+```console
+// ServerSocketChannel
+channelReadComplete: accept完成
+read: 什么都不做
+
+// SocketChannel(accept -> register)
+handlerAdded: 添加Handler
+channelRegistered: 注册Selector
+channelActive: Channel激活
+read: 监听read事件
+```
+
+**Client启动**
+
+```console
+handlerAdded: 添加Handler
+channelRegistered: 注册Selector
+connect: 连接远程主机
+channelActive: Channel激活
+read: 监听read事件
+```
+
+**Read**
+
+```console
+// read到ByteBuf
+fireChannelRead: 处理read的数据
+fireChannelReadComplete: read结束
+```
+
+#### Netty Read
+
+* NioEventLoop.processSelectedKey()
+    * SelectionKey.OP_READ
+    * unsafe.read()
+    * 分配DirectBuffer
+    * 读数据到DirectBuffer
+    * pipeline.fireChannelRead(ByteBuf): 读完一个ByteBuf
+    * DirectBuffer释放，重复使用
+    * pipeline.fireChannelReadComplete(): 一次Channel Read完成
+
+#### Netty Write
+
+* channel.write()
+    * pipeline.write()
+    * inEventLoop()
+        * next.write()
+    * !inEventLoop()
+        * channel.eventLoop.execute(WriteTask)
+    * ...
+    * Unsafe.write()
+        * ByteBuf转换为DirectBuffer
+        * 添加到ChannelOutboundBuffer(写缓冲区)
+    * Unsafe.flush()
+        * 写ChannelOutboundBuffer中数据
 
 #### NioEventLoopGroup
 
@@ -99,6 +238,28 @@ private void doStartThread() {
 }
 ```
 
+**NioEventLoop线程循环**
+
+* 时间分配
+    * ioRatio == 100
+        * processSelectedKeys()
+        * runAllTasks()
+    * ioRatio != 100
+        * processSelectedKeys(): 执行时间ioTime，默认为50，1:1
+        * runAllTasks(ioTime * (100 - ioRatio) / ioRatio)
+* processSelectedKeys()
+    * processSelectedKey()
+        * (SelectionKey.OP_READ | SelectionKey.OP_ACCEPT
+            * unsafe.read()
+        * SelectionKey.OP_WRITE
+            * unsafe().forceFlush()
+        * SelectionKey.OP_CONNECT
+            * unsafe.finishConnect()
+* runAllTasks()
+    * fetchFromScheduledTaskQueue(): 从调度任务队列中获取即将执行的任务添加到taskQueue
+    * taskQueue.poll()
+    * 全部执行或是直到达到执行限制时间
+
 #### ChannelPipeline
 
 * ChannelHandler管道
@@ -127,6 +288,7 @@ protected DefaultChannelPipeline(Channel channel) {
 * AbstractChannelHandlerContext prev: 后一节点
 * boolean inbound: 是否inbound
 * boolean outbound: 是否outbound
+* int handlerState: 状态
 
 **HeadContext**
 
