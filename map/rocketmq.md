@@ -5,6 +5,20 @@ title:  RocketMQ
 
 [http://www.iocoder.cn/?vip](http://www.iocoder.cn/?vip)
 
+#### RocketMQ特性
+
+* 高性能
+* 低延迟
+* 亿级消息堆积
+
+#### Namesrv
+
+#### Broker
+
+#### Producer
+
+#### Consumer
+
 #### 消息通信模式
 
 * SYNC: 同步
