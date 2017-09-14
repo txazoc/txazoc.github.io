@@ -18,6 +18,7 @@ title:  思维脑图
 * [RocketMQ](/map/rocketmq.html)
 * [搜索引擎](/map/search-engine.html)
 * [日志系统](/map/log-system.html)
+* [分布式](/map/distribution.html)
 * [Tomcat](/map/tomcat.html)
 * [Netty](/map/netty.html)
 * [Java](/map/java.html)
