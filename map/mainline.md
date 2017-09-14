@@ -84,10 +84,60 @@ title:  主线
 
 #### 高可用
 
-* 
 * 单点故障
 
 #### 易扩展
 
 * 分布式
 * 注册与发现
+
+#### 思维导图
+
+* 操作系统
+    * 常见命令
+        * tcpdump
+        * netstat
+        * ps
+        * top
+    * 原理
+        * 内存分配
+* 数据库
+    * 索引
+        * B/B+树原理
+        * InnoDB索引实现机制
+    * 优化
+        * 参数配置
+        * explain
+        * show processlist
+        * show profile
+        * 
+    * 设计
+        * 表设计
+        * 索引设计
+        * 分库分表
+* Web
+    * Http
+        * 缓存控制
+        * 长连接
+    * 安全
+        * SQL注入
+        * XSS
+        * CSRF
+* Nginx
+    * Web服务器
+    * 反向代理
+    * 负载均衡
+    * ACL
+* 网络
+    * TCP
+        * 三次握手
+        * 超时重连
+        * 各种连接状态
+    * 编程
+        * socket编程
+        * epoll
+        * select
+    * Netty
+        * 网络模型
+        * pipeline
+        * 基本使用

@@ -3,6 +3,8 @@ layout: map
 title:  RocketMQ
 ---
 
+[http://www.iocoder.cn/?vip](http://www.iocoder.cn/?vip)
+
 #### 消息通信模式
 
 * SYNC: 同步
@@ -14,14 +16,23 @@ title:  RocketMQ
 * 不支持
 * 不同的topic
 
-#### 有序消息
+#### 消息类型
 
-* 全局有序消息
-* 局部有序消息
+* 普通消息
+* 顺序消息
+    * 全局顺序
+    * 分区顺序
+* 定时消息
+* 延时消息
+* 事务消息
+
+#### 消息查询
+
+* 按topic
+* 按msgId
+* 按key
 
 #### 广播消息
-
-#### 延时消息
 
 #### 批量消息
 
