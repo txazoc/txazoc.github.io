@@ -3,15 +3,41 @@ layout: map
 title:  Tomcat
 ---
 
+#### 模块
+
+* 组件和生命周期管理
+* 启动
+    * init() -&gt; start()
+    * 加载WebApp
+* 请求处理
+    * Acceptor、Poller、线程池
+    * 解析Http协议: 请求行、头部、参数
+    * 请求映射: Host -&gt; Context -&gt; Wrapper
+        * 精确匹配
+        * 前缀匹配
+        * 扩展匹配
+        * welcome-file
+        * DefaultServlet
+    * Pipeline
+    * ApplicationFilterChain.doFilter()
+    * servlet.service(request, response)
+* 热部署
+    * webapp
+    * servlet
+    * jsp
+
 #### Tomcat体系结构
 
+* Bootstrap
+* Catalina
 * Server: 整个容器(Container)
     * GlobalNamingResources
     * Service[]: 多个Connector和一个Engine的组合
         * Connector[]: 连接器，接收客户端请求
         * Engine: 引擎，处理来自Connector的请求
             * Host: 虚拟主机
-                * Context: Web应用程序，`$CATALINA_BASE`目录
+                * Context: 一个Web应用程序
+                    * Wrapper: 一个Servlet
 
 #### 生命周期管理
 
@@ -21,6 +47,7 @@ Lifecycle
 * start()
 * stop()
 * destroy()
+* LifecycleListener
 
 #### Tomcat启动
 
@@ -185,18 +212,21 @@ Lifecycle
 * 类加载顺序
     * JVM
         * BootstrapClassLoader
-    * LauncherHelper
-        * ClassLoader.getSystemClassLoader()
-    * Launcher
-        * 创建SystemClassLoader
-            * ExtClassLoader
-            * AppClassLoader
-    * main类
-        * SystemClassLoader
-        * 创建CommonClassLoader
-    * Tomcat类
-        * CommonClassLoader
-    * 请求处理(请求线程池)
+    * LauncherHelper: BootstrapClassLoader加载
+        * static
+            * ClassLoader.getSystemClassLoader()
+            * ClassLoader.initSystemClassLoader()
+            * Launcher.getLauncher()
+    * new Launcher()
+        * Launcher$ExtClassLoader
+        * Launcher$AppClassLoader -&gt; SystemClassLoader
+    * LauncherHelper.checkAndLoadMain()
+        * SystemClassLoader.loadClass(mainClass)
+    * Bootstrap.main()
+        * initClassLoaders()
+            * CommonClassLoader
+    * Catalina: CommonClassLoader加载
+    * 请求处理
         * WebappClassLoader
         * jsp请求
             * JasperLoader
@@ -243,7 +273,7 @@ Lifecycle
     * response.finishResponse()
 * StandardEngineValve.invoke()
     * StandardHost.getPipeline().getFirst().invoke(request, response);
-* AbstractAccessLogValve.invoke()
+* AccessLogValve.invoke()
     * getNext().invoke(request, response)
 * ErrorReportValve.invoke()
     * getNext().invoke(request, response)
@@ -284,3 +314,139 @@ Lifecycle
 
 * jsp -&gt; compile -&gt; servlet(*_jsp.java)
 * extends org.apache.jasper.runtime.HttpJspBase
+
+#### Container
+
+* HashMap<String, Container> children: 子容器
+* ThreadPoolExecutor startStopExecutor: 子容器启动停止线程池
+* Pipeline pipeline: 管道
+* List<LifecycleListener> lifecycleListeners: 生命周期事件监听器
+* Thread thread: 容器后台线程
+    * ContainerBackgroundProcessor
+        * backgroundProcess(): 10s
+
+```java
+public abstract class ContainerBase extends LifecycleMBeanBase implements Container {
+
+    @Override
+    protected void initInternal() throws LifecycleException {
+        // 初始化子容器启动停止线程池
+        super.initInternal();
+    }
+
+    @Override
+    protected synchronized void startInternal() throws LifecycleException {
+        Container children[] = findChildren();
+        List<Future<Void>> results = new ArrayList<>();
+        // 启动子容器
+        for (int i = 0; i < children.length; i++) {
+            results.add(startStopExecutor.submit(new StartChild(children[i])));
+        }
+
+        // 等待子容器启动完成
+        for (Future<Void> result : results) {
+            result.get();
+        }
+
+        // 启动管道
+        if (pipeline instanceof Lifecycle) {
+            ((Lifecycle) pipeline).start();
+        }
+
+        // 触发start事件
+        setState(LifecycleState.STARTING);
+
+        // 启动容器后台线程(仅为StandardEngine时创建)
+        threadStart();
+    }
+
+}
+```
+
+#### 部署WebApp
+
+* StandardContext
+    * lifecycleListeners: ContextConfig
+* StandardHost.addChild(context)
+    * StandardContext.start()
+* StandardContext.start()
+    * 创建WebappLoader
+    * 创建work目录: work/Catalina/localhost/test
+    * 创建ServletContext: ApplicationContextFacade
+    * 校验Webapp和jar包中的/META-INF/MANIFEST.MF
+    * WebappLoader.start()
+    * fireLifecycleEvent("configure_start", null)
+    * ServletContainerInitializer.onStartup()
+    * listenerStart()
+        * 实例化listener
+        * listener.contextInitialized()
+    * StandardManager.start()
+        * SessionIdGenerator
+    * filterStart()
+    * loadOnStartup()
+        * StandardWrapper.start()
+            * 实例化Servlet
+            * Servlet.init()
+* WebappLoader.start() 
+    * 创建ParallelWebappClassLoader
+        * parent = CommonClassLoader
+        * delegate = false
+* ContextConfig.configureStart()
+    * 扫描ServletContainerInitializer
+    * 扫描/WEB-INF/classes下注解
+        * @WebServlet
+        * @WebFilter
+        * @WebListener
+    * 扫描其它类路径下注解
+    * web.xml配置设置给ContextConfig
+        * context-param
+        * filter filter-mapping
+        * listener
+        * servlet -&gt; StandardWrapper
+            * pipeline: StandardWrapperValve
+        * StandardContext.addChild(wrapper)
+        * 添加servlet映射到servletMappings
+            * default: /
+            * jsp: *.jsp
+            * jsp: *.jspx
+            * 自定义
+        * welcome-file-list
+
+#### 热部署
+
+* webapp
+    * backgroundProcess()
+    * HostConfig.check()
+        * if autoDeploy
+        * resources
+            * webapp
+            * webapp.war
+            * webapp/META-INF/context.xml
+            * ${catalina.home}/conf/context.xml
+            * ${catalina.home}/conf/Catalina/localhost/test.xml
+        * web.xml
+            * webapp/WEB-INF/web.xml
+            * ${catalina.home}/conf/web.xml
+        * StandardContext.reload()
+* jsp
+    * JspServletWrapper.service()
+    * JspCompilationContext.compile(): development mode
+    * Compiler.isOutDated()
+        * 检查class文件的最后修改时间: 至少4s间隔
+        * 最后修改时间不一致: return true
+    * if true
+        * 删除生成的servlet文件
+        * JasperLoader = null
+        * JDTCompiler.compile()
+        * JspServletWrapper.reload = true
+    * servlet = getServlet()
+        * if reload
+            * theServlet.destroy()
+            * 销毁当前servlet实例
+            * new JasperLoader()
+            * JasperLoader.loadClass()
+            * newInstance()
+            * newServlet.init()
+            * theServlet = newServlet
+            * reload = false
+    * servlet.service()
