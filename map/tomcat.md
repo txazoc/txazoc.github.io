@@ -159,12 +159,16 @@ Lifecycle
 #### 类加载机制
 
 * 类加载器继承关系
-    * BootstrapClassLoader
-        * $JAVA_HOME/jre/lib/*.jar
-        * $JAVA_HOME/jre/lib/ext/*.jar
-    * SystemClassLoader: -classpath，Tomcat启动类
-        * $CATALINA_HOME/bin/bootstrap.jar
-        * $CATALINA_HOME/bin/tomcat-juli.jar
+    * BootstrapClassLoader: 启动类加载器
+        * sun.boot.class.path
+            * $JAVA_HOME/jre/lib/*.jar
+    * Launcher$ExtClassLoader: 扩展类加载器
+        * java.ext.dirs
+            * $JAVA_HOME/jre/lib/ext/*.jar
+    * Launcher.AppClassLoader: 系统类加载器，Tomcat启动类
+        * java.class.path: -classpath
+            * $CATALINA_HOME/bin/bootstrap.jar
+            * $CATALINA_HOME/bin/tomcat-juli.jar
     * CommonClassLoader: Tomcat类库和公共类库
         * $CATALINA_HOME/lib/*.jar
     * WebappClassLoader: 隔离不同的Webapp
