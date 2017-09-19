@@ -69,4 +69,4 @@ paginate: 10
 paginate_path: "index/:num"
 
 # 随机版本号
-randomVersion: "0d7fff8cd2232176c1ef87d62987f44c"
+randomVersion: "1e187fcc3f2d90936f3c81e5b79cfcdb"

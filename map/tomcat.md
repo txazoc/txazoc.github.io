@@ -111,8 +111,8 @@ Lifecycle
     * StandardEngine.stop()
     * Connector.stop()
 * destroy()
-        * Connector.destroy()
-        * StandardEngine.destroy()
+    * Connector.destroy()
+    * StandardEngine.destroy()
 
 **Connector(HTTP/1.1)**
 
