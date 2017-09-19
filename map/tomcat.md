@@ -414,21 +414,23 @@ public abstract class ContainerBase extends LifecycleMBeanBase implements Contai
 
 #### 热部署
 
-* webapp
+* webapp: autoDeploy=true
     * backgroundProcess()
     * HostConfig.check()
         * if autoDeploy
-        * resources
-            * webapp
-            * webapp.war
-            * webapp/META-INF/context.xml
-            * ${catalina.home}/conf/context.xml
-            * ${catalina.home}/conf/Catalina/localhost/test.xml
-        * web.xml
-            * webapp/WEB-INF/web.xml
-            * ${catalina.home}/conf/web.xml
+            * redeployResources
+                * {webapp}
+                * {webapp}.war
+                * {webapp}/META-INF/context.xml
+                * ${catalina.base}/conf/context.xml
+                * ${catalina.base}/conf/Catalina/localhost/{webapp}.xml
+            * reloadResources
+                * {webapp}/WEB-INF/web.xml
+                * ${catalina.base}/conf/web.xml
         * StandardContext.reload()
-* jsp
+* servlet
+    * Instrumentation
+* jsp: reloadable=true
     * JspServletWrapper.service()
     * JspCompilationContext.compile(): development mode
     * Compiler.isOutDated()
@@ -450,3 +452,7 @@ public abstract class ContainerBase extends LifecycleMBeanBase implements Contai
             * theServlet = newServlet
             * reload = false
     * servlet.service()
+
+#### DefaultServlet
+    * 404
+    * 静态资源
