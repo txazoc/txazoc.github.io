@@ -70,3 +70,35 @@ title:  RocketMQ
         * 消息丢失
     * 缺点
         * 牺牲高可用性
+
+#### RouteInfoManager
+
+* topicQueueTable: topic - 队列集合
+    * k: topic
+    * v: QueueData[]
+        * brokerName: broker-1
+        * readQueueNums: 4
+        * writeQueueNums: 4
+* brokerAddrTable: brokerName - master/slave
+    * k: brokerName: broker-1
+    * v: BrokerData
+        * cluster: DefaultCluster
+        * brokerName: broker-1
+        * brokerAddrs
+            * k: brokerId: 0
+            * v: brokerAddress: 192.168.1.106:10931
+* clusterAddrTable: 集群 - brokerName集合
+    * k: clusterName: DefaultCluster
+    * v: Set<String>
+        * brokerName: broker-1
+        * brokerName: broker-2
+* brokerLiveTable
+    * k: brokerAddr: 192.168.1.106:10931
+    * v: BrokerLiveInfo
+        * lastUpdateTimestamp: 1505917226150
+        * Channel
+        * haServerAddr: 192.168.1.106:10932
+
+#### Send Message
+
+#### Pull Message
