@@ -12,49 +12,6 @@ title:  RocketMQ
 * 低延迟
 * 亿级消息堆积
 
-#### Namesrv
-
-#### Broker
-
-#### Producer
-
-#### Consumer
-
-#### 消息通信模式
-
-* SYNC: 同步
-* ASYNC: 异步
-* ONEWAY: 单向
-
-#### 消息优先级
-
-* 不支持
-* 不同的topic
-
-#### 消息类型
-
-* 普通消息
-* 顺序消息
-    * 全局顺序
-    * 分区顺序
-* 定时消息
-* 延时消息
-* 事务消息
-
-#### 消息查询
-
-* 按topic
-* 按msgId
-* 按key
-
-#### 广播消息
-
-#### 批量消息
-
-#### 消息过滤
-
-#### Push & Pull
-
 #### 可用性
 
 * 单master模式
@@ -102,59 +59,126 @@ title:  RocketMQ
         * Channel: 通道
         * haServerAddr: 192.168.1.106:10932
 
-#### Broker
+#### Netty消息通信
 
-* ProducerManager
-* ConsumerManager
-* TopicConfigManager
+* RemotingService
+    * RemotingServer: NettyRemotingServer
+    * RemotingClient: NettyRemotingClient
+* 消息类型 - RemotingCommand
+    * RemotingCommand
+        * code: 类型
+        * opaque: 请求id，自增
+        * flag: 标记
+        * remark: 备注
+        * extFields: 额外字段
+        * customHeader: 自定义header
+        * serializeTypeCurrentRPC: 序列化类型
+        * body: 内容
+    * 编码格式
+        * 总长度: 4字节
+        * 序列化类型: 1字节
+        * header长度: 3字节
+        * headerData
+            * customHeader复制到extFields
+            * 序列化RemotingCommand
+                * json
+                * rocketmq
+        * body
+* invoke
+    * invokeSync(): 同步调用
+        * 创建ResponseFuture
+        * responseTable.put(请求id, responseFuture)
+        * channel.writeAndFlush(command)
+        * responseFuture等待返回结果直到发送失败或超时
+        * responseTable.remove(请求id)
+    * invokeAsync(): 异步调用
+        * 获取异步请求许可
+        * 创建ResponseFuture(invokeCallback)
+        * responseTable.put(请求id, responseFuture)
+        * channel.writeAndFlush(command)
+    * invokeOneway(): 单向调用
+        * RemotingCommand添加单向标记
+        * 获取单向请求许可
+        * channel.writeAndFlush(command)
+* invoke响应
+    * responseFuture = responseTable.get(请求id)
+    * responseTable.remove(请求id)
+    * invokeCallback != null
+        * true: 异步请求的response
+            * 回调线程池执行回调
+        * false: 同步请求的response
+            * 设置responseCommand
+            * 唤醒等待
 
-#### Producer
+#### Producer发送消息
 
-* MQClientInstance
-* DefaultMQProducerImpl
+***1. 普通消息***
 
-#### Consumer
+* 选择queue: 支持三种方式
+    * 轮询queue列表: 默认方式，同步模式下支持重试，重试次数可配
+        * 重试策略: 选择除上次选取的queue的brokerName之外的其它queue
+    * 指定MessageQueue
+    * 实现MessageQueueSelector接口
+* 获取queue对应的broker的master节点地址
+    * 获取失败，从namesrv同步
+    * 再次获取失败，代表master节点不可用，发送失败，抛出异常
+* Message处理
+    * 生成消息唯一id: 16字节
+        * 4: ip
+        * 2: pid低16位
+        * 4: classLoader.hashCode()
+        * 4: 当前时间与当月第一天0时0分0秒的时间差(毫秒为单位)
+        * 2: int累加器低16位
+    * 消息压缩: 非批量消息且body长度大于body压缩阈值(默认4096字节)，则压缩
+        * 压缩消息
+        * 添加消息压缩标记
+    * 若为事务消息，添加事务消息标记
+    * 创建发送消息请求header: SendMessageRequestHeader
+        * producerGroup
+        * message.topic
+        * queueId
+        * 消息标记
+        * message.properties
+        * 批量消息标记
+* 创建RemotingCommand
+    * code
+    * header: SendMessageRequestHeader
+    * body = message.body
+* NettyRemotingClient发送消息
+    * 同步发送
+        * remotingClient.invokeSync()
+    * 异步发送
+        * remotingClient.invokeAsync()
+    * 单向发送
+        * remotingClient.invokeOneway()
 
-* MQClientInstance
-* RebalanceImpl
+***2. 事务消息***
 
-#### Send Message
+* 添加事务消息标记
+* 同步发送事务消息
+* SEND_OK
+    * 执行本地事务分支
+    * 获得本地事务状态
+        * COMMIT_MESSAGE
+        * ROLLBACK_MESSAGE
+        * UNKNOW
+* endTransaction()
+    * 创建结束事务请求header: EndTransactionRequestHeader
+        * commitOrRollback = 本地事务状态
+    * 单向发送结束事务消息
 
-* Send Message
-    * 选择queue: 支持三种方式
-        * 默认: 轮询queue列表，同步模式下支持重试，重试次数可配
-            * 重试策略: 选择其它brokerName的节点
-        * 指定MessageQueue
-        * 实现MessageQueueSelector接口
-    * 获取queue对应的broker master节点地址
-        * 获取失败，从namesrv同步
-        * 同步后获取还失败，代表master节点不可用，发送失败，抛出异常
-    * Message处理
-        * 设置消息唯一id: 16字节
-            * 4: ip
-            * 2: pid低16位
-            * 4: classLoader.hashCode()
-            * 4: 当前时间与当月第一天0点的时间差
-            * 2: int累加器低16位
-        * 消息压缩: 非批量消息且body长度大于body压缩阈值(默认4096字节)，则压缩
-            * 压缩消息
-            * 添加消息压缩标记
-        * 若为事务消息，添加事务消息标记
-        * 创建消息header: SendMessageRequestHeader
-    * 消息封装为RemotingCommand
-        * code
-        * header: SendMessageRequestHeader
-        * body = message.body
-    * 消息通信模式分开处理
-        * 同步发送
-            * remotingClient.invokeSync
-        * 异步发送
-            * remotingClient.invokeAsync
-        * 单向发送
-            * remotingClient.invokeOneway
-* 事务消息
+***3. 批量消息***
 
-#### Pull Message
+* 批量消息校验
+    * 不支持延时消息
+    * 消息的topic必须都相同
+    * 消息的waitStoreMsgOK必须都相同
+* 创建MessageBatch: 继承自Message
+* 每条消息生成消息唯一id
+* body = encode(消息)
+* 发送MessageBatch
+
+#### Consumer消费消息
 
 #### 节点网络通信
 
