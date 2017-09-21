@@ -4,6 +4,7 @@ title:  RocketMQ
 ---
 
 [http://www.iocoder.cn/?vip](http://www.iocoder.cn/?vip)
+[blog.csdn.net/binzhaomobile/article/details/73743361](blog.csdn.net/binzhaomobile/article/details/73743361)
 
 #### RocketMQ特性
 
@@ -71,15 +72,17 @@ title:  RocketMQ
     * 缺点
         * 牺牲高可用性
 
-#### RouteInfoManager
+#### Namesrv - RouteInfoManager
 
-* topicQueueTable: topic - 队列集合
+* topicQueueTable: topic - broker - queue
     * k: topic
     * v: QueueData[]
         * brokerName: broker-1
-        * readQueueNums: 4
-        * writeQueueNums: 4
-* brokerAddrTable: brokerName - master/slave
+        * readQueueNums: 读队列数
+        * writeQueueNums: 写队列数
+        * perm: 读写权限
+        * topicSynFlag: 同步/异步复制标记
+* brokerAddrTable: broker - master/slave
     * k: brokerName: broker-1
     * v: BrokerData
         * cluster: DefaultCluster
@@ -87,7 +90,7 @@ title:  RocketMQ
         * brokerAddrs
             * k: brokerId: 0
             * v: brokerAddress: 192.168.1.106:10931
-* clusterAddrTable: 集群 - brokerName集合
+* clusterAddrTable: cluster - broker
     * k: clusterName: DefaultCluster
     * v: Set<String>
         * brokerName: broker-1
@@ -95,10 +98,33 @@ title:  RocketMQ
 * brokerLiveTable
     * k: brokerAddr: 192.168.1.106:10931
     * v: BrokerLiveInfo
-        * lastUpdateTimestamp: 1505917226150
-        * Channel
+        * lastUpdateTimestamp: 最近一次心跳包时间，1505917226150
+        * Channel: 通道
         * haServerAddr: 192.168.1.106:10932
+
+#### Broker
+
+* ProducerManager
+* ConsumerManager
+* TopicConfigManager
+
+#### Producer
+
+* MQClientInstance
+* DefaultMQProducerImpl
+
+#### Consumer
+
+* MQClientInstance
+* RebalanceImpl
 
 #### Send Message
 
 #### Pull Message
+
+#### 节点网络通信
+
+* broker -&gt; `register_broker` -&gt; namesrv: 30s
+* broker-slave -&gt; `register_broker` -&gt; broker-master
+* producer -&gt; `get_routeinto_by_topic` -&gt; namesrv: 30s
+* consumer -&gt; `get_routeinto_by_topic` -&gt; namesrv: 30s
