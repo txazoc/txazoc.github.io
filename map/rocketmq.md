@@ -120,6 +120,40 @@ title:  RocketMQ
 
 #### Send Message
 
+* Send Message
+    * 选择queue: 支持三种方式
+        * 默认: 轮询queue列表，同步模式下支持重试，重试次数可配
+            * 重试策略: 选择其它brokerName的节点
+        * 指定MessageQueue
+        * 实现MessageQueueSelector接口
+    * 获取queue对应的broker master节点地址
+        * 获取失败，从namesrv同步
+        * 同步后获取还失败，代表master节点不可用，发送失败，抛出异常
+    * Message处理
+        * 设置消息唯一id: 16字节
+            * 4: ip
+            * 2: pid低16位
+            * 4: classLoader.hashCode()
+            * 4: 当前时间与当月第一天0点的时间差
+            * 2: int累加器低16位
+        * 消息压缩: 非批量消息且body长度大于body压缩阈值(默认4096字节)，则压缩
+            * 压缩消息
+            * 添加消息压缩标记
+        * 若为事务消息，添加事务消息标记
+        * 创建消息header: SendMessageRequestHeader
+    * 消息封装为RemotingCommand
+        * code
+        * header: SendMessageRequestHeader
+        * body = message.body
+    * 消息通信模式分开处理
+        * 同步发送
+            * remotingClient.invokeSync
+        * 异步发送
+            * remotingClient.invokeAsync
+        * 单向发送
+            * remotingClient.invokeOneway
+* 事务消息
+
 #### Pull Message
 
 #### 节点网络通信
