@@ -110,7 +110,7 @@ title:  RocketMQ
             * 设置responseCommand
             * 唤醒等待
 
-#### Producer发送消息
+#### 消息传递 - Producer发送消息
 
 ***1. 普通消息***
 
@@ -178,7 +178,11 @@ title:  RocketMQ
 * body = encode(消息)
 * 发送MessageBatch
 
-#### Consumer消费消息
+#### 消息传递 - Broker接收消息
+
+#### 消息传递 - Broker投递消息
+
+#### 消息传递 - Consumer消费消息
 
 #### 节点网络通信
 
