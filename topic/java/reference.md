@@ -7,7 +7,7 @@ date:   2017-09-23
 
 #### 强引用
 
-在Java中创建的普通对象都是强引用
+* 在Java中创建的普通对象都是强引用
 
 #### 引用 - Reference
 
@@ -356,3 +356,415 @@ public class ReferenceQueue<T> {
 ***回收过程***
 
 * enqueue
+
+```java
+final class Finalizer extends FinalReference<Object> {
+
+    // 引用队列
+    private static ReferenceQueue<Object> queue = new ReferenceQueue<>();
+    // 未被finalized的Finalizer链表, Finalizer创建时添加, finalize时删除
+    private static Finalizer unfinalized = null;
+    // 锁对象
+    private static final Object lock = new Object();
+    // 后/前一个Finalizer元素
+    private Finalizer next = null, prev = null;
+
+    /**
+     * 是否已被finalized
+     */
+    private boolean hasBeenFinalized() {
+        return (next == this);
+    }
+
+    /**
+     * 添加到unfinalized链表
+     */
+    private void add() {
+        synchronized (lock) {
+            if (unfinalized != null) {
+                this.next = unfinalized;
+                unfinalized.prev = this;
+            }
+            unfinalized = this;
+        }
+    }
+
+    /**
+     * 从unfinalized链表中删除
+     */
+    private void remove() {
+        synchronized (lock) {
+            if (unfinalized == this) {
+                if (this.next != null) {
+                    unfinalized = this.next;
+                } else {
+                    unfinalized = this.prev;
+                }
+            }
+            if (this.next != null) {
+                this.next.prev = this.prev;
+            }
+            if (this.prev != null) {
+                this.prev.next = this.next;
+            }
+            // 表明当前对象已被finalized
+            this.next = this;
+            this.prev = this;
+        }
+    }
+
+    private Finalizer(Object finalizee) {
+        super(finalizee, queue);
+        add();
+    }
+
+    /**
+     * 注册, Invoked by VM
+     */
+    static void register(Object finalizee) {
+        new Finalizer(finalizee);
+    }
+
+    private void runFinalizer(JavaLangAccess jla) {
+        synchronized (this) {
+            if (hasBeenFinalized()) {
+                // 已被finalized, return
+                return;
+            }
+
+            // 从unfinalized链表中删除
+            remove();
+        }
+        try {
+            // 引用对象
+            Object finalizee = this.get();
+            if (finalizee != null && !(finalizee instanceof java.lang.Enum)) {
+                // 调用引用对象的finalize()方法
+                jla.invokeFinalize(finalizee);
+                finalizee = null;
+            }
+        } catch (Throwable x) {
+        }
+
+        // 清除引用对象
+        super.clear();
+    }
+
+    /**
+     * 创建并启动SecondaryFinalizer线程
+     */
+    private static void forkSecondaryFinalizer(final Runnable proc) {
+        AccessController.doPrivileged(
+                new PrivilegedAction<Void>() {
+                    public Void run() {
+                        ThreadGroup tg = Thread.currentThread().getThreadGroup();
+                        for (ThreadGroup tgn = tg; tgn != null; tg = tgn, tgn = tg.getParent()) ;
+                        Thread sft = new Thread(tg, proc, "Secondary finalizer");
+                        sft.start();
+                        try {
+                            sft.join();
+                        } catch (InterruptedException x) {
+                        }
+                        return null;
+                    }
+                });
+    }
+
+    /**
+     * Called by Runtime.runFinalization()
+     */
+    static void runFinalization() {
+        if (!VM.isBooted()) {
+            return;
+        }
+
+        forkSecondaryFinalizer(new Runnable() {
+
+            private volatile boolean running;
+
+            public void run() {
+                if (running) {
+                    return;
+                }
+                final JavaLangAccess jla = SharedSecrets.getJavaLangAccess();
+                running = true;
+                // 处理引用队列中剩余的Finalizer
+                for (; ; ) {
+                    // 从引用队列中poll直到队列为空
+                    Finalizer f = (Finalizer) queue.poll();
+                    if (f == null) {
+                        break;
+                    }
+                    f.runFinalizer(jla);
+                }
+            }
+        });
+    }
+
+    /**
+     * Invoked by java.lang.Shutdown
+     */
+    static void runAllFinalizers() {
+        if (!VM.isBooted()) {
+            return;
+        }
+
+        forkSecondaryFinalizer(new Runnable() {
+
+            private volatile boolean running;
+
+            public void run() {
+                if (running) {
+                    return;
+                }
+                final JavaLangAccess jla = SharedSecrets.getJavaLangAccess();
+                running = true;
+                // 处理unfinalized链表中剩余的Finalizer
+                for (; ; ) {
+                    Finalizer f;
+                    synchronized (lock) {
+                        f = unfinalized;
+                        if (f == null) {
+                            break;
+                        }
+                        unfinalized = f.next;
+                    }
+                    f.runFinalizer(jla);
+                }
+            }
+        });
+    }
+
+    /**
+     * Finalizer线程
+     */
+    private static class FinalizerThread extends Thread {
+
+        // 运行标识
+        private volatile boolean running;
+
+        FinalizerThread(ThreadGroup g) {
+            super(g, "Finalizer");
+        }
+
+        public void run() {
+            if (running) {
+                return;
+            }
+
+            while (!VM.isBooted()) {
+                try {
+                    // 等待虚拟机启动完成
+                    VM.awaitBooted();
+                } catch (InterruptedException x) {
+                }
+            }
+
+            final JavaLangAccess jla = SharedSecrets.getJavaLangAccess();
+            running = true;
+            for (; ; ) {
+                try {
+                    // 从引用队列中删除一个Finalizer, 引用队列为空时阻塞等待
+                    Finalizer f = (Finalizer) queue.remove();
+                    f.runFinalizer(jla);
+                } catch (InterruptedException x) {
+                }
+            }
+        }
+    }
+
+    static {
+        // 初始化并启动FinalizerThread线程
+        ThreadGroup tg = Thread.currentThread().getThreadGroup();
+        for (ThreadGroup tgn = tg; tgn != null; tg = tgn, tgn = tg.getParent()) ;
+        Thread finalizer = new FinalizerThread(tg);
+        finalizer.setPriority(Thread.MAX_PRIORITY - 2);
+        finalizer.setDaemon(true);
+        finalizer.start();
+    }
+
+}
+```
+
+***何时创建Finalizer***
+
+```c
+// 重写Object.<init>
+void Rewriter::rewrite_Object_init(methodHandle method, TRAPS) {
+    RawBytecodeStream bcs(method);
+    while (!bcs.is_last_bytecode()) {
+        Bytecodes::Code opcode = bcs.raw_next();
+        switch (opcode) {
+            case Bytecodes::_return:
+                // return指令替换为_return_register_finalizer指令
+                *bcs.bcp() = Bytecodes::_return_register_finalizer;
+                break;
+                // ...
+        }
+    }
+}
+
+void TemplateTable::_return(TosState state) {
+    // ...
+    if (_desc->bytecode() == Bytecodes::_return_register_finalizer) {
+        // ...
+        __ call_VM(noreg, CAST_FROM_FN_PTR(address, InterpreterRuntime::register_finalizer), rax);
+        __ bind(skip_register_finalizer);
+    }
+    // ...
+}
+
+IRT_ENTRY(void, InterpreterRuntime::register_finalizer(JavaThread* thread, oopDesc* obj))
+    InstanceKlass::register_finalizer(instanceOop(obj), CHECK);
+IRT_END
+
+instanceOop InstanceKlass::register_finalizer(instanceOop i, TRAPS) {
+    instanceHandle h_i(THREAD, i);
+    JavaValue result(T_VOID);
+    JavaCallArguments args(h_i);
+    // Finalizer.register()方法
+    methodHandle mh(THREAD, Universe::finalizer_register_method());
+    JavaCalls::call(&result, mh, &args, CHECK_NULL);
+    return h_i();
+}
+```
+
+#### Cleaner
+
+* 继承自PhantomReference
+
+#### GC处理Reference
+
+```c
+DiscoveredList* _discoveredSoftRefs;        // SoftReference链表
+DiscoveredList* _discoveredWeakRefs;        // WeakReference链表
+DiscoveredList* _discoveredFinalRefs;       // FinalReference链表
+DiscoveredList* _discoveredPhantomRefs;     // PhantomReference链表
+DiscoveredList* _discoveredCleanerRefs;     // Cleaner链表
+```
+
+```c
+ReferenceProcessorStats ReferenceProcessor::process_discovered_references() {
+    // SoftReference: _current_soft_ref_policy, clear_referent = true
+    process_discovered_reflist(_discoveredSoftRefs, _current_soft_ref_policy, true, is_alive, keep_alive, complete_gc, task_executor);
+
+    // WeakReference: clear_referent = true
+    process_discovered_reflist(_discoveredWeakRefs, NULL, true, is_alive, keep_alive, complete_gc, task_executor);
+
+    // FinalReference: clear_referent = false
+    process_discovered_reflist(_discoveredFinalRefs, NULL, false, is_alive, keep_alive, complete_gc, task_executor);
+
+    // PhantomReference: clear_referent = false
+    process_discovered_reflist(_discoveredPhantomRefs, NULL, false, is_alive, keep_alive, complete_gc, task_executor);
+
+    // Cleaner: clear_referent = true
+    process_discovered_reflist(_discoveredCleanerRefs, NULL, true, is_alive, keep_alive, complete_gc, task_executor);
+}
+
+size_t ReferenceProcessor::process_discovered_reflist(
+        DiscoveredList refs_lists[],    // Reference列表
+        ReferencePolicy *policy,        // SoftReference清除策略
+        bool clear_referent,            // 是否清除referent
+        BoolObjectClosure *is_alive,
+        OopClosure *keep_alive,
+        VoidClosure *complete_gc,
+        AbstractRefProcTaskExecutor *task_executor) {
+    /**
+     * 第一阶段: 只处理SoftReference
+     *
+     * 1) SoftReference清除策略选择不清除referent, 从列表中排除
+     */
+    if (policy != NULL) {
+        for (uint i = 0; i < _max_num_q; i++) {
+            process_phase1(refs_lists[i], policy, is_alive, keep_alive, complete_gc);
+        }
+    }
+
+    /**
+     * 第二阶段: 继续存活的Reference对象, 从列表中排除
+     */
+    for (uint i = 0; i < _max_num_q; i++) {
+        // pp2_work()
+        process_phase2(refs_lists[i], is_alive, keep_alive, complete_gc);
+    }
+
+    /**
+     * 第三阶段: 清除referent
+     *
+     * 1) clear_referent = true: 清除referent
+     * 2) clear_referent = false: 不清除referent, 从列表中排除
+     */
+    for (uint i = 0; i < _max_num_q; i++) {
+        process_phase3(refs_lists[i], clear_referent, is_alive, keep_alive, complete_gc);
+    }
+}
+
+void ReferenceProcessor::process_phase1(DiscoveredList &refs_list,
+                                        ReferencePolicy *policy,
+                                        BoolObjectClosure *is_alive,
+                                        OopClosure *keep_alive,
+                                        VoidClosure *complete_gc) {
+    DiscoveredListIterator iter(refs_list, keep_alive, is_alive);
+    // 遍历
+    while (iter.has_next()) {
+        // referent是否存活
+        bool referent_is_dead = (iter.referent() != NULL) && !iter.is_referent_alive();
+        // referent为不存活状态, 由SoftReference清除策略来选择是否清楚referent
+        if (referent_is_dead && !policy->should_clear_reference(iter.obj(), _soft_ref_timestamp_clock)) {
+            // 不清楚referent
+
+            // 从列表中删除Reference对象
+            iter.remove();
+            // Reference对象改为Active状态: Reference.next = NULL
+            iter.make_active();
+            // referent继续存活
+            iter.make_referent_alive();
+            iter.move_to_next();
+        } else {
+            iter.next();
+        }
+    }
+}
+
+void ReferenceProcessor::pp2_work(DiscoveredList &refs_list,
+                                  BoolObjectClosure *is_alive,
+                                  OopClosure *keep_alive) {
+    DiscoveredListIterator iter(refs_list, keep_alive, is_alive);
+    // 遍历
+    while (iter.has_next()) {
+        // referent为存活状态
+        if (iter.is_referent_alive()) {
+            // referent为可达状态
+
+            // 从列表中删除Reference对象
+            iter.remove();
+            // referent继续存活
+            iter.make_referent_alive();
+            iter.move_to_next();
+        } else {
+            iter.next();
+        }
+    }
+}
+
+void ReferenceProcessor::process_phase3(DiscoveredList &refs_list,
+                                        bool clear_referent,
+                                        BoolObjectClosure *is_alive,
+                                        OopClosure *keep_alive,
+                                        VoidClosure *complete_gc) {
+    DiscoveredListIterator iter(refs_list, keep_alive, is_alive);
+    // 遍历
+    while (iter.has_next()) {
+        iter.update_discovered();
+        // 是否清除referent
+        if (clear_referent) {
+            // 清除referent, referent = NULL
+            iter.clear_referent();
+        } else {
+            // 不清除referent, referent继续存活
+            iter.make_referent_alive();
+        }
+        iter.next();
+    }
+}
+```
