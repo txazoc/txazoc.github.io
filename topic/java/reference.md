@@ -29,8 +29,14 @@ public abstract class Reference<T> {
      * -            个状态
      * - Inactive   不活跃状态, 没有更多的事可做, 实例的状态不会再改变
      * -----------------------------------------------------------------
+     * Treated specially by GC
+     * 
+     * 被垃圾收集器特殊对待, 这个可以这么理解
+     * 如果按普通对象的逻辑, referent被Reference强引用了
+     * 但这里, 垃圾收集器在处理时, Reference对referent引用不算强引用的范畴
+     * -----------------------------------------------------------------
      */
-    private T referent; /* Treated specially by GC */
+    private T referent;
 
     /**
      * 引用队列
@@ -64,7 +70,12 @@ public abstract class Reference<T> {
     static private class Lock {
     }
 
-    // 锁对象, 用于与垃圾收集器同步
+    /**
+     * 锁对象, 用于和垃圾收集器同步
+     * 
+     * 在每个gc周期开始时, 垃圾收集器必须先获取锁对象, 因此, 为了不影响gc, 代码中任何
+     * 获取锁对象地方, 必须尽快释放, 避免分配新对象或调用用户代码
+     */
     private static Lock lock = new Lock();
 
     /**
@@ -85,6 +96,7 @@ public abstract class Reference<T> {
         public void run() {
             for (; ; ) {
                 Reference<Object> r;
+                // 此处lock后很快就释放
                 synchronized (lock) {
                     // pending不为null
                     if (pending != null) {
@@ -329,33 +341,42 @@ public class ReferenceQueue<T> {
 
 #### 软引用 - SoftReference
 
-* 在内存足够时，不会被回收
-* 在内存不足即将抛出`OutOfMemoryError`时，会被回收
-* 可用来实现高速缓存
+```java
+public class SoftReference<T> extends Reference<T> {
 
-***回收过程***
+    // 系统时钟, 由垃圾收集器负责更新
+    static private long clock;
 
-* 回收referent占用的内存
-* referent = null
-* enqueue
+    // 时间戳, get()方法调用时更新, 垃圾收集器可能会使用该字段来选择清除哪些SoftReference
+    private long timestamp;
+
+    public SoftReference(T referent) {
+        super(referent);
+        this.timestamp = clock;
+    }
+
+    public SoftReference(T referent, ReferenceQueue<? super T> q) {
+        super(referent, q);
+        this.timestamp = clock;
+    }
+
+    public T get() {
+        T o = super.get();
+        if (o != null && this.timestamp != clock) {
+            // 更新时间戳
+            this.timestamp = clock;
+        }
+        return o;
+    }
+
+}
+```
 
 #### 弱引用 - WeakReference
 
-* GC时被发现, 就会被回收
-
-***回收过程***
-
-* 回收referent占用的内存
-* referent = null
-* enqueue
-
 #### 虚引用 - PhantomReference
 
-#### FinalReference
-
-***回收过程***
-
-* enqueue
+#### Final引用 - FinalReference
 
 ```java
 final class Finalizer extends FinalReference<Object> {
@@ -591,6 +612,26 @@ final class Finalizer extends FinalReference<Object> {
 }
 ```
 
+```java
+public final class System {
+
+    private static void initializeSystemClass() {
+        setJavaLangAccess();
+    }
+
+    private static void setJavaLangAccess() {
+        sun.misc.SharedSecrets.setJavaLangAccess(new sun.misc.JavaLangAccess() {
+
+            public void invokeFinalize(Object o) throws Throwable {
+                o.finalize();
+            }
+
+        });
+    }
+
+}
+```
+
 ***何时创建Finalizer***
 
 ```c
@@ -637,6 +678,112 @@ instanceOop InstanceKlass::register_finalizer(instanceOop i, TRAPS) {
 #### Cleaner
 
 * 继承自PhantomReference
+
+```java
+public class Cleaner extends PhantomReference<Object> {
+
+    // 虚引用队列, 空队列, Cleaner不会enqueue, 而是在ReferenceHandler中直接调用clean()方法返回
+    private static final ReferenceQueue<Object> dummyQueue = new ReferenceQueue<>();
+
+    // 双向链表, 防止Cleaner在referent之前被垃圾收集器回收
+
+    // 链表头节点
+    static private Cleaner first = null;
+
+    // 后一个/前一个Cleaner
+    private Cleaner next = null, prev = null;
+
+    /**
+     * 添加Cleaner到链表头部
+     */
+    private static synchronized Cleaner add(Cleaner cl) {
+        if (first != null) {
+            cl.next = first;
+            first.prev = cl;
+        }
+        first = cl;
+        return cl;
+    }
+
+    /**
+     * 删除Cleaner
+     */
+    private static synchronized boolean remove(Cleaner cl) {
+        if (cl.next == cl) {
+            // 已经被删除, return
+            return false;
+        }
+
+        if (first == cl) {
+            if (cl.next != null) {
+                first = cl.next;
+            } else {
+                first = cl.prev;
+            }
+        }
+        if (cl.next != null) {
+            cl.next.prev = cl.prev;
+        }
+        if (cl.prev != null) {
+            cl.prev.next = cl.next;
+        }
+
+        // 指向自己用来表明Cleaner已被删除
+        cl.next = cl;
+        cl.prev = cl;
+        return true;
+    }
+
+    // 清理任务
+    private final Runnable thunk;
+
+    private Cleaner(Object referent, Runnable thunk) {
+        super(referent, dummyQueue);
+        this.thunk = thunk;
+    }
+
+    /**
+     * 创建Cleaner
+     */
+    public static Cleaner create(Object ob, Runnable thunk) {
+        // thunk不可为null
+        if (thunk == null) {
+            return null;
+        }
+        // 新建Cleaner并添加到链表
+        return add(new Cleaner(ob, thunk));
+    }
+
+    /**
+     * 清除
+     */
+    public void clean() {
+        // 已被删除, 代表已经执行过clean()
+        if (!remove(this)) {
+            return;
+        }
+        try {
+            // 执行清理任务
+            thunk.run();
+        } catch (final Throwable x) {
+            AccessController.doPrivileged(new PrivilegedAction<Void>() {
+
+                public Void run() {
+                    // 打印异常信息
+                    if (System.err != null) {
+                        new Error("Cleaner terminated abnormally", x).printStackTrace();
+                    }
+                    // JVM退出
+                    System.exit(1);
+                    return null;
+                }
+
+            });
+        }
+    }
+
+}
+```
 
 #### GC处理Reference
 
