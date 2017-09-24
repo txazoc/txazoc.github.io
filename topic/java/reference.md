@@ -456,6 +456,7 @@ final class Finalizer extends FinalReference<Object> {
     private static void forkSecondaryFinalizer(final Runnable proc) {
         AccessController.doPrivileged(
                 new PrivilegedAction<Void>() {
+                
                     public Void run() {
                         ThreadGroup tg = Thread.currentThread().getThreadGroup();
                         for (ThreadGroup tgn = tg; tgn != null; tg = tgn, tgn = tg.getParent()) ;
@@ -467,6 +468,7 @@ final class Finalizer extends FinalReference<Object> {
                         }
                         return null;
                     }
+                    
                 });
     }
 
@@ -498,6 +500,7 @@ final class Finalizer extends FinalReference<Object> {
                     f.runFinalizer(jla);
                 }
             }
+            
         });
     }
 
@@ -532,6 +535,7 @@ final class Finalizer extends FinalReference<Object> {
                     f.runFinalizer(jla);
                 }
             }
+            
         });
     }
 
@@ -571,6 +575,7 @@ final class Finalizer extends FinalReference<Object> {
                 }
             }
         }
+        
     }
 
     static {
