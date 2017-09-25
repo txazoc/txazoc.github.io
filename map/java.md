@@ -8,6 +8,12 @@ title:  Java
 * [Java引用](/topic/java/reference.html)
 * [堆初始化](/topic/hotspot/heap-init.html)
 * [GC过程](/topic/hotspot/gc-process.html)
+* [/Users/txazo/TxazoProject/hotspot/hotspot/src/share/vm/classfile/vmSymbols.hpp](/Users/txazo/TxazoProject/hotspot/hotspot/src/share/vm/classfile/vmSymbols.hpp)
+* [/Users/txazo/TxazoProject/hotspot/hotspot/src/share/vm/classfile/systemDictionary.hpp](/Users/txazo/TxazoProject/hotspot/hotspot/src/share/vm/classfile/systemDictionary.hpp)
+* [http://www.cnblogs.com/iceAeterNa/p/5028155.html](http://www.cnblogs.com/iceAeterNa/p/5028155.html)
+* [https://yq.aliyun.com/users/1285323208264169?spm=5176.100239.blogrightarea2947.1.4CaWmZ&do=login)](https://yq.aliyun.com/users/1285323208264169?spm=5176.100239.blogrightarea2947.1.4CaWmZ&do=login))
+* [http://geek.csdn.net/news/detail/74130](http://geek.csdn.net/news/detail/74130)
+* [文稿/多核编程入门.pdf](文稿/多核编程入门.pdf)
 
 #### 线程池
 

@@ -3,11 +3,6 @@ layout: map
 title:  思维脑图
 ---
 
-* [/Users/txazo/TxazoProject/hotspot/hotspot/src/share/vm/classfile/systemDictionary.hpp](/Users/txazo/TxazoProject/hotspot/hotspot/src/share/vm/classfile/systemDictionary.hpp)
-* [/Users/txazo/TxazoProject/hotspot/hotspot/src/share/vm/classfile/vmSymbols.hpp](/Users/txazo/TxazoProject/hotspot/hotspot/src/share/vm/classfile/vmSymbols.hpp)
-* [http://www.cnblogs.com/iceAeterNa/p/5028155.html](http://www.cnblogs.com/iceAeterNa/p/5028155.html)
-* [https://yq.aliyun.com/users/1285323208264169?spm=5176.100239.blogrightarea2947.1.4CaWmZ&do=login](https://yq.aliyun.com/users/1285323208264169?spm=5176.100239.blogrightarea2947.1.4CaWmZ&do=login)
-
 * [专题](/topics.html)
 * [主线](/map/mainline.html)
 * [操作系统](/map/operatingsystem.html)
@@ -30,5 +25,3 @@ title:  思维脑图
 * [多核编程](/map/multi-core-program.html)
 * [项目总结](/map/project-summary.html)
 * [机器学习](/map/machine-learning.html)
-* [http://geek.csdn.net/news/detail/74130](http://geek.csdn.net/news/detail/74130)
-* [http://www.docin.com/p-922845708.html](http://www.docin.com/p-922845708.html)
