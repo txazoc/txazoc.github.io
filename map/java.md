@@ -6,6 +6,7 @@ title:  Java
 #### 链接
 
 * [Java引用](/topic/java/reference.html)
+* [堆初始化](/topic/hotspot/heap-init.html)
 * [GC过程](/topic/hotspot/gc-process.html)
 
 #### 线程池

@@ -5,6 +5,8 @@ title:  GC过程
 date:   2017-09-24
 ---
 
+#### hotspot分代
+
 #### gc入口
 
 ```c
