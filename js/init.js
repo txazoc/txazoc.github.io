@@ -10,7 +10,7 @@ define(function (require, exports, module) {
         lastWindowWidth: 0,
         sourceDomain: '//github.txazo.com',
         indexSpeedDomain: '//www.txazo.com',
-        mapReg: new RegExp(/^\/map\/[^\.\/#]+\.html/),
+        mapReg: new RegExp(/^\/(map|topic)\/[^\.#]+\.html/),
 
         init: function (sourceDomain, indexSpeedDomain) {
             Init.sourceDomain = sourceDomain;
