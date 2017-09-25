@@ -7,7 +7,8 @@ title:  Java
 
 * [Java引用](/topic/java/reference.html)
 * [堆初始化](/topic/hotspot/heap-init.html)
-* [GC过程](/topic/hotspot/gc-process.html)
+* [GC入口分析](/topic/hotspot/gc-entry.html)
+* [GC过程分析](/topic/hotspot/gc-process.html)
 * [/Users/txazo/TxazoProject/hotspot/hotspot/src/share/vm/classfile/vmSymbols.hpp](/Users/txazo/TxazoProject/hotspot/hotspot/src/share/vm/classfile/vmSymbols.hpp)
 * [/Users/txazo/TxazoProject/hotspot/hotspot/src/share/vm/classfile/systemDictionary.hpp](/Users/txazo/TxazoProject/hotspot/hotspot/src/share/vm/classfile/systemDictionary.hpp)
 * [http://www.cnblogs.com/iceAeterNa/p/5028155.html](http://www.cnblogs.com/iceAeterNa/p/5028155.html)

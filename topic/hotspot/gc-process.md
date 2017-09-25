@@ -1,11 +1,9 @@
 ---
 layout: topic
 module: HotSpot
-title:  GC过程
+title:  GC过程分析
 date:   2017-09-24
 ---
-
-#### hotspot分代
 
 #### gc入口
 
