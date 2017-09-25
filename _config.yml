@@ -7,7 +7,7 @@ encoding:     UTF-8
 
 permalink:  /:categories/:title.html
 
-gems: [jekyll-paginate]
+plugins: [jekyll-paginate]
 
 # 网站设置
 title: "txazoc"
@@ -69,4 +69,4 @@ paginate: 10
 paginate_path: "index/:num"
 
 # 随机版本号
-randomVersion: "bfa5bfb19c6890abba5c534d47e40d0f"
+randomVersion: "3d28d9c704d4bdb988c53a93cb52f57a"

@@ -20,7 +20,7 @@ jint universe_init() {
 
 ```c
 /**
- * 有三种堆类型可选择
+ * 有三种堆可选择
  *
  * 1) ParallelScavengeHeap
  *        -XX:+UseParallelGC
@@ -105,12 +105,13 @@ class CollectorPolicy {
 };
 ```
 
-再回到上面的代码，可以看到:
+再回到上面的代码，可以知道分代堆中的收集器策略选择如下:
 
 ```c
 /*
- * ConcurrentMarkSweepPolicy: -XX:+UseConcMarkSweepGC:
  * MarkSweepPolicy: 默认的分代收集器策略
+ * ConcurrentMarkSweepPolicy: -XX:+UseConcMarkSweepGC
+ * ASConcurrentMarkSweepPolicy: -XX:+UseConcMarkSweepGC + -XX:+UseAdaptiveSizePolicy
  */
 ```
 
@@ -118,7 +119,9 @@ class CollectorPolicy {
 
 ```c
 virtual void initialize_all() {
+    // 收集器策略初始化
     CollectorPolicy::initialize_all();
+    // 初始化分代
     initialize_generations();
 }
 
@@ -131,19 +134,21 @@ virtual void initialize_all() {
      * _min_heap_byte_size      最小堆大小
      * _initial_heap_byte_size  初始堆大小
      * _max_heap_byte_size      最大堆大小
-     * _min_gen0_size           最小新生代
-     * _initial_gen0_size       初始新生代
-     * _max_gen0_size           最大新生代
+     * _min_gen0_size           最小新生代大小
+     * _initial_gen0_size       初始新生代大小
+     * _max_gen0_size           最大新生代大小
      */
     initialize_flags();
     /**
-     * 调整新生代和老年代大小
+     * 调整新生代和老年代的大小
      */
     initialize_size_info();
 }
 
 /**
- * 标记清除收集器策略: 新生代(Serial、ParNew) + 老年代(Serial Old)
+ * 标记清除收集器策略分代初始化
+ * 
+ * 新生代(Serial、ParNew) + 老年代(Serial Old)
  */
 void MarkSweepPolicy::initialize_generations() {
     _generations = NEW_C_HEAP_ARRAY3(GenerationSpecPtr, number_of_generations(), mtGC, CURRENT_PC, AllocFailStrategy::RETURN_NULL);
@@ -159,25 +164,29 @@ void MarkSweepPolicy::initialize_generations() {
 }
 
 /**
- * CMS收集器策略: 新生代(Serial、ParNew) + 老年代(CMS)
+ * CMS收集器策略分代初始化
+ * 
+ * 新生代(Serial、ParNew) + 老年代(CMS)
  */
 void ConcurrentMarkSweepPolicy::initialize_generations() {
     _generations = NEW_C_HEAP_ARRAY3(GenerationSpecPtr, number_of_generations(), mtGC, CURRENT_PC, AllocFailStrategy::RETURN_NULL);
     if (UseParNewGC) {
-        // 新生代ParNew收集器
         if (UseAdaptiveSizePolicy) {
+            // 自适应大小新生代ParNew收集器
             _generations[0] = new GenerationSpec(Generation::ASParNew, _initial_gen0_size, _max_gen0_size);
         } else {
+            // 新生代ParNew收集器
             _generations[0] = new GenerationSpec(Generation::ParNew, _initial_gen0_size, _max_gen0_size);
         }
     } else {
         // 新生代Serial收集器
         _generations[0] = new GenerationSpec(Generation::DefNew, _initial_gen0_size, _max_gen0_size);
     }
-    // 老年代CMS收集器
     if (UseAdaptiveSizePolicy) {
+        // 自适应大小老年代CMS收集器
         _generations[1] = new GenerationSpec(Generation::ASConcurrentMarkSweep, _initial_gen1_size, _max_gen1_size);
     } else {
+        // 老年代CMS收集器
         _generations[1] = new GenerationSpec(Generation::ConcurrentMarkSweep, _initial_gen1_size, _max_gen1_size);
     }
 }
@@ -194,6 +203,7 @@ ThreadLocalAllocBuffer::set_max_size(Universe::heap()->max_tlab_size());
 ```c
 jint status = Universe::heap()->initialize();
 if (status != JNI_OK) {
+    // 堆初始化失败
     return status;
 }
 ```
@@ -206,7 +216,7 @@ if (UseTLAB) {
 }
 
 void ThreadLocalAllocBuffer::startup_initialization() {
-// -XX:TLABWasteTargetPercent=1, TLAB可占用eden空间的百分比
+// -XX:TLABWasteTargetPercent=1, TLAB占用eden空间的百分比
 _target_refills = 100 / (2 * TLABWasteTargetPercent);
 _target_refills = MAX2(_target_refills, (unsigned) 1U);
 
@@ -226,11 +236,13 @@ Thread::current()->tlab().initialize();
 CollectedHeap::pre_initialize();
 ```
 
-* (2). 分代数量
+* (2). 分代数量: 2
 
 ```c
 _n_gens = gen_policy()->number_of_generations();
 ```
+
+分代堆中的收集器策略都继承自两代收集器策略
 
 ```c
 /**
@@ -251,20 +263,24 @@ class TwoGenerationCollectorPolicy {
 // 64k或128k
 GenGrain = 1 << (16 ARM32_ONLY(+ 1));
 
+// 分代内存对齐大小
 size_t gen_alignment = Generation::GenGrain;
-// GenerationSpec
+// 分代描述
 _gen_specs = gen_policy()->generations();
 for (i = 0; i < _n_gens; i++) {
     _gen_specs[i]->align(gen_alignment);
 }
 
+/**
+ * 分代的最小内存和最大内存大小对齐
+ */
 void align(size_t alignment) {
     set_init_size(align_size_up(init_size(), alignment));
     set_max_size(align_size_up(max_size(), alignment));
 }
 ```
 
-* (4). 申请分配堆内存
+* (4). 申请分配堆内存: 此处暂未理清楚
 
 ```c
 char *heap_address;
@@ -289,7 +305,7 @@ char *GenCollectedHeap::allocate(
     int n_covered_regions = 0;
 
     for (int i = 0; i < _n_gens; i++) {
-        // 总预留内存大小 = 各分代最大堆内存之和
+        // 总预留内存大小 = 各分代最大堆内存大小之和
         total_reserved += _gen_specs[i]->max_size();
         n_covered_regions += _gen_specs[i]->n_covered_regions();
     }
@@ -344,6 +360,7 @@ ReservedSpace Universe::reserve_heap(size_t heap_size, size_t alignment) {
 * (5). 初始化各分代
 
 ```c
+// this赋值给全局变量
 _gch = this;
 
 for (i = 0; i < _n_gens; i++) {
@@ -355,36 +372,38 @@ for (i = 0; i < _n_gens; i++) {
 
 Generation *GenerationSpec::init(ReservedSpace rs, int level, GenRemSet *remset) {
     switch (name()) {
-        // Serial收集器
+        // DefNew分代 - Serial收集器
         case Generation::DefNew:
             return new DefNewGeneration(rs, init_size(), level);
 
-            // Serial Old收集器
+        // Tenured分代 - Serial Old收集器
         case Generation::MarkSweepCompact:
             return new TenuredGeneration(rs, init_size(), level, remset);
 
-            // ParNew收集器
+        // ParNew分代 - ParNew收集器
         case Generation::ParNew:
             return new ParNewGeneration(rs, init_size(), level);
 
-            // 自适应大小ParNew收集器
+        // ASParNew分代 - 自适应大小ParNew收集器
         case Generation::ASParNew:
             return new ASParNewGeneration(rs, init_size(), init_size(), level);
 
-            // CMS收集器
+        // ConcurrentMarkSweep分代 - CMS收集器
         case Generation::ConcurrentMarkSweep: {
             CardTableRS *ctrs = remset->as_CardTableRS();
             ConcurrentMarkSweepGeneration *g = NULL;
             g = new ConcurrentMarkSweepGeneration(rs, init_size(), level, ctrs, UseCMSAdaptiveFreeLists, (FreeBlockDictionary<FreeChunk>::DictionaryChoice) CMSDictionaryChoice);
+            // 初始化性能计数器
             g->initialize_performance_counters();
             return g;
         }
 
-            // 自适应大小CMS收集器
+        // ASConcurrentMarkSweep分代 - 自适应大小CMS收集器
         case Generation::ASConcurrentMarkSweep: {
             CardTableRS *ctrs = remset->as_CardTableRS();
             ASConcurrentMarkSweepGeneration *g = NULL;
             g = new ASConcurrentMarkSweepGeneration(rs, init_size(), level, ctrs, UseCMSAdaptiveFreeLists, (FreeBlockDictionary<FreeChunk>::DictionaryChoice) CMSDictionaryChoice);
+            // 初始化性能计数器
             g->initialize_performance_counters();
             return g;
         }
@@ -400,6 +419,7 @@ Generation *GenerationSpec::init(ReservedSpace rs, int level, GenRemSet *remset)
 if (collector_policy()->is_concurrent_mark_sweep_policy()) {
     bool success = create_cms_collector();
     if (!success) {
+        // 创建失败
         return JNI_ENOMEM;
     }
 }

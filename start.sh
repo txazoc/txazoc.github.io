@@ -8,4 +8,4 @@ python2 script/index404.py
 
 open -g http://127.0.0.1:4000/map
 
-jekyll serve
+bundle exec jekyll serve
