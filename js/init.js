@@ -570,14 +570,14 @@ define(function (require, exports, module) {
         },
 
         initSource: function (pathName) {
-            var path = pathName.substring(7, pathName.length);
+            var path = pathName.substring(8, pathName.length);
             var modules = path.split('/');
             var $sourceNav = $('.source-nav');
-            $sourceNav.append('<a href="' + Init.wrapIndexSpeedDomain('/source') + '">源码</a>')
-            for (var m in modules) {
+            $sourceNav.append('<a href="' + Init.wrapIndexSpeedDomain('/source') + '">源码</a>');
+            for (var i = 0; i < modules.length - 1; i++) {
                 $sourceNav
                     .append('<span class="dire">&gt;&gt;</span>')
-                    .append('<span class="tag">' + m + '</span>')
+                    .append('<span class="tag">' + modules[i] + '</span>')
             }
             $sourceNav.css('visibility', 'visible');
         },
