@@ -580,7 +580,7 @@ define(function (require, exports, module) {
                 basePath += modules[i] + '/';
                 $sourceNav
                     .append('<span class="dire">&gt;&gt;</span>')
-                    .append('<span class="tag">' + modules[i] + '<a class="sub-title" href="' + basePath + '"></a></span>')
+                    .append('<a class="sub-title" href="' + basePath + '"><span class="tag">' + modules[i] + '</span></a>')
             }
             $sourceNav.css('visibility', 'visible');
         },

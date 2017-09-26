@@ -17,19 +17,26 @@
 
     .sub-title {
         color: #6cc;
-    }
-
-    > span {
         margin-left: 15px;
         font-size: 13px;
         line-height: 1.8;
     }
 
+    > span {
+        font-size: 13px;
+    }
+
     > .dire {
         color: #ccc;
+        margin-left: 15px;
+        font-size: 13px;
+        line-height: 1.8;
     }
 
     > .tag {
         color: #6f6f6f;
+        margin-left: 15px;
+        font-size: 13px;
+        line-height: 1.8;
     }
 }
