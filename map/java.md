@@ -6,9 +6,10 @@ title:  Java
 #### 链接
 
 * [Java引用](/topic/java/reference.html)
-* [堆初始化](/topic/hotspot/heap-init.html)
-* [GC入口分析](/topic/hotspot/gc-entry.html)
-* [GC过程分析](/topic/hotspot/gc-process.html)
+* [堆初始化](/topic/hotspot/sourcecode/heap-init.html)
+* [GC入口分析](/topic/hotspot/sourcecode/gc-entry.html)
+* [GC过程分析](/topic/hotspot/sourcecode/gc-process.html)
+* [对象创建分析](/topic/hotspot/sourcecode/new-object.html)
 * [/Users/txazo/TxazoProject/hotspot/hotspot/src/share/vm/classfile/vmSymbols.hpp](/Users/txazo/TxazoProject/hotspot/hotspot/src/share/vm/classfile/vmSymbols.hpp)
 * [/Users/txazo/TxazoProject/hotspot/hotspot/src/share/vm/classfile/systemDictionary.hpp](/Users/txazo/TxazoProject/hotspot/hotspot/src/share/vm/classfile/systemDictionary.hpp)
 * [http://www.cnblogs.com/iceAeterNa/p/5028155.html](http://www.cnblogs.com/iceAeterNa/p/5028155.html)
