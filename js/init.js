@@ -574,7 +574,7 @@ define(function (require, exports, module) {
             var modules = path.split('/');
             var $sourceNav = $('.source-nav');
             $sourceNav.append('<a href="' + Init.wrapIndexSpeedDomain('/source') + '">源码</a>');
-            for (var i = 0; i < modules.length - 1; i++) {
+            for (var i = 0; i < modules.length - 2; i++) {
                 $sourceNav
                     .append('<span class="dire">&gt;&gt;</span>')
                     .append('<span class="tag">' + modules[i] + '</span>')
@@ -587,7 +587,7 @@ define(function (require, exports, module) {
             if (Init.mapReg.test(window.location.pathname)) {
                 var h4Array = [];
                 var $article = $('.md-primary');
-                $article.find('h1,h2,h3,h4,h5,h6').each(function() {
+                $article.find('h1,h2,h3,h4,h5,h6').each(function () {
                     var title = $(this).html();
                     $(this).html('').append($('<a>').attr('id', title).html(title));
                     if ($(this)[0].tagName == 'H4') {
@@ -597,7 +597,7 @@ define(function (require, exports, module) {
                 var $list = $('<ul>');
                 $list.append($('<li>').append($('<a>').html('返回上级').attr('href', '/map')));
                 if (h4Array.length > 0) {
-                    $.each(h4Array, function(i) {
+                    $.each(h4Array, function (i) {
                         $list.append($('<li>').append($('<a>').html(h4Array[i]).attr('href', '#' + h4Array[i])));
                     });
                 }
