@@ -573,11 +573,13 @@ define(function (require, exports, module) {
             var path = pathName.substring(8, pathName.length);
             var modules = path.split('/');
             var $sourceNav = $('.source-nav');
-            $sourceNav.append('<a href="' + Init.wrapIndexSpeedDomain('/source') + '">源码</a>');
+            var basePath = Init.wrapIndexSpeedDomain('/source/');
+            $sourceNav.append('<a href="' + basePath + '">源码</a>');
             for (var i = 0; i < modules.length - 2; i++) {
+                basePath += modules[i] + '/';
                 $sourceNav
                     .append('<span class="dire">&gt;&gt;</span>')
-                    .append('<span class="tag">' + modules[i] + '</span>')
+                    .append('<a href="' + basePath + '"><span class="tag">' + modules[i] + '</span></a>')
             }
             $sourceNav.css('visibility', 'visible');
         },
