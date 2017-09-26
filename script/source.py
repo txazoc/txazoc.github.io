@@ -35,6 +35,7 @@ def generateIndex(path, relativePath, childNames):
     if os.path.exists(indexFile):
         header = 0
         for line in open(indexFile, 'r'):
+            line = line.strip()
             if line == '---':
                 header += 1
                 headers.append(line)
