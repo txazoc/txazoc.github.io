@@ -2,24 +2,34 @@
 # -*- coding:utf-8 -*-
 
 import os
+import time
 
-rootDir = os.getcwd() + '/source'
+rootPath = '/source'
+rootDir = os.getcwd() + rootPath
+
+class SourceItem:
+    def __init__(self, name, isFile):
+        self.name = name
+        self.isFile = isFile
 
 def buildSourceModule(relativePath):
     childNames = []
     fullPath = rootDir + '/' + relativePath
     childs = os.listdir(fullPath)
     for child in childs:
-        if child.endswith('.md'):
-            childNames.append(child.replace('.md', ''))
         childRelativePath = relativePath + '/' + child
         childFullPath = rootDir + '/' + childRelativePath
         if os.path.isdir(childFullPath):
-            buildTopicModule(childRelativePath)
-    if len(childNames) > 0:
-        generateIndex(fullPath, childNames)
+            childNames.append(SourceItem(child, False).__dict__)
+            buildSourceModule(childRelativePath)
+        else:
+            if child.endswith('.md') and child != 'index.md':
+                childNames.append(SourceItem(child.replace('.md', ''), True).__dict__)
 
-def generateIndex(path, childNames):
+    if len(childNames) > 0:
+        generateIndex(fullPath, relativePath, childNames)
+
+def generateIndex(path, relativePath, childNames):
     headers = []
     indexFile = path + '/index.md'
     if os.path.exists(indexFile):
@@ -30,8 +40,13 @@ def generateIndex(path, childNames):
                 headers.append(line)
             elif header >= 2:
                 break
+            else:
+                headers.append(line)
     else:
         headers.append('---')
+        headers.append('layout: source')
+        headers.append('title: ' + generateTitle(rootPath + relativePath))
+        headers.append('date: ' + time.strftime('%Y-%m-%d'))
         headers.append('---')
 
         index = 0
@@ -39,10 +54,16 @@ def generateIndex(path, childNames):
     f = open(indexFile, 'w')
     for line in headers:
         writeLine(f, line)
-    writeLine(f, '\n')
-    for line in childNames:
-        writeLine(f, line)
+    writeLine(f, '')
+    for item in childNames:
+        writeLine(f, '* [' + item['name'] + '](' + rootPath + relativePath + '/' + item['name'] + (
+            '.html' if item['isFile'] else '/') + ')')
     f.close()
+
+def generateTitle(path):
+    if path.find('/') > -1:
+        return path.split('/')[-1]
+    return path
 
 def writeLine(f, line):
     f.write(line + '\n')
