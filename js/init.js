@@ -571,17 +571,28 @@ define(function (require, exports, module) {
 
         initSource: function (pathName) {
             var path = pathName.substring(8, pathName.length);
+            path = Init.stripSlash(path);
             var modules = path.split('/');
             var $sourceNav = $('.source-nav');
             var basePath = Init.wrapIndexSpeedDomain('/source/');
             $sourceNav.append('<a href="' + basePath + '">源码</a>');
-            for (var i = 0; i < modules.length - 2; i++) {
+            for (var i = 0; i < modules.length - 1; i++) {
                 basePath += modules[i] + '/';
                 $sourceNav
                     .append('<span class="dire">&gt;&gt;</span>')
                     .append('<a href="' + basePath + '"><span class="tag">' + modules[i] + '</span></a>')
             }
             $sourceNav.css('visibility', 'visible');
+        },
+
+        stripSlash: function (path) {
+            if (path.substring(0, 1) == '/') {
+                path = path.substring(1, path.length);
+            }
+            if (path.substring(path.length - 1, path.length) == '/') {
+                path = path.substring(0, path.length - 1);
+            }
+            return path;
         },
 
         initDirectory: function () {
