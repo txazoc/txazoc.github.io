@@ -16,6 +16,7 @@ title:  Java
 * [https://yq.aliyun.com/users/1285323208264169?spm=5176.100239.blogrightarea2947.1.4CaWmZ&do=login)](https://yq.aliyun.com/users/1285323208264169?spm=5176.100239.blogrightarea2947.1.4CaWmZ&do=login))
 * [http://geek.csdn.net/news/detail/74130](http://geek.csdn.net/news/detail/74130)
 * [文稿/多核编程入门.pdf](文稿/多核编程入门.pdf)
+* [http://blog.csdn.net/xleyou/article/details/21072333](http://blog.csdn.net/xleyou/article/details/21072333)
 
 #### 线程池
 
