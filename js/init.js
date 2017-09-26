@@ -575,12 +575,12 @@ define(function (require, exports, module) {
             var modules = path.split('/');
             var $sourceNav = $('.source-nav');
             var basePath = Init.wrapIndexSpeedDomain('/source/');
-            $sourceNav.append('<a href="' + basePath + '">源码</a>');
+            $sourceNav.append('<a class="title" href="' + basePath + '">源码</a>');
             for (var i = 0; i < modules.length - 1; i++) {
                 basePath += modules[i] + '/';
                 $sourceNav
                     .append('<span class="dire">&gt;&gt;</span>')
-                    .append('<a href="' + basePath + '"><span class="tag">' + modules[i] + '</span></a>')
+                    .append('<a class="sub-title" href="' + basePath + '"><span class="tag">' + modules[i] + '</span></a>')
             }
             $sourceNav.css('visibility', 'visible');
         },
