@@ -23,7 +23,7 @@ def buildSourceModule(relativePath):
                 childFileNames.append(child.replace('.md', ''))
 
     if len(childDirNames) + len(childFileNames) > 0:
-        generateIndex(fullPath, relativePath, childNames)
+        generateIndex(fullPath, relativePath, childDirNames, childFileNames)
 
 def generateIndex(path, relativePath, childDirNames, childFileNames):
     headers = []
