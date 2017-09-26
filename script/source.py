@@ -7,29 +7,25 @@ import time
 rootPath = '/source'
 rootDir = os.getcwd() + rootPath
 
-class SourceItem:
-    def __init__(self, name, isFile):
-        self.name = name
-        self.isFile = isFile
-
 def buildSourceModule(relativePath):
-    childNames = []
+    childDirNames = []
+    childFileNames = []
     fullPath = rootDir + '/' + relativePath
     childs = os.listdir(fullPath)
     for child in childs:
         childRelativePath = relativePath + '/' + child
         childFullPath = rootDir + '/' + childRelativePath
         if os.path.isdir(childFullPath):
-            childNames.append(SourceItem(child, False).__dict__)
+            childDirNames.append(child)
             buildSourceModule(childRelativePath)
         else:
             if child.endswith('.md') and child != 'index.md':
-                childNames.append(SourceItem(child.replace('.md', ''), True).__dict__)
+                childFileNames.append(child.replace('.md', ''))
 
-    if len(childNames) > 0:
+    if len(childDirNames) + len(childFileNames) > 0:
         generateIndex(fullPath, relativePath, childNames)
 
-def generateIndex(path, relativePath, childNames):
+def generateIndex(path, relativePath, childDirNames, childFileNames):
     headers = []
     indexFile = path + '/index.md'
     if os.path.exists(indexFile):
@@ -56,9 +52,10 @@ def generateIndex(path, relativePath, childNames):
     for line in headers:
         writeLine(f, line)
     writeLine(f, '')
-    for item in childNames:
-        writeLine(f, '* [' + item['name'] + '](' + rootPath + relativePath + '/' + item['name'] + (
-            '.html' if item['isFile'] else '/') + ')')
+    for name in childDirNames:
+        writeLine(f, '* [' + name + '/](' + rootPath + relativePath + '/' + name + '/)')
+    for name in childFileNames:
+        writeLine(f, '* [' + name + '](' + rootPath + relativePath + '/' + name + '.html)')
     f.close()
 
 def generateTitle(path):

@@ -7,7 +7,7 @@ date:   2017-09-26
 #### 最大值和最小值
 
 ```java
-// int最小值: -2147483647
+// int最小值: -2147483648
 public static final int MIN_VALUE = 0x80000000;
 
 // int最大值: 2147483647
