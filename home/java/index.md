@@ -1,5 +1,5 @@
 ---
-layout: home
+layout: homelist
 title: java
 date: 2017-09-26
 ---

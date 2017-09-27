@@ -7,6 +7,6 @@ python2 script/compress.py
 python2 script/index404.py
 python2 script/home.py
 
-open -g http://127.0.0.1:4000/map
+open -g http://127.0.0.1:4000/home
 
 bundle exec jekyll serve

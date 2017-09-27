@@ -11,6 +11,8 @@ define(function (require, exports, module) {
         sourceDomain: '//github.txazo.com',
         indexSpeedDomain: '//www.txazo.com',
         mapReg: new RegExp(/^\/(map|topic)\/[^\.#]+\.html/),
+        homeReg: new RegExp(/^\/home\/[^\.#]+\.html/),
+        homeListReg: new RegExp(/^\/home\/[^\.#]*/),
 
         init: function (sourceDomain, indexSpeedDomain) {
             Init.sourceDomain = sourceDomain;
@@ -576,11 +578,20 @@ define(function (require, exports, module) {
             var $homeNav = $('.home-nav');
             var basePath = Init.wrapIndexSpeedDomain('/home/');
             $homeNav.append('<a class="title" href="' + basePath + '">Home</a>');
-            for (var i = 0; i < modules.length - 1; i++) {
-                basePath += modules[i] + '/';
+            var length = path.indexOf('.html') > -1 ? modules.length - 1 : modules.length;
+            if (length > 2) {
                 $homeNav
                     .append('<span class="dire">&gt;&gt;</span>')
-                    .append('<a class="sub-title" href="' + basePath + '"><span class="tag">' + modules[i] + '</span></a>')
+                    .append('<span class="tag">...</span>')
+            }
+            var start = length > 2 ? length - 2 : 0;
+            for (var i = 0; i < length; i++) {
+                basePath += modules[i] + '/';
+                if (i >= start && modules[i] != '') {
+                    $homeNav
+                        .append('<span class="dire">&gt;&gt;</span>')
+                        .append('<a class="sub-title" href="' + basePath + '"><span class="tag">' + modules[i] + '</span></a>');
+                }
             }
             $homeNav.css('visibility', 'visible');
         },
@@ -617,6 +628,36 @@ define(function (require, exports, module) {
                 $article.prepend($list);
                 $article.prepend($('<h4>').append($('<strong>').append($('<em>').html('目录'))));
             }
+
+            // Home
+            if (Init.homeReg.test(window.location.pathname)) {
+                var h4Array = [];
+                var $article = $('.md-primary');
+                $article.find('h1,h2,h3,h4,h5,h6').each(function () {
+                    var title = $(this).html();
+                    $(this).html('').append($('<a>').attr('id', title).html(title));
+                    if ($(this)[0].tagName == 'H4') {
+                        h4Array.push(title);
+                    }
+                });
+                var $list = $('<ul>');
+                if (h4Array.length > 0) {
+                    $.each(h4Array, function (i) {
+                        $list.append($('<li>').append($('<a>').html(h4Array[i]).attr('href', '#' + h4Array[i])));
+                    });
+                }
+                $article.prepend($list);
+                $article.prepend($('<h4>').append($('<strong>').append($('<em>').html('目录'))));
+            }
+
+            if (Init.homeListReg.test(window.location.pathname)) {
+                $('.article').find('ul li a').each(function () {
+                    var $this = $(this);
+                    if ($this.html().indexOf('/') > -1) {
+                        $this.css('color', '#FF8785');
+                    }
+                });
+            }
         }
     };
 
@@ -648,81 +689,79 @@ define(function (require, exports, module) {
     };
 
     var HighLight = {
-            languages: ['linux'],
-            quoteRegex: new RegExp('^\'[^\']*\'$'),
-            doubleQuoteRegex: new RegExp('^"[^"]*"$'),
-            match: function (language) {
-                return $.inArray(language, HighLight.languages) >= 0;
-            },
+        languages: ['linux'],
+        quoteRegex: new RegExp('^\'[^\']*\'$'),
+        doubleQuoteRegex: new RegExp('^"[^"]*"$'),
+        match: function (language) {
+            return $.inArray(language, HighLight.languages) >= 0;
+        },
 
-            highLight: function (language, target) {
-                HighLight[language](target);
-            },
+        highLight: function (language, target) {
+            HighLight[language](target);
+        },
 
-            linux: function (target) {
-                var $target = $(target);
-                var content = $target.html();
-                var lines = content.split('\n');
-                if (lines != null && lines.length > 0) {
-                    var newContent = '';
-                    $.each(lines, function (i, line) {
-                            line = line.trim();
-                            if (line == null || line == '') {
-                                newContent += line;
-                            } else if (line.charAt(0) != '$' && i != 0) {
-                                newContent += HighLight.wrapSpan(line, 'output');
-                            } else {
-                                var dollar = 0;
-                                var pipe = 0;
-                                var words = line.split(' ');
-                                $.each(words, function (j, word) {
-                                        if (j == 0) {
-                                            if (word == "$") {
-                                                dollar = 1;
-                                                newContent += HighLight.wrapSpan('$', 'prompt');
-                                            } else {
-                                                dollar = 1;
-                                                newContent += HighLight.wrapSpan('$', 'prompt');
-                                                newContent += ' ';
-                                                newContent += HighLight.wrapSpan(word, 'keyword');
-                                            }
-                                        } else if (j == 1 && dollar == 1) {
-                                            newContent += HighLight.wrapSpan(word, 'keyword');
-                                        } else if (pipe == 1) {
-                                            pipe = 0;
-                                            newContent += HighLight.wrapSpan(word, 'keyword');
-                                        } else if (word == '|') {
-                                            pipe = 1;
-                                            newContent += HighLight.wrapSpan(word, 'pipe');
-                                        } else if (word.charAt(0) == '-') {
-                                            newContent += HighLight.wrapSpan(word, 'option');
-                                        } else if (HighLight.quoteRegex.test(word) || HighLight.doubleQuoteRegex.test(word)) {
-                                            newContent += HighLight.wrapSpan(word, 'string');
+        linux: function (target) {
+            var $target = $(target);
+            var content = $target.html();
+            var lines = content.split('\n');
+            if (lines != null && lines.length > 0) {
+                var newContent = '';
+                $.each(lines, function (i, line) {
+                        line = line.trim();
+                        if (line == null || line == '') {
+                            newContent += line;
+                        } else if (line.charAt(0) != '$' && i != 0) {
+                            newContent += HighLight.wrapSpan(line, 'output');
+                        } else {
+                            var dollar = 0;
+                            var pipe = 0;
+                            var words = line.split(' ');
+                            $.each(words, function (j, word) {
+                                    if (j == 0) {
+                                        if (word == "$") {
+                                            dollar = 1;
+                                            newContent += HighLight.wrapSpan('$', 'prompt');
                                         } else {
-                                            newContent += HighLight.wrapSpan(word, 'param');
-                                        }
-                                        if (j != words.length - 1) {
+                                            dollar = 1;
+                                            newContent += HighLight.wrapSpan('$', 'prompt');
                                             newContent += ' ';
+                                            newContent += HighLight.wrapSpan(word, 'keyword');
                                         }
+                                    } else if (j == 1 && dollar == 1) {
+                                        newContent += HighLight.wrapSpan(word, 'keyword');
+                                    } else if (pipe == 1) {
+                                        pipe = 0;
+                                        newContent += HighLight.wrapSpan(word, 'keyword');
+                                    } else if (word == '|') {
+                                        pipe = 1;
+                                        newContent += HighLight.wrapSpan(word, 'pipe');
+                                    } else if (word.charAt(0) == '-') {
+                                        newContent += HighLight.wrapSpan(word, 'option');
+                                    } else if (HighLight.quoteRegex.test(word) || HighLight.doubleQuoteRegex.test(word)) {
+                                        newContent += HighLight.wrapSpan(word, 'string');
+                                    } else {
+                                        newContent += HighLight.wrapSpan(word, 'param');
                                     }
-                                );
-                            }
-                            if (i != lines.length - 1) {
-                                newContent += '\n';
-                            }
+                                    if (j != words.length - 1) {
+                                        newContent += ' ';
+                                    }
+                                }
+                            );
                         }
-                    );
-                    $target.html(newContent);
-                }
-            },
-
-            wrapSpan: function (text, classStyle) {
-                return '<span class="hljs-' + classStyle + '">' + text + '</span>';
+                        if (i != lines.length - 1) {
+                            newContent += '\n';
+                        }
+                    }
+                );
+                $target.html(newContent);
             }
+        },
+
+        wrapSpan: function (text, classStyle) {
+            return '<span class="hljs-' + classStyle + '">' + text + '</span>';
         }
-        ;
+    };
 
     exports.init = Init.init;
 
-})
-;
+});

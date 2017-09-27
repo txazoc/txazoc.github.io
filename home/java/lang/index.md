@@ -1,5 +1,5 @@
 ---
-layout: home
+layout: homelist
 title: lang
 date: 2017-09-26
 ---

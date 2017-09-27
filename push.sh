@@ -8,5 +8,5 @@ python2 script/index404.py
 python2 script/home.py
 
 git add .
-git cm 'auto commit'
+git commit -am 'auto commit'
 git push origin master

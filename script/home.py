@@ -41,7 +41,7 @@ def generateIndex(path, relativePath, childDirNames, childFileNames):
                 headers.append(line)
     else:
         headers.append('---')
-        headers.append('layout: home')
+        headers.append('layout: homelist')
         headers.append('title: ' + generateTitle(rootPath + relativePath))
         headers.append('date: ' + time.strftime('%Y-%m-%d'))
         headers.append('---')
