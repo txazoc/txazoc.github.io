@@ -30,8 +30,7 @@ def buildHomeModule(relativePath):
                 childFileNames.append(child.replace('.md', ''))
                 childTitle[child.replace('.md', '')] = readItemTitle(fullPath, child)
 
-    if len(childDirNames) + len(childFileNames) > 0:
-        generateIndex(fullPath, relativePath, childDirNames, childFileNames, childTitle)
+    generateIndex(fullPath, relativePath, childDirNames, childFileNames, childTitle)
 
 def readItemTitle(path, file):
     header = 0
