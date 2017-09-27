@@ -12,3 +12,4 @@ date: 2017-09-27
 * [内存分配/](/home/hotspot/memory-allocate/)
 * [OOP-Klass/](/home/hotspot/oop-klass/)
 * [运行时数据区/](/home/hotspot/run-time-data-area/)
+* [Hotspot通用类型](/home/hotspot/hotspot-common-type.html)
