@@ -4,13 +4,14 @@ title:  堆内存结构
 date:   2017-09-26
 ---
 
+> HeapWord，堆内存的最小单元，堆中的通用指针，也是堆中对象大小的基本单位
+
 ```c
 /**
  * 堆字
  */
 class HeapWord {
   private:
-    // 基地址
     char *i;
   public:
     char *value() {
