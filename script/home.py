@@ -7,9 +7,15 @@ import time
 rootPath = '/home'
 rootDir = os.getcwd() + rootPath
 
+class Item:
+    def __init__(self, name, title):
+        self.name = name
+        self.title = title
+
 def buildHomeModule(relativePath):
     childDirNames = []
     childFileNames = []
+    childTitle = {}
     fullPath = rootDir + '/' + relativePath
     childs = os.listdir(fullPath)
     for child in childs:
@@ -18,14 +24,32 @@ def buildHomeModule(relativePath):
         if os.path.isdir(childFullPath):
             childDirNames.append(child)
             buildHomeModule(childRelativePath)
+            childTitle[child] = readItemTitle(fullPath, child + '/index.md')
         else:
             if child.endswith('.md') and child != 'index.md':
                 childFileNames.append(child.replace('.md', ''))
+                childTitle[child.replace('.md', '')] = readItemTitle(fullPath, child)
 
     if len(childDirNames) + len(childFileNames) > 0:
-        generateIndex(fullPath, relativePath, childDirNames, childFileNames)
+        generateIndex(fullPath, relativePath, childDirNames, childFileNames, childTitle)
 
-def generateIndex(path, relativePath, childDirNames, childFileNames):
+def readItemTitle(path, file):
+    header = 0
+    for line in open(path + '/' + file, 'r'):
+        line = line.strip()
+        if line == '---':
+            header += 1
+        elif header >= 2:
+            break
+        else:
+            if line.find(':') > -1:
+                pair = line.split(':', 1)
+                key = pair[0].strip()
+                value = pair[1].strip()
+                if key == 'title':
+                    return pair[1].strip()
+
+def generateIndex(path, relativePath, childDirNames, childFileNames, childTitle):
     headers = []
     indexFile = path + '/index.md'
     if os.path.exists(indexFile):
@@ -53,9 +77,9 @@ def generateIndex(path, relativePath, childDirNames, childFileNames):
         writeLine(f, line)
     writeLine(f, '')
     for name in childDirNames:
-        writeLine(f, '* [' + name + '/](' + rootPath + relativePath + '/' + name + '/)')
+        writeLine(f, '* [' + childTitle[name] + '/](' + rootPath + relativePath + '/' + name + '/)')
     for name in childFileNames:
-        writeLine(f, '* [' + name + '](' + rootPath + relativePath + '/' + name + '.html)')
+        writeLine(f, '* [' + childTitle[name] + '](' + rootPath + relativePath + '/' + name + '.html)')
     f.close()
 
 def generateTitle(path):
