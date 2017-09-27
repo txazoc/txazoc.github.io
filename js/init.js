@@ -654,7 +654,9 @@ define(function (require, exports, module) {
                 $('.article').find('ul li a').each(function () {
                     var $this = $(this);
                     if ($this.html().indexOf('/') > -1) {
-                        $this.css('color', '#FF8785');
+                        $this.addClass('home-list-a-dir');
+                    } else {
+                        $this.addClass('home-list-a-file');
                     }
                 });
             }
