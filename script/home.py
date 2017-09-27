@@ -4,10 +4,10 @@
 import os
 import time
 
-rootPath = '/source'
+rootPath = '/home'
 rootDir = os.getcwd() + rootPath
 
-def buildSourceModule(relativePath):
+def buildHomeModule(relativePath):
     childDirNames = []
     childFileNames = []
     fullPath = rootDir + '/' + relativePath
@@ -17,7 +17,7 @@ def buildSourceModule(relativePath):
         childFullPath = rootDir + '/' + childRelativePath
         if os.path.isdir(childFullPath):
             childDirNames.append(child)
-            buildSourceModule(childRelativePath)
+            buildHomeModule(childRelativePath)
         else:
             if child.endswith('.md') and child != 'index.md':
                 childFileNames.append(child.replace('.md', ''))
@@ -41,7 +41,7 @@ def generateIndex(path, relativePath, childDirNames, childFileNames):
                 headers.append(line)
     else:
         headers.append('---')
-        headers.append('layout: source')
+        headers.append('layout: home')
         headers.append('title: ' + generateTitle(rootPath + relativePath))
         headers.append('date: ' + time.strftime('%Y-%m-%d'))
         headers.append('---')
@@ -68,11 +68,11 @@ def writeLine(f, line):
 
 def main():
     print '--------------------------------------------------'
-    print '[python] build source module begin.'
+    print '[python] build home module begin.'
 
-    buildSourceModule('')
+    buildHomeModule('')
 
-    print '[python] build source module success.'
+    print '[python] build home module success.'
     print '--------------------------------------------------'
 
 main()

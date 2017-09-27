@@ -252,8 +252,8 @@ define(function (require, exports, module) {
                 Init.initTopics();
             } else if (pathName.length > 6 && pathName.substr(0, 7) == '/topic/') {
                 Init.initTopic(pathName);
-            } else if (pathName.length > 7 && pathName.substr(0, 8) == '/source/') {
-                Init.initSource(pathName);
+            } else if (pathName.length > 5 && pathName.substr(0, 6) == '/home/') {
+                Init.initHome(pathName);
             }
         },
 
@@ -569,20 +569,20 @@ define(function (require, exports, module) {
             });
         },
 
-        initSource: function (pathName) {
-            var path = pathName.substring(8, pathName.length);
+        initHome: function (pathName) {
+            var path = pathName.substring(6, pathName.length);
             path = Init.stripSlash(path);
             var modules = path.split('/');
-            var $sourceNav = $('.source-nav');
-            var basePath = Init.wrapIndexSpeedDomain('/source/');
-            $sourceNav.append('<a class="title" href="' + basePath + '">源码</a>');
+            var $homeNav = $('.home-nav');
+            var basePath = Init.wrapIndexSpeedDomain('/home/');
+            $homeNav.append('<a class="title" href="' + basePath + '">Home</a>');
             for (var i = 0; i < modules.length - 1; i++) {
                 basePath += modules[i] + '/';
-                $sourceNav
+                $homeNav
                     .append('<span class="dire">&gt;&gt;</span>')
                     .append('<a class="sub-title" href="' + basePath + '"><span class="tag">' + modules[i] + '</span></a>')
             }
-            $sourceNav.css('visibility', 'visible');
+            $homeNav.css('visibility', 'visible');
         },
 
         stripSlash: function (path) {

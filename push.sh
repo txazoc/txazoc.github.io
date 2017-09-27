@@ -5,7 +5,7 @@ python2 script/topic.py
 python2 script/topic-copy.py
 python2 script/compress.py
 python2 script/index404.py
-python2 script/source.py
+python2 script/home.py
 
 git add .
 git cm 'auto commit'

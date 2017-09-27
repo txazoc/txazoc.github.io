@@ -1,7 +1,7 @@
 ---
-layout: source
+layout: home
 title: source
 date: 2017-09-26
 ---
 
-* [java/](/source/java/)
+* [java/](/home/java/)

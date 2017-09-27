@@ -1,5 +1,5 @@
 ---
-layout: source
+layout: home
 title:  Integer
 date:   2017-09-26
 ---
