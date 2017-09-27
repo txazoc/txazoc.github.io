@@ -9,5 +9,6 @@ date: 2017-09-27
 * [类加载链接初始化/](/home/hotspot/class-load-link-init/)
 * [编译器/](/home/hotspot/compiler/)
 * [垃圾回收/](/home/hotspot/gc/)
+* [memory-allocate/](/home/hotspot/memory-allocate/)
 * [OOP-Klass/](/home/hotspot/oop-klass/)
 * [运行时数据区/](/home/hotspot/run-time-data-area/)
