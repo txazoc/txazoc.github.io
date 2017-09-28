@@ -182,6 +182,7 @@ title:  RocketMQ
 
 #### 消息传递 - Broker接收消息
 
+* SendMessageProcessor.processRequest()
 * 请求自定义头部SendMessageRequestHeader解码
 * 创建响应response
     * response.opaque = request.opaque
@@ -214,6 +215,12 @@ title:  RocketMQ
         * 获取MappedFile
             * MappedFile为空或满，创建新的MappedFile
         * 追加消息到MappedFile
+            * 获取文件写入offset
+            * 生成消息id: addr + 文件写入offset
+            * 获取队列offset
+            * 写消息到DirectByteBuffer
+            * 更新队列offset: 加1
+            * 更新文件写入offset: 加消息字节数
         * `写消息解锁`
         * 统计
             * topic发送消息次数加1
@@ -235,6 +242,19 @@ title:  RocketMQ
                 * 等待slave同步消息成功，直到超时
                 * GroupTransferService线程消息是否同步slave成功
                 * 同步slave成功，唤醒等待
+    * 存储消息耗时统计
+* 处理消息存储结果，返回response
+    * 消息存储失败，返回不同的ResponseCode和remark
+    * 消息存储成功
+        * broker统计
+            * topic消息数加1
+            * topic消息容量更新
+            * broker消息数加1
+        * 更新SendMessageResponseHeader
+            * 消息id
+            * 队列id
+            * 队列offset
+    * 写response
 
 #### 消息传递 - Broker投递消息
 
