@@ -256,7 +256,10 @@ title:  RocketMQ
             * 队列offset
     * 写response
 
-#### 消息传递 - Broker投递消息
+#### 消息传递 - Consumer拉取消息
+
+* PullMessageProcessor.processRequest()
+* 
 
 #### 消息传递 - Consumer消费消息
 
