@@ -5,6 +5,8 @@ title:  RocketMQ
 
 [http://www.iocoder.cn/?vip](http://www.iocoder.cn/?vip)
 [blog.csdn.net/binzhaomobile/article/details/73743361](blog.csdn.net/binzhaomobile/article/details/73743361)
+[http://www.doc88.com/p-4127042457647.html](http://www.doc88.com/p-4127042457647.html)
+[http://www.cnblogs.com/wxd0108/p/6055004.html](http://www.cnblogs.com/wxd0108/p/6055004.html)
 
 #### RocketMQ特性
 
@@ -179,6 +181,60 @@ title:  RocketMQ
 * 发送MessageBatch
 
 #### 消息传递 - Broker接收消息
+
+* 请求自定义头部SendMessageRequestHeader解码
+* 创建响应response
+    * response.opaque = request.opaque
+* 检查
+    * broker是否开始接收消息: startAcceptSendRequestTimeStamp
+    * broker写权限检查
+    * 检查topic和系统关键字是否冲突
+    * 检查topic配置是否存在
+    * 检查队列id是否有效
+    * 检查是否拒绝事务消息
+* 消息处理
+    * 队列id小于0: 从写队列中随机选择
+    * 消息转换为broker内部存储消息结构
+* MessageStore存储消息
+    * 检查
+        * 是否已关闭
+        * 检查是否slave节点
+        * 检查是否可写
+        * 检查topic长度，不超过127
+        * 检查properties长度，不超过32767
+        * 系统PageCache是否busy
+    * CommitLog存储消息
+        * 延时消息处理
+            * 调整消息延时级别
+            * 修正延时消息的topic和队列id
+        * `写消息加锁`
+            * CAS
+            * ReentrantLock
+        * 设置消息存储时间为当前时间戳，为保证全局有序
+        * 获取MappedFile
+            * MappedFile为空或满，创建新的MappedFile
+        * 追加消息到MappedFile
+        * `写消息解锁`
+        * 统计
+            * topic发送消息次数加1
+            * topic发送消息大小更新
+        * 磁盘flush
+            * GroupCommitService: SYNC_FLUSH
+                * waitStoreMsgOK
+                    * 等到消息flush到磁盘，直到超时
+                    * GroupCommitService线程检查是否有未flush消息并flush
+                    * flush成功，唤醒等待
+                * !waitStoreMsgOK
+                    * 唤醒GroupCommitService
+            * FlushRealTimeService: ASYNC_FLUSH，实时flush
+                * 唤醒FlushRealTimeService
+            * CommitRealTimeService: ASYNC_FLUSH，实时commit
+                * 唤醒CommitRealTimeService
+        * slave同步: broker为同步master
+            * waitStoreMsgOK
+                * 等待slave同步消息成功，直到超时
+                * GroupTransferService线程消息是否同步slave成功
+                * 同步slave成功，唤醒等待
 
 #### 消息传递 - Broker投递消息
 
