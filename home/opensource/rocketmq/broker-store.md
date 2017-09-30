@@ -20,46 +20,70 @@ store/
         topics.json.bak
 ```
 
-***consumerOffset.json***
+***consumerOffset.json - 消费进度***
 
-```json
+```js
 {
-	"offsetTable":{
-		"%RETRY%consumer@consumer":{0:0
+	"offsetTable": {
+		"%RETRY%consumer-group@consumer-group": {
+		    0: 0
 		},
-		"topic-multi@consumer":{0:113085,1:113083,2:113086,3:113088
+		// topic@消费组
+		"topicName@consumer-group": {
+		    // 队列id: 消费进度
+		    0: 113085,
+		    1: 113083,
+		    2: 113086,
+		    3: 113088
 		}
 	}
 }
 ```
 
-***delayOffset.json***
+***delayOffset.json - 延时消费进度***
 
-```json
+```js
 {
-	"offsetTable":{3:233051
+	"offsetTable": {
+	    // SCHEDULE_TOPIC_XXXX的队列id: 消费进度
+	    3: 233051
 	}
 }
 ```
 
-***topics.json***
+***subscriptionGroup.json - 订阅组***
 
-```json
-"topic-multi": {
-    "order": false,
-    "perm": 6,
-    "readQueueNums": 4,
-    "topicFilterType": "SINGLE_TAG",
-    "topicName": "topic-multi",
-    "topicSysFlag": 0,
-    "writeQueueNums": 4
+```js
+"consumer-group": {
+    "brokerId": 0,                              // brokerId
+    "consumeBroadcastEnable": true,             // 是否允许广播消费
+    "consumeEnable": true,                      // 是否允许消费
+    "consumeFromMinEnable": true,               // 是否允许从头开始消费
+    "groupName": "consumer-group",              // 订阅组名称
+    "notifyConsumerIdsChangedEnable": true,     // 消费者变更时是否通知
+    "retryMaxTimes": 16,                        // 最大重试次数
+    "retryQueueNums": 1,                        // 重试队列数
+    "whichBrokerWhenConsumeSlowly": 1           // 消费缓慢时建议切换到的brokerId
 }
 ```
 
+***topics.json - topic配置***
+
+```js
+"topicName": {
+    "order": false,                     // 是否有序
+    "perm": 6,                          // 读写权限, 0100-可读, 0010-可写
+    "readQueueNums": 4,                 // 读队列数
+    "writeQueueNums": 4,                // 写队列数
+    "topicFilterType": "SINGLE_TAG",    // 过滤类型
+    "topicName": "topicName",           // topic名称
+    "topicSysFlag": 0                   // topic系统标记
+}
+```
+
+***配置管理器***
+
 ```java
-/**
- * 配置管理器
- */
 public abstract class ConfigManager {
 
     /**
@@ -141,6 +165,8 @@ public abstract class ConfigManager {
 
 #### commitlog
 
+***commitlog文件***
+
 ```c
 store/
     commitlog/
@@ -152,12 +178,37 @@ store/
         ...
 ```
 
+***消息存储结构***
+
+```c
+1   TotalSize                   // 4字节     消息大小
+2   MagicCode                   // 4字节     0xdaa320a7
+3   BodyCRC                     // 4字节     消息内容校验码
+4   QueueId                     // 4字节     队列id
+5   Flag                        // 4字节     标记
+6   QueueOffset                 // 8字节     队列中偏移量(实际偏移地址 = QueueOffset * 20)
+7   PhysicalOffset              // 8字节     commitlog中偏移地址
+8   SysFlag                     // 4字节     消息标记
+9   BornTimestamp               // 8字节     消息生产时间戳
+10  BornHost                    // 8字节     消息生产host
+11  StoreTimestamp              // 8字节     消息存储时间戳
+12  StoreHostAddress            // 8字节     消息存储host
+13  ReconsumeTimes              // 4字节     重复消费次数
+14  PreparedTransactionOffset   // 8字节     prepared状态事务消息在commitlog中偏移地址
+15  BodyLength                  // 4字节     消息内容长度
+    Body                        //          消息内容
+16  TopicLength                 // 1字节     topic长度
+    Topic                       //          topic
+17  PropertiesLength            // 2字节     Properties长度
+    Properties                  //          Properties
+```
+
 #### consumerqueue
 
 ```c
 store/
     consumerqueue/
-        ${topic}/
+        ${topicName}/
             ${queueId}/
                 00000000000000000000    // 6M
                 00000000000006000000    // 6M
@@ -165,6 +216,14 @@ store/
                 00000000000018000000    // 6M
                 00000000000024000000    // 6M
                 ...
+```
+
+***消费队列结构***
+
+```c
+CommitLogOffset     // 8字节      commitlog中偏移地址
+MsgSize             // 4字节      消息大小
+TagsCode            // 8字节      tag的哈希值
 ```
 
 #### index
