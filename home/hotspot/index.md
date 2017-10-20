@@ -13,3 +13,4 @@ date: 2017-09-27
 * [OOP-Klass/](/home/hotspot/oop-klass/)
 * [运行时数据区/](/home/hotspot/run-time-data-area/)
 * [Hotspot通用类型](/home/hotspot/hotspot-common-type.html)
+* [开源虚拟机](/home/hotspot/opensource-vm.html)
