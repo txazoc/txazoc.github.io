@@ -8,3 +8,4 @@ date: 2017-09-26
 * [java/](/home/java/)
 * [开源/](/home/opensource/)
 * [A](/home/a.html)
+* [资料](/home/information.html)
