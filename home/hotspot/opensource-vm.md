@@ -8,3 +8,7 @@ date:   2017-10-20
 
 * [Maxine-VM](https://github.com/beehive-lab/Maxine-VM)
 * [Maxine VM介绍](http://ldq67123.iteye.com/blog/2369501)
+
+#### JamVM
+
+* [JamVM](http://jamvm.sourceforge.net/)
