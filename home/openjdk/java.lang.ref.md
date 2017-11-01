@@ -15,8 +15,10 @@ date: 2017-10-26
 * WeakReference: 弱引用
     * gc时回收
 * PhantomReference: 虚引用
-    * Cleaner: Cleaner.clean()
+    * Cleaner
+        * Cleaner.clean()
 * FinalReference: Final引用
     * Finalizer
+        * 入队列
         * FinalizerThread线程
             * queue.poll().finalize()

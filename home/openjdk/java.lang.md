@@ -9,6 +9,7 @@ date: 2017-10-26
     * Cache
     * Number: Byte、Short、Integer、Long、Float、Double
 * ClassLoader: 类加载器
+    * 双亲委派
     * loadClass()
     * findClass()
     * defineClass()
@@ -38,14 +39,24 @@ date: 2017-10-26
 * 多线程
     * Runnable
     * Thread
+        * ThreadLocalMap<ThreadLocal, Object>
         * start()/run()
         * sleep()
         * join()
         * interrupt()/interrupted()/isInterrupted()
+    * Thread$State
+        * NEW
+        * RUNNABLE
+        * BLOCKED
+        * WAITING
+        * TIMED_WAITING
+        * TERMINATED
     * ThreadLocal
 * 字符串
     * String: 不可变
-        * intern()
         * 字符串常量池
+            * 字符串常量
+            * intern()
     * StringBuffer
     * StringBuilder
+        * char[]

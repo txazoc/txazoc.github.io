@@ -9,5 +9,5 @@ date: 2017-10-26
     * HeapByteBuffer: 堆内存
     * DirectByteBuffer: 直接内存
     * MappedByteBuffer: 内存映射文件
-* Channel
+* Channel: 通道
 * Selector

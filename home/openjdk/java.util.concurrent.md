@@ -12,7 +12,9 @@ date: 2017-10-26
     * getXXXVolatile()/putXXXVolatile()
 * AQS
 * 原子类
-* ReentrantLock
+* Lock
+    * ReentrantLock
+    * ReentrantReadWriteLock
 * Condition
 * 并发工具类
     * Semaphore
@@ -24,9 +26,10 @@ date: 2017-10-26
     * ConcurrentHashMap
     * CopyOnWriteArrayList
     * DelayQueue
+    * PriorityBlockingQueue
 * 线程池
+    * Executors
     * ThreadPoolExecutor
     * ScheduledThreadPoolExecutor
     * FutureTask: implements Runnable, Future
         * Callable
-    * Executors

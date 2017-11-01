@@ -17,6 +17,15 @@ date: 2017-10-26
     * Unicode字符编码
         * UTF-8
         * UTF-16
+* 流总结
+    * 转byte
+        * byte、char、String、基本数据类型、对象
+    * 中间处理
+        * 缓冲
+    * 存储读写
+        * 内存
+        * 文件
+        * 网络
 * 节点流
     * 文件流: FileInputStream/XXX
         * FileDescriptor fd: 文件描述符

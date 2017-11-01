@@ -4,6 +4,13 @@ title: A
 date: 2017-09-26
 ---
 
+* getrestaurantsbygrouponproductid          (getRestaurantList)
+* getrestaurantsbysupplierrestaurantids     (getRestaurantList)
+* getDestinationsAndDishesByRestaurantId    (PoiAdminServiceProxy)
+* getrestaurantsbydestidanddishid           (getRestaurantList)
+* mergedestinationdishrestaurant            (PoiAdminService)
+* searchbrandrestaurant                     (restaurantRepository.findByIds(restaurantIds))
+
 #### CPU
 
 * CPU
