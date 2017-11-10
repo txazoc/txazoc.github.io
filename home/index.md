@@ -4,6 +4,7 @@ title: Home
 date: 2017-09-26
 ---
 
+* [all-in-one/](/home/all-in-one/)
 * [大数据/](/home/bigdata/)
 * [虚拟机/](/home/hotspot/)
 * [java/](/home/java/)
