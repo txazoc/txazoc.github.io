@@ -3,6 +3,18 @@ layout: mc
 title:  指令
 ---
 
+#### /clear
+
+```java
+/clear <player> [item]
+```
+
+#### /clone
+
+```java
+/clone <x,y,z> <x,y,z> <x,y,z>
+```
+
 #### /gamerule
 
 游戏规则
@@ -63,4 +75,10 @@ title:  指令
 ```java
 /give @P command_block          // 给予命令方块
 /fill 0 0 1  170 10 10 stone    // 填充命令方块
+```
+
+#### /spawnpoint
+
+```java
+/spawnpoint Chaugod 0 10 0
 ```
