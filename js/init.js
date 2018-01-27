@@ -128,7 +128,11 @@ define(function (require, exports, module) {
                             var newPre = $('<pre></pre>').addClass('hljs-dark');
                             var newCode = $('<code></code>').addClass('language-' + language);
                             newPre.append(newCode.html($(this).html().replace(/<(?:.|\s)*?>/g, '')));
-                            $(this).parent().parent().after(newPre).remove();
+                            if ($(this).parent().parent().hasClass('highlighter-rouge')) {
+                                $(this).parent().parent().after(newPre).remove();
+                            } else {
+                                $(this).parent().parent().parent().after(newPre).remove();
+                            }
                         }
                     }
                 });
