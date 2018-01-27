@@ -18,7 +18,7 @@ url: "http://www.txazo.com"
 
 # Markdown引擎
 # kramdown, maruku, rdiscount, redcarpet
-markdown: rdiscount
+markdown: kramdown
 markdownStyle: md-primary
 
 # highlight高亮样式
@@ -69,4 +69,4 @@ paginate: 10
 paginate_path: "index/:num"
 
 # 随机版本号
-randomVersion: "0f338421d4f2f4420d9ae0751aab6c48"
+randomVersion: "410181fd87f2812ce467fcb4d876f2a2"
