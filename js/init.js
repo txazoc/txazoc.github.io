@@ -109,9 +109,15 @@ define(function (require, exports, module) {
             if (preCode.length > 0) {
                 preCode.each(function (i, e) {
                     if ($(this).parent().hasClass('highlight')
-                        && $(this).parent().parent().hasClass('highlighter-rouge')) {
+                        && ($(this).parent().parent().hasClass('highlighter-rouge')
+                            || $(this).parent().parent().parent().hasClass('highlighter-rouge'))) {
                         var language = '';
-                        var divClasses = $(this).parent().parent().attr('class').trim().split(' ');
+                        var divClasses = [];
+                        if ($(this).parent().parent().hasClass('highlighter-rouge')) {
+                            divClasses = $(this).parent().parent().attr('class').trim().split(' ');
+                        } else {
+                            divClasses = $(this).parent().parent().parent().attr('class').trim().split(' ');
+                        }
                         $.each(divClasses, function (i, v) {
                             if (v.substr(0, 9) == 'language-') {
                                 language = v.substr(9, v.length);
