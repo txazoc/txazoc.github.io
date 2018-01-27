@@ -11,7 +11,7 @@ define(function (require, exports, module) {
         sourceDomain: '//github.txazo.com',
         indexSpeedDomain: '//www.txazo.com',
         mapReg: new RegExp(/^\/(map|topic)\/[^\.#]+\.html/),
-        homeReg: new RegExp(/^\/home\/[^\.#]+\.html/),
+        homeReg: new RegExp(/^\/(home|new)\/[^\.#]+\.html/),
         homeListReg: new RegExp(/^\/home\/[^\.#]*/),
 
         init: function (sourceDomain, indexSpeedDomain) {
