@@ -29,7 +29,7 @@ def replace(localDebug):
             elif key == 'randomVersion':
                 write(f, 'randomVersion', md5hash(str(time.time())), '"')
             elif key == 'markdown':
-                write(f, 'markdown', (localDebug == 'true') and 'kramdown' or 'kramdown', '')
+                write(f, 'markdown', (localDebug == 'true') and 'rdiscount' or 'kramdown', '')
             else:
                 f.write(line)
         else:
