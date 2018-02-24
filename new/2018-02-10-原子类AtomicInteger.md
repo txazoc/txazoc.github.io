@@ -3,21 +3,22 @@ layout: new
 title:  原子类AtomicInteger
 ---
 
-原子类原理: volatile + CAS
+原子类的原理: volatile + CAS
 
 ```java
 public class AtomicInteger extends Number implements Serializable {
 
+    // Unsafe
     private static final Unsafe unsafe = Unsafe.getUnsafe();
     
-    // value字段偏移
+    // value字段的偏移
     private static final long valueOffset;
 
     static {
         valueOffset = unsafe.objectFieldOffset(AtomicInteger.class.getDeclaredField("value"));
     }
 
-    // 值
+    // 值, volatile
     private volatile int value;
 
     /**
