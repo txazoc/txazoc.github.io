@@ -11,7 +11,7 @@ title: 目录
 * [2018-02-09 Timer定时任务](/new/2018-02-09-Timer定时任务.html)
 * [2018-02-09 TreeMap](/new/2018-02-09-TreeMap.html)
 * [2018-02-09 WeakHashMap](/new/2018-02-09-WeakHashMap.html)
-* [2018-02-10 原子类AtomicInteger](/new/2018-02-10-原子类AtomicInteger.html)
+* [2018-02-10 原子类](/new/2018-02-10-原子类.html)
 * [2018-02-11 AQS](/new/2018-02-11-AQS.html)
 * [2018-02-26 Queue](/new/2018-02-26-Queue.html)
 * [2018-02-27 List](/new/2018-02-27-List.html)
