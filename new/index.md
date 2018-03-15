@@ -27,6 +27,7 @@ title: 目录
 * [2018-03-10 Zookeeper](/new/2018-03-10-Zookeeper.html)
 * [2018-03-11 动态代理](/new/2018-03-11-动态代理.html)
 * [2018-03-12 类加载](/new/2018-03-12-类加载.html)
-* [2018-03-13 AOP](/new/2018-03-13-AOP.html)
+* [2018-03-13 Spring AOP](/new/2018-03-13-Spring AOP.html)
 * [2018-03-14 事务](/new/2018-03-14-事务.html)
 * [2018-03-15 微服务](/new/2018-03-15-微服务.html)
+* [2018-03-16 ThreadLocal](/new/2018-03-16-ThreadLocal.html)

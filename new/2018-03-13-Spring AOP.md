@@ -1,13 +1,17 @@
 ---
 layout: new
-title:  AOP
+title:  Spring AOP
 ---
+
+#### AOP
+
+Aspect Oriented Programming，面向切面编程
 
 #### 切入点Pointcut
 
 * execution: 方法
-* args: 参数
-* @args: 参数注解
+* args: 方法参数
+* @args: 方法参数注解
 * @annotation: 方法注解
 * ...
 
@@ -55,18 +59,17 @@ public interface MethodMatcher {
 * 后置增强: AfterReturningAdvice
 * 引介增强: IntroductionInterceptor
 
-#### 切面Advisor
+#### 切面Aspect
 
-```切面 = 切入点 + 增强```
+```切面Aspect = 切入点Pointcut + 增强Advice```
 
-#### AOP实现
+#### AOP代理
 
-* JdkDynamicAopProxy
-* ObjenesisCglibAopProxy
+* JDK动态代理: JdkDynamicAopProxy
+* CGLib动态代理: ObjenesisCglibAopProxy
 
-#### AOP原理
+#### AOP代理实现
 
-以CGLib代理为例
 
 ```java
 public class ReflectiveMethodInvocation implements ProxyMethodInvocation, Cloneable {
@@ -96,6 +99,8 @@ public class ReflectiveMethodInvocation implements ProxyMethodInvocation, Clonea
 }
 ```
 
+前置增强拦截器:
+
 ```java
 public class MethodBeforeAdviceInterceptor implements MethodInterceptor, Serializable {
 
@@ -113,6 +118,8 @@ public class MethodBeforeAdviceInterceptor implements MethodInterceptor, Seriali
 
 }
 ```
+
+后置增强拦截器:
 
 ```java
 public class AfterReturningAdviceInterceptor implements MethodInterceptor, AfterAdvice, Serializable {
@@ -132,6 +139,8 @@ public class AfterReturningAdviceInterceptor implements MethodInterceptor, After
 
 }
 ```
+
+异常增强拦截器:
 
 ```java
 public class ThrowsAdviceInterceptor implements MethodInterceptor, AfterAdvice {
