@@ -15,7 +15,7 @@ public class Thread implements Runnable {
 }
 ```
 
-ThreadLocal为ThreadLocalMap中Entry的key，同时也是WeakReference的referent
+ThreadLocalMap是一个数组实现的Map，ThreadLocal为Entry的key，同时也是WeakReference的referent
 
 ```java
 public class ThreadLocal<T> {
@@ -25,14 +25,14 @@ public class ThreadLocal<T> {
         private Entry[] table;
 
         /**
-         * Entry节点为弱引用
+         * Entry继承自WeakReference
          */
         static class Entry extends WeakReference<ThreadLocal<?>> {
 
             Object value;
 
             Entry(ThreadLocal<?> k, Object v) {
-                // referent为ThreadLocal
+                // ThreadLocal为弱引用
                 super(k);
                 value = v;
             }
@@ -47,7 +47,7 @@ public class ThreadLocal<T> {
 
 ```java
 public T get() {
-    // 当前线程的ThreadLocalMap
+    // 获取当前线程的ThreadLocalMap
     ThreadLocalMap map = getMap(Thread.currentThread());
     if (map != null) {
         ThreadLocalMap.Entry e = map.getEntry(this);
@@ -64,7 +64,7 @@ ThreadLocalMap getMap(Thread t) {
 }
 
 /**
- * 可被重写
+ * 初始值, 可被重写
  */
 protected T initialValue() {
     return null;
@@ -75,6 +75,6 @@ protected T initialValue() {
 
 在一个线程内，使用多个ThreadLocal，用完后ThreadLocal失去强引用，gc时会被回收，但Entry中的value不会被回收，造成内存泄露。
 
-最新的ThreadLocal实现中，get()和set()时，会调用`expungeStaleEntry()`方法清除key为null的Entry中的value。
+最新的ThreadLocal实现中，get()和set()时，会调用`expungeStaleEntry()`方法清除部分key为null的Entry中的value。
 
-好的习惯: ThreadLocal用完后，手动调用`remove()`方法清除Entry中的value
+ThreadLocal用完后，最好手动调用`remove()`方法清除对应Entry中的value。

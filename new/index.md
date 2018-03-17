@@ -24,7 +24,7 @@ title: 目录
 * [2018-02-18 Spring](/new/2018-02-18-Spring.html)
 * [2018-02-20 垃圾回收](/new/2018-02-20-垃圾回收.html)
 * [2018-02-24 MyBatis](/new/2018-02-24-MyBatis.html)
-* [2018-02-27 0-Zookeeper](/new/2018-02-2710-Zookeeper.html)
+* [2018-02-27 Zookeeper](/new/2018-02-27-Zookeeper.html)
 * [2018-03-01 动态代理](/new/2018-03-01-动态代理.html)
 * [2018-03-02 Spring AOP](/new/2018-03-02-Spring AOP.html)
 * [2018-03-03 类加载](/new/2018-03-03-类加载.html)

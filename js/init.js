@@ -722,8 +722,6 @@ define(function (require, exports, module) {
                         line = line.trim();
                         if (line == null || line == '') {
                             newContent += line;
-                        } else if (line.charAt(0) != '$' && i != 0) {
-                            newContent += HighLight.wrapSpan(line, 'output');
                         } else {
                             var dollar = 0;
                             var pipe = 0;
@@ -734,7 +732,7 @@ define(function (require, exports, module) {
                                             dollar = 1;
                                             newContent += HighLight.wrapSpan('$', 'prompt');
                                         } else {
-                                            dollar = 1;
+                                            dollar = 0;
                                             newContent += HighLight.wrapSpan('$', 'prompt');
                                             newContent += ' ';
                                             newContent += HighLight.wrapSpan(word, 'keyword');
