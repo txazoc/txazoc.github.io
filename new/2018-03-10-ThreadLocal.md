@@ -3,7 +3,7 @@ layout: new
 title:  ThreadLocal
 ---
 
-#### ThreadLocal结构
+#### ThreadLocal内部结构
 
 Thread内部有一个`ThreadLocal.ThreadLocalMap`实例
 
