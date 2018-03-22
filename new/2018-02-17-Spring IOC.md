@@ -1,6 +1,6 @@
 ---
 layout: new
-title:  Spring
+title:  Spring IOC
 ---
 
 #### IOC
@@ -10,13 +10,3 @@ title:  Spring
     * Autowire: byType
     * Autowire + Qualifier: byName
     * Resource: 先byName, 后byType
-
-#### AOP
-
-#### Spring事务
-
-* AOP管理事务
-* 事务传播机制
-* 事务隔离级别
-
-#### Spring MVC
