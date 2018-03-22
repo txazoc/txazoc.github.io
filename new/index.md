@@ -39,3 +39,4 @@ title: 目录
 * [2018-03-16 InnoDB](/new/2018-03-16-InnoDB.html)
 * [2018-03-18 IDEA](/new/2018-03-18-IDEA.html)
 * [2018-03-19 Lamdba](/new/2018-03-19-Lamdba.html)
+* [2018-03-20 类加载](/new/2018-03-20-类加载.html)
