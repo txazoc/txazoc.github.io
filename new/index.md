@@ -38,3 +38,4 @@ title: 目录
 * [2018-03-15 MySQL](/new/2018-03-15-MySQL.html)
 * [2018-03-16 InnoDB](/new/2018-03-16-InnoDB.html)
 * [2018-03-18 IDEA](/new/2018-03-18-IDEA.html)
+* [2018-03-19 Lamdba](/new/2018-03-19-Lamdba.html)
