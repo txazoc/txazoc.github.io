@@ -44,5 +44,7 @@ title: 目录
 * [2018-03-21 JVM类加载](/new/2018-03-21-JVM类加载.html)
 * [2018-03-22 JVM垃圾回收](/new/2018-03-22-JVM垃圾回收.html)
 * [2018-03-23 JVM监控工具](/new/2018-03-23-JVM监控工具.html)
+* [2018-04-01 volatile](/new/2018-04-01-volatile.html)
+* [2018-04-02 wait-notify](/new/2018-04-02-wait-notify.html)
 * [2018-04-05 busy spin](/new/2018-04-05-busy spin.html)
 * [2018-04-07 伪共享](/new/2018-04-07-伪共享.html)
