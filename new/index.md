@@ -52,3 +52,4 @@ title: 目录
 * [2018-04-11 final](/new/2018-04-11-final.html)
 * [2018-04-12 synchronized](/new/2018-04-12-synchronized.html)
 * [2018-04-15 hashcode](/new/2018-04-15-hashcode.html)
+* [2018-05-01 Redis](/new/2018-05-01-Redis.html)
