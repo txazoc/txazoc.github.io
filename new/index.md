@@ -48,3 +48,6 @@ title: 目录
 * [2018-04-02 wait-notify](/new/2018-04-02-wait-notify.html)
 * [2018-04-05 busy spin](/new/2018-04-05-busy spin.html)
 * [2018-04-07 伪共享](/new/2018-04-07-伪共享.html)
+* [2018-04-10 static](/new/2018-04-10-static.html)
+* [2018-04-11 final](/new/2018-04-11-final.html)
+* [2018-04-12 synchronized](/new/2018-04-12-synchronized.html)
