@@ -58,3 +58,5 @@ title: 目录
 * [2018-07-01 NIO实现](/new/2018-07-01-NIO实现.html)
 * [2018-07-05 ELK安装](/new/2018-07-05-ELK安装.html)
 * [2018-07-06 ElasticSearch](/new/2018-07-06-ElasticSearch.html)
+* [2018-07-07 Kibana](/new/2018-07-07-Kibana.html)
+* [2018-07-08 LogStash](/new/2018-07-08-LogStash.html)
