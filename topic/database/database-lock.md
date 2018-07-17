@@ -22,7 +22,7 @@ create table User (
     id int(11) unsigned not null auto_increment comment 'id',
     name varchar(16) not null default '' comment 'name',
     primary key (id)
-) ENGINE=Myisam DEFAULT CHARSET=utf8 COMMENT='User';
+) ENGINE=Myisam DEFAULT CHARSET=utf8 COMMENT=user;
 
 insert into User(name) values('admin');
 ```
