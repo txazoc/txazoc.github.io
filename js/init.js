@@ -13,10 +13,14 @@ define(function (require, exports, module) {
         mapReg: new RegExp(/^\/(map|topic|new)\/[^\.#]+\.html/),
         homeReg: new RegExp(/^\/(home)\/[^\.#]+\.html/),
         homeListReg: new RegExp(/^\/home\/[^\.#]*/),
+        isWindows: false,
 
         init: function (sourceDomain, indexSpeedDomain) {
             Init.sourceDomain = sourceDomain;
             Init.indexSpeedDomain = indexSpeedDomain;
+
+            // 字体
+            Init.initFont();
 
             // 目录
             Init.initDirectory();
@@ -147,6 +151,9 @@ define(function (require, exports, module) {
                     } else {
                         $(this).addClass('language-' + language);
                         hljs.highlightBlock(e);
+                    }
+                    if (Init.isWindows) {
+                        $(this).css('font-family', '"SFMono-Regular",Consolas,"Liberation Mono",Menlo,Courier,monospace');
                     }
                     $(this).parent().addClass('hljs-dark').show();
                 });
@@ -614,6 +621,14 @@ define(function (require, exports, module) {
                 path = path.substring(0, path.length - 1);
             }
             return path;
+        },
+
+        initFont: function () {
+            var userAgent = navigator.userAgent.toLowerCase();
+            if (userAgent.indexOf('windows') != -1) {
+                Init.isWindows = true;
+                $('body').css('font-family', '-apple-system,BlinkMacSystemFont,"Segoe UI",Helvetica,Arial,sans-serif,"Apple Color Emoji","Segoe UI Emoji","Segoe UI Symbol"');
+            }
         },
 
         initDirectory: function () {
