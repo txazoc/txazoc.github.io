@@ -5,11 +5,29 @@
     text-align: center;
     margin-top: 10px;
 
-    .left {
-        float: left;
-    }
+    ul {
+        li {
+            .time {
 
-    .right {
-        float: right;
+            }
+
+            .message {
+                .avatar {
+
+                }
+
+                .text {
+
+                }
+            }
+
+            .left {
+                float: left;
+            }
+
+            .right {
+                float: right;
+            }
+        }
     }
 }
