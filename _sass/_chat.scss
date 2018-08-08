@@ -2,22 +2,59 @@
 
 // About
 .chat {
-    text-align: center;
     margin-top: 10px;
+    height: 100%;
 
     ul {
-        li {
-            .time {
+        list-style: outside none none;
 
+        li {
+            clear: both;
+            padding: 10px 0 10px 0;
+
+            .chat_time {
+                text-align: center;
+                font-size: 13px;
+                color: #999;
             }
 
-            .message {
-                .avatar {
+            .chat_main {
+                display: block;
 
+                .chat_avatar {
+                    width: 30px;
+                    height: 30px;
                 }
 
-                .text {
+                .chat_text {
+                    width: auto;
+                    position: relative;
+                    display: block;
 
+                    .chat_nickname {
+                        display: block;
+                        font-size: 13px;
+                        color: #999;
+                    }
+
+                    .chat_message {
+                        display: block;
+                        max-width: 300px;
+                        background-color: #99FF66;
+                        border-width: 0;
+                        border-radius: 8px;
+                        margin-top: 5px;
+                        padding: 5px 8px 5px 8px;
+                        overflow: hidden;
+
+                        span {
+                            font-size: 13px;
+                            word-break: normal;
+                            width: auto;
+                            white-space: pre-wrap;
+                            word-wrap: break-word;
+                        }
+                    }
                 }
             }
 
