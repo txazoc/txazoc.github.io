@@ -64,7 +64,6 @@
                         display: block;
                         overflow: hidden;
                         max-width: 200px;
-                        background-color: #99FF66;
                         border-width: 0;
                         border-radius: 8px;
                         margin-top: 5px;
@@ -72,7 +71,8 @@
 
                         span {
                             width: auto;
-                            font-size: 13px;
+                            color: #666;
+                            font-size: 12px;
                             word-break: normal;
                             white-space: pre-wrap;
                             word-wrap: break-word;
@@ -81,10 +81,12 @@
 
                     .chat_message_left {
                         text-align: left;
+                        background-color: #66D9EF;
                     }
 
                     .chat_message_right {
                         text-align: left;
+                        background-color: #99FF66;
                     }
                 }
 
@@ -107,7 +109,7 @@
                 float: right;
             }
 
-            :after {
+            &:after {
                 display: table;
                 content: "";
                 width: 0;
