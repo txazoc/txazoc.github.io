@@ -26,6 +26,14 @@
                     height: 30px;
                 }
 
+                .chat_avatar_left {
+                    float: left;
+                }
+
+                .chat_avatar_right {
+                    float: right;
+                }
+
                 .chat_text {
                     width: auto;
                     position: relative;
@@ -35,6 +43,13 @@
                         display: block;
                         font-size: 13px;
                         color: #999;
+                    }
+
+                    .chat_nickname_left {
+                    }
+
+                    .chat_nickname_right {
+                        text-align: right;
                     }
 
                     .chat_message {
@@ -55,6 +70,24 @@
                             word-wrap: break-word;
                         }
                     }
+
+                    .chat_message_left {
+                        text-align: left;
+                    }
+
+                    .chat_message_right {
+                        text-align: left;
+                    }
+                }
+
+                .chat_text_left {
+                    float: left;
+                    margin-left: 10px;
+                }
+
+                .chat_text_right {
+                    float: right;
+                    margin-right: 10px;
                 }
             }
 
