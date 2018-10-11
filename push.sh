@@ -7,6 +7,7 @@ python2 script/compress.py
 python2 script/index404.py
 python2 script/home.py
 python2 script/new.py
+python2 script/arch.py
 
 git add .
 git commit -am 'auto commit'
