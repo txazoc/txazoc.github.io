@@ -1,4 +1,0 @@
----
-layout: map
-title:  Kafka
----
