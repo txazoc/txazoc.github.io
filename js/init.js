@@ -10,7 +10,7 @@ define(function (require, exports, module) {
         lastWindowWidth: 0,
         sourceDomain: '//github.txazo.com',
         indexSpeedDomain: '//www.txazo.com',
-        mapReg: new RegExp(/^\/(map|topic|new|arch)\/[^\.#]+\.html/),
+        mapReg: new RegExp(/^\/(map|topic|new|arch|person)\/[^\.#]+\.html/),
         homeReg: new RegExp(/^\/(home)\/[^\.#]+\.html/),
         homeListReg: new RegExp(/^\/home\/[^\.#]*/),
         isWindows: false,
