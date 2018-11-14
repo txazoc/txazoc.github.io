@@ -1,5 +1,5 @@
 ---
-layout: /person
+layout: person
 title: 个人
 ---
 
