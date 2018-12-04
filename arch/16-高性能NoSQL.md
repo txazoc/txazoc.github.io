@@ -18,8 +18,15 @@ NoSQL，Not Only SQL
 
 #### 文档数据库
 
+* MongoDB
+
 #### 列式数据库
+
+* HBase
 
 #### 全文搜索引擎
 
+* ElasticSearch
 * 全文搜索: 倒排索引
+
+#### todo
