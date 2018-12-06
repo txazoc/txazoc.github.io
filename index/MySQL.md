@@ -5,6 +5,31 @@ title:  MySQL
 
 #### Spring事务管理
 
+* Spring声明式事务管理
+
+```java
+@Transactional(propagation = Propagation.REQUIRED, rollbackFor = Exception.class)
+public void update() {
+}
+```
+
+* AOP实现
+
+```java
+@Override
+public Object invoke(Object proxy, Method method, Object[] args) throws Throwable {
+    setAutoCommit(false);
+    try {
+        invoke();
+        commit();
+    } catch (Exception e) {
+        rollback();
+    }
+}
+```
+
+* Spring事务传播机制
+
 #### 数据库事务
 
 #### 分布式事务
@@ -26,6 +51,11 @@ title:  MySQL
 #### MVCC
 
 #### Redo Log/Undo Log
+
+* innodb_flush_log_at_trx_commit
+    * 0:
+    * 1:
+    * 2:
 
 #### 排序order
 
