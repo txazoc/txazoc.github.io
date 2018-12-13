@@ -77,20 +77,6 @@ date: 2017-09-26
             * 大对象
             * 长期存活对象晋级
             * 空间分配担保: Minor GC后Survivor空间不足
-* 内存回收
-    * 垃圾收集器分类
-        * 新生代/老年代
-        * 串行/并行/并发
-        * Stop The World
-        * 复制/标记-整理/标记-清除
-    * 垃圾收集器
-        * Serial
-        * Serial Old
-        * ParNew
-        * CMS
-        * Parallel Scanvenge
-        * Parallel Old
-        * G1
 * 内存模型
     * 局部变量
         * 线程局部变量
