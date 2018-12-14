@@ -13,13 +13,13 @@ title:  Zuul
 
 #### ZuulFilter
 
-* ServletDetectionFilter
-* Servlet30WrapperFilter
-* PreDecorationFilter
+* ServletDetectionFilter(`pre`): 检测是否DispatcherServlet过来的Request
+* Servlet30WrapperFilter(`pre`): 包装HttpServletRequest
+* PreDecorationFilter(`pre`): 查找路由
 
-* RibbonRoutingFilter
+* RibbonRoutingFilter(`route`): 使用Ribbon、Hystrix或HttpClient发送代理请求
 
-* SendResponseFilter
+* SendResponseFilter(`post`): 写回代理请求的响应
 
 ```java
 public abstract class ZuulFilter implements IZuulFilter, Comparable<com.netflix.zuul.ZuulFilter> {
