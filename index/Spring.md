@@ -10,5 +10,10 @@ title:  Spring
 #### Spring扩展接口
 
 * ```FactroyBean```
-
 * ```BeanPostProcessor```
+* ```InstantiationAwareBeanPostProcessor```
+* ```BeanFactoryPostProcessor```
+* ```Aware```
+* ```InitializingBean```
+
+#### Spring MVC
