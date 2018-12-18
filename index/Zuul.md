@@ -22,7 +22,7 @@ title:  Zuul
 * SendResponseFilter(`post`): 写回代理请求的响应
 
 ```java
-public abstract class ZuulFilter implements IZuulFilter, Comparable<com.netflix.zuul.ZuulFilter> {
+public abstract class ZuulFilter implements IZuulFilter, Comparable<ZuulFilter> {
 
     // zuul.ServletDetectionFilter.pre.disable:true
     public boolean isFilterDisabled() {
@@ -59,6 +59,10 @@ public class MyFilter extends ZuulFilter {
 }
 ```
 
-![Zuul Core Architecture](/images/zuul/zuul-filter.png)
+#### Zuul Core Architecture
 
-![Request Lifecycle](/images/zuul/zuul-lifecycle.png)
+<img src="/images/zuul/zuul-filter.png" style="width: 480px; border-width: 0px;" title="Zuul Core Architecture" />
+
+#### Request Lifecycle
+
+<img src="/images/zuul/zuul-lifecycle.png" style="width: 480px; border-width: 0px;" title="Request Lifecycle" />
