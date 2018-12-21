@@ -44,6 +44,10 @@ public Object invoke(Object proxy, Method method, Object[] args) throws Throwabl
 
 #### ACID
 
+#### 索引
+
+* B+树
+
 #### InnoDB索引
 
 #### InnoDB锁
