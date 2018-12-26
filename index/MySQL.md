@@ -47,6 +47,8 @@ public Object invoke(Object proxy, Method method, Object[] args) throws Throwabl
 #### 索引
 
 * B+树
+* MyISAM: 非聚集索引(数据文件 + 索引文件)
+* InnoDB: 聚集索引(数据索引文件)
 
 #### InnoDB索引
 

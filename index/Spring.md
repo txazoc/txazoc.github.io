@@ -38,3 +38,12 @@ title:  Spring
 * BeanPostProcessor: postProcessBeforeInitialization()
 * InitializingBean: afterPropertiesSet()
 * BeanPostProcessor: postProcessAfterInitialization()
+
+#### BeanDefinition
+
+* BeanDefinition
+* BeanDefinitionHolder
+
+* AnnotatedBeanDefinitionReader
+* BeanDefinitionRegistry
+* ClassPathBeanDefinitionScanner
