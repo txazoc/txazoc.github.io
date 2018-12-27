@@ -47,3 +47,5 @@ title:  Spring
 * AnnotatedBeanDefinitionReader
 * BeanDefinitionRegistry
 * ClassPathBeanDefinitionScanner
+* ImportBeanDefinitionRegistrar
+* FactoryBean
