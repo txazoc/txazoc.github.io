@@ -14,4 +14,17 @@ title:  InnoDB
     * doublewrite buffer
     * Crash Recovery
 * I(Isolation): 隔离性
+    * autocommit
+    * set ISOLATION LEVEL
+    * Row-Level Lock
 * D(Durability): 持久性
+    * doublewrite buffer
+    * `set innodb_flush_log_at_trx_commit`
+    * sync_binlog
+    * innodb_file_per_table
+
+#### MVCC
+
+* DB_TRX_ID(6byte): 事务ID
+* DB_ROLL_PTR(7byte): 回滚指针
+* DB_ROW_ID
