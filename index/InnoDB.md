@@ -29,9 +29,16 @@ title:  InnoDB
 * DB_ROLL_PTR(7byte): 回滚指针
 * DB_ROW_ID
 
+#### InnoDB Architecture
+
+<img src="/images/innodb/innodb-architecture.png" style="width: 480px; border-width: 0px;" title="Hash" />
+
 #### InnoDB In-Memory Structures
 
 * Buffer Pool
+* Change Buffer
+* Adaptive Hash Index
+* Log Buffer
 
 #### InnoDB On-Disk Structures
 
