@@ -644,7 +644,7 @@ define(function (require, exports, module) {
                     }
                 });
                 var $list = $('<ul>');
-                $list.append($('<li>').append($('<a>').html('返回上级').attr('href', window.location.pathname.substring(0, window.location.pathname.lastIndexOf('/')))));
+                $list.append($('<li>').append($('<a>').html('返回上级').attr('href', window.location.pathname.substring(0, window.location.pathname.lastIndexOf('/')) + '/')));
                 if (h4Array.length > 0) {
                     $.each(h4Array, function (i) {
                         $list.append($('<li>').append($('<a>').html(h4Array[i]).attr('href', '#' + h4Array[i])));
