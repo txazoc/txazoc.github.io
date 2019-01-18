@@ -17,7 +17,7 @@ title:  MyBatis源码
         * CachingExecutor
 * SqlSession.insert()/update()/delete()/select()
     * 获取MappedStatement
-    * 
+    * Executor.update()/query()
 
 #### MyBatis缓存
 
