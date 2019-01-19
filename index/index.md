@@ -1,6 +1,6 @@
 ---
 layout: index
-title: index
+title: Index
 ---
 
 * [Dubbo源码](/index/Dubbo源码.html)
