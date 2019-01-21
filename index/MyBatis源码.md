@@ -8,8 +8,8 @@ title:  MyBatis源码
 * 解析Configuration
     * 初始化数据源: 数据库连接池
     * 注册Mapper
-        * MapperRegistry -> `Map<Class, MapperProxyFactory>`
-        * Mapper -> MappedStatement
+        * MapperRegistry: `Map<Class, MapperProxyFactory>`
+        * Mapper -> `List<MappedStatement>`
         * MappedStatement
             * `Cache cache`: 二级缓存
 * 获取Mapper
@@ -22,9 +22,9 @@ title:  MyBatis源码
 * SqlSession.insert()/update()/delete()/select()
     * 获取MappedStatement
     * CachingExecutor
-        * MappedStatement.cache
+        * MappedStatement.cache(`二级缓存`)
     * BaseExecutor
-        * localCache
+        * localCache(`一级缓存`)
     * StatementHandler -> prepareStatement
     * ParameterHandler -> set parameters
     * JDBC execute
