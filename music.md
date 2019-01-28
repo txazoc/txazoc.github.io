@@ -5,14 +5,14 @@ title:  网易云音乐
 
 #### 2018-07-26
 
-![20180726135446.png](/images/music/20180726135446.png)
+<img src="/images/music/20180726135446.png" style="width: 480px; border-width: 1px;" />
 
-![20180726135458.png](/images/music/20180726135458.png)
+<img src="/images/music/20180726135458.png" style="width: 480px; border-width: 1px;" />
 
-![20180726140140.png](/images/music/20180726140140.png)
+<img src="/images/music/20180726140140.png" style="width: 480px; border-width: 1px;" />
 
-![20180726140334.png](/images/music/20180726140334.png)
+<img src="/images/music/20180726140334.png" style="width: 480px; border-width: 1px;" />
 
-![20180726140453.png](/images/music/20180726140453.png)
+<img src="/images/music/20180726140453.png" style="width: 480px; border-width: 1px;" />
 
-![20180726142507.png](/images/music/20180726142507.png)
+<img src="/images/music/20180726142507.png" style="width: 480px; border-width: 1px;" />
