@@ -5,15 +5,15 @@ title:  Tomcat源码
 
 #### Tomcat请求流程
 
-* acceptCount(backlog): 100
+* `acceptCount`(backlog): 100
 * Acceptor
-    * maxConnections: 10000
+    * `maxConnections`: 10000
     * accept()
     * offer Poller.events
 * Poller
-    * `Selector selector`
-    * `SynchronizedQueue<PollerEvent> events`
-    * events -> poll() -> register `OP_READ`
+    * Selector selector
+    * SynchronizedQueue<PollerEvent> events
+    * events -> poll() -> register OP_READ
     * selector -> select() -> isReadable -> SocketProcessor
 * Executor
     * `minSpareThreads`: 10
@@ -27,6 +27,8 @@ title:  Tomcat源码
         * servlet.service(request, response)
     * response
         * write()
-        * register `OP_WRITE`
+        * register OP_WRITE
 
 <img src="/images/tomcat/tomcat-request-process.png" style="width: 480px; border-width: 1px;" title="Tomcat Request Process" />
+
+#### 热部署和热加载
