@@ -53,20 +53,20 @@ rssxml: "/feed.xml"
 
 # 导航条菜单
 menu:
-    # 首页: /
-    # 标签: /tag.html
-    # 归档: /archive.html
-    # 专题: /topics.html
-    # 关于: /about.html
     首页: /
-    标签: /
-    归档: /
-    专题: /
+    标签: /tag.html
+    归档: /archive.html
+    专题: /topics.html
     关于: /about.html
+    # 首页: /
+    # 标签: /
+    # 归档: /
+    # 专题: /
+    # 关于: /about.html
 
 # 分页
 paginate: 10
 paginate_path: "index/:num"
 
 # 随机版本号
-randomVersion: "04f67a31c98bd95ddf156b9cf83872a1"
+randomVersion: "43c8601677c14c8d7c7c7297d7956438"

@@ -1,5 +1,4 @@
 ---
 layout: default
-title:  404 - Page not found
 ---
-<div class="notfound"><p class="p404"><span>4</span> <span>0</span> <span>4</span></p><p class="p_not">Sorry, page not found</p><p class="p_link">Click to <a href="/">home page</a> or <a href="javascript:history.back(-1);">back</a></p></div>
+<div class="list"><ul>{% for post in paginator.posts %}<li><h3 class="list-title"><a href="{% if site.localDebug == 'true' %}{{ post.url | prepend: site.baseurl | prepend: site.localDomain }}{% else %}{{ post.url | prepend: site.baseurl | prepend: site.sourceDomain }}{% endif %}">{{ post.title }}</a></h3><div class="list-content"><p>{{ post.content | strip_html | strip_newlines | truncate: 150 }}</p></div><div class="list-info"><span class="datetime">{{ post.date | date: "%Y年%m月%d日" }}</span></div></li>{% endfor %}</ul></div><div class="page" page="{{ paginator.page }}#{{ paginator.total_pages }}"></div>

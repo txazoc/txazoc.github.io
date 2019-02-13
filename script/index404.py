@@ -7,7 +7,8 @@ import shutil
 rootPath = os.getcwd()
 
 def index404():
-    shutil.copy(rootPath + '/404.html', rootPath + '/index.html')
+    # shutil.copy(rootPath + '/404.html', rootPath + '/index.html')
+    shutil.copy(rootPath + '/index_bak.html', rootPath + '/index.html')
 
 def main():
     print '--------------------------------------------------'
