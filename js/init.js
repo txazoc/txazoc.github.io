@@ -11,6 +11,7 @@ define(function (require, exports, module) {
         sourceDomain: '//github.txazo.com',
         indexSpeedDomain: '//www.txazo.com',
         mapReg: new RegExp(/^\/(map|topic|new|arch|person|index)\/[^\.#]+\.html/),
+        dirReg: new RegExp(/^\/(map|new|arch|person|index)\/[^\.#]+\.html/),
         homeReg: new RegExp(/^\/(home)\/[^\.#]+\.html/),
         homeListReg: new RegExp(/^\/home\/[^\.#]*/),
         isWindows: false,
@@ -644,7 +645,10 @@ define(function (require, exports, module) {
                     }
                 });
                 var $list = $('<ul>');
-                $list.append($('<li>').append($('<a>').html('返回上级').attr('href', window.location.pathname.substring(0, window.location.pathname.lastIndexOf('/')) + '/')));
+                console.log(window.location.pathname);
+                if (Init.dirReg.test(window.location.pathname)) {
+                    $list.append($('<li>').append($('<a>').html('返回上级').attr('href', window.location.pathname.substring(0, window.location.pathname.lastIndexOf('/')) + '/')));
+                }
                 if (h4Array.length > 0) {
                     $.each(h4Array, function (i) {
                         $list.append($('<li>').append($('<a>').html(h4Array[i]).attr('href', '#' + h4Array[i])));
