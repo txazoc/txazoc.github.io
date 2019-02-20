@@ -26,7 +26,9 @@ title:  Spring IOC源码
             * BeanClassLoaderAware.setBeanClassLoader()
             * BeanFactoryAware.setBeanFactory()
         * BeanPostProcessor.postProcessBeforeInitialization()
-        * `InitializingBean.afterPropertiesSet()`、`init-method`
+            * `@PostConstruct`
+        * `InitializingBean.afterPropertiesSet()`
+        * `init-method`
         * BeanPostProcessor.postProcessAfterInitialization()
 
 #### Spring扩展接口
