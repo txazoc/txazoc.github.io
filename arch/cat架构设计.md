@@ -7,7 +7,7 @@ title:  cat架构设计
 
 消息类型:
 
-* T|A: Transaction，事务
+* T\|A: Transaction，事务
 * E: Event，事件
 * L: Trace，跟踪
 * M: Metric，度量
