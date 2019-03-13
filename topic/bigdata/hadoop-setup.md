@@ -74,8 +74,8 @@ $ java -version
 
 #### 4. 安装Hadoop
 
-去Hadoop官网上下载`.tar.gz`格式得安装包，hadoop-2.7.3.tar.gz
-l
+去Hadoop官网上下载`.tar.gz`格式的安装包，hadoop-2.7.3.tar.gz
+
 ```linux
 $ tar -zxvf hadoop-2.7.3.tar.gz -C /usr/local
 $ cd /usr/local
