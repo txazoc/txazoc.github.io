@@ -31,6 +31,12 @@ title:  Spring IOC源码
         * `init-method`
         * BeanPostProcessor.postProcessAfterInitialization()
 
+三步走:
+
+* createBeanInstance
+* populateBean
+* initializeBean
+
 #### Spring扩展接口
 
 * ```FactroyBean```
