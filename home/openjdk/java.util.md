@@ -15,8 +15,6 @@ date: 2017-10-26
 * Map
     * HashMap: 数组 + 链表
     * TreeMap: 红黑树
-    * WeakHashMap
-        * WeakReference(key)
 * Queue/Deque
     * PriorityQueue
 * 工具类

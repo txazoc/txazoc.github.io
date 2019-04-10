@@ -56,6 +56,4 @@ Hashtable是线程安全的。
 
 #### Properties
 
-#### WeakHashMap
-
 #### ConcurrentSkipListMap

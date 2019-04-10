@@ -36,6 +36,7 @@ def main():
     # buildArchModule('/arch', '从0开始学架构')
     # buildArchModule('person', '个人')
     buildArchModule('index', 'Index')
+    buildArchModule('summary', '总结')
 
     print '[python] build arch module success.'
     print '--------------------------------------------------'
