@@ -48,8 +48,6 @@ public class HashMap<K, V> {
 
 Hashtable是线程安全的。
 
-#### LinkedHashMap
-
 #### ConcurrentHashMap
 
 #### TreeMap

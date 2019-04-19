@@ -4,11 +4,6 @@ title: java.util
 date: 2017-10-26
 ---
 
-* List
-    * ArrayList: 数组
-    * LinkedList: 链表
-    * Vector: synchronized
-    * Stack: extends Vector
 * Set
     * HashSet: 基于HashMap实现
     * TreeSet: 基于TreeMap实现

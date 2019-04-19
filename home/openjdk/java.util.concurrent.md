@@ -10,7 +10,6 @@ date: 2017-10-26
     * compareAndSwapInt()/compareAndSwapLong()/compareAndSwapObject()
     * getXXX()/putXXX()
     * getXXXVolatile()/putXXXVolatile()
-* AQS
 * 原子类
 * Lock
     * ReentrantLock
