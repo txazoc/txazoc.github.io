@@ -179,22 +179,3 @@ date:       2016-07-27
 #### Java内存模型
 
 * 线程(处理器) － 本地内存(共享变量副本) － JMM － 主内存(共享变量)
-
-#### synchronized
-
-* synchronized同步方法 synchronized静态同步方法: ACC_SYNCHRONIZED标记
-* synchronized同步代码块: monitorenter monitorexit
-* monitor: 监视器
-
-#### ReentrantLock: 可重入锁
-
-* volatile + CAS + park
-
-#### 线程池
-
-* ThreadPoolExecutor
-* 工作线程, 循环从工作队列获取任务执行, 
-* 工作线程数 < corePoolSize, 新建工作线程
-* 工作线程数 > corePoolSize, 工作队列未满, 添加到工作队列
-* 工作线程数 > corePoolSize, 工作队列满, 新建工作线程
-* 工作队列满, woker工作线程数 > maximumPoolSize, reject策略处理
