@@ -42,8 +42,6 @@ public Object invoke(Object proxy, Method method, Object[] args) throws Throwabl
 
 #### 读写分离/分库分表
 
-#### ACID
-
 #### 索引
 
 * B+树

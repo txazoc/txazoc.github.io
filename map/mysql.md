@@ -135,40 +135,6 @@ title:  MySQL
 
 #### InnoDB事务
 
-* 事务的ACID特性
-    * A 原子性: 一个事务中的所有操作，要么全部执行，要么全部不执行，不会停留在某个中间状态，允许回滚
-        * [MVCC](#MVCC)
-        * autocommit
-        * commit、rollback
-    * C 一致性: 事务从一个一致性状态切换到另一个一致性状态，事务的中间状态不会被其它事务看到
-        * doublewrite buffer
-        * crash recovery
-    * I 隔离性: 事务之间互相影响的程度，适当的破坏`一致性`来提升并发度
-        * autocommit
-        * 事务隔离级别
-        * 行锁
-    * D 持久性: 事务提交后，数据会被持久化到数据库，不会丢失
-        * doublewrite buffer
-        * innodb_flush_log_at_trx_commit
-        * sync_binlog
-        * innodb_file_per_table
-* 并发事务产生的问题
-    * 脏读: 一个事务读取了另一个事务`未提交`的数据，读到脏数据
-        * 问题来源: 读写并发
-        * 解决方案: [MySQL锁机制](#MySQL锁机制)
-    * 不可重复读: 一个事务读取了另一个事务`提交后`的数据，多次读取结果不同
-        * 问题来源: 事务并发
-        * 解决方案: [MVCC](#MVCC)
-    * 幻读: 一个事务读取了另一个事务插入的记录，多次读取结果不同
-        * 问题来源: 读事务无法对`insert`的行加锁
-        * 解决方案: 事务串行化
-* 事务隔离级别
-    * Read Uncommitted: 读未提交
-    * Read Committed: 读已提交，解决`脏读`
-        * [MySQL锁机制](#MySQL锁机制)
-    * Repeatable Read: 可重复读，解决`脏读`、`不可重复读`，InnoDB默认隔离级别
-        * [MVCC](#MVCC)
-    * Serializable: 串行化，解决所有并发问题
 * 事务并发模型
     * 读读
     * 读写
