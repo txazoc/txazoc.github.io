@@ -7,24 +7,6 @@ date:   2016-11-29
 
 参考自: [Memory Management in the Java HotSpot Virtual Machine](http://www.oracle.com/technetwork/java/javase/memorymanagement-whitepaper-150215.pdf)
 
-#### 显式和自动内存管理
-
-显示内存分配带来的问题:
-
-* 手动释放内存，加重程序员负担
-* 对象持有已被释放内存的引用
-* 无用内存未释放，导致内存泄露
-
-#### 垃圾收集概念
-
-垃圾收集器的职责:
-
-* 分配内存
-* 回收无用内存
-
-`垃圾收集`: 查找并释放无用内存的过程
-
-`内存碎片`
 
 设计垃圾收集算法时的选择:
 

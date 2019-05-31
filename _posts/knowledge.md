@@ -127,15 +127,6 @@ date:       2016-07-27
 * 静态代理
 * 动态代理: JDK CGLib
 
-#### JDK动态代理
-
-* Proxy.newProxyInstance
-* 生成代理类的字节码($Proxy0反编译), 装载Class并缓存
-* Constructor实例化代理类
-* 调用代理类的方法
-* 调用InvocationHandler.invoke()
-* Method调用目标对象方法
-
 #### HashMap
 
 * 数组 + 链表: Node(hash, key, value, next)[]

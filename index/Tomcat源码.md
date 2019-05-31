@@ -10,7 +10,7 @@ title:  Tomcat源码
     * `maxConnections`: 10000
     * accept()
     * offer Poller.events
-* Poller
+* Poller[2]
     * Selector selector
     * SynchronizedQueue<PollerEvent> events
     * events -> poll() -> register OP_READ
