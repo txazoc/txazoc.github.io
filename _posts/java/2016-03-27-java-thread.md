@@ -141,5 +141,3 @@ while (isAlive()) {
 #### wait() notify() notifyAll()
 
 #### 线程中断
-
-#### ThreadLocal解决线程安全
