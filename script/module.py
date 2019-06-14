@@ -38,5 +38,6 @@ def main():
     # buildArchModule('person', '个人')
     buildArchModule('index', 'Index')
     buildArchModule('summary', '总结')
+    buildArchModule('javaadvanced', 'Java高级')
 
 main()
