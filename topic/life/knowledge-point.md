@@ -9,7 +9,6 @@ date:   2017-02-21
 2. SOA: Restful
 3. 缓存: EhCache
 4. 数据库连接池: DBCP、C3P0、Proxool
-5. 分布式: CAP原则
 6. 高性能
     * 分布式/负载均衡
     * 异步编程: 队列、线程池
