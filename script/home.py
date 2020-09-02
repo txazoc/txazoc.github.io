@@ -12,25 +12,28 @@ class Item:
         self.name = name
         self.title = title
 
-def buildHomeModule(relativePath):
+def buildHomeModule(relativePath, childDirAliases):
     childDirNames = []
     childFileNames = []
     childTitle = {}
     fullPath = rootDir + '/' + relativePath
     childs = os.listdir(fullPath)
     for child in childs:
+        dirAliases = childDirAliases[:]
         childRelativePath = relativePath + '/' + child
         childFullPath = rootDir + '/' + childRelativePath
         if os.path.isdir(childFullPath):
             childDirNames.append(child)
-            buildHomeModule(childRelativePath)
-            childTitle[child] = readItemTitle(fullPath, child + '/index.md')
+            title = readItemTitle(fullPath, child + '/index.md')
+            dirAliases.append(title)
+            buildHomeModule(childRelativePath, dirAliases)
+            childTitle[child] = title
         else:
             if child.endswith('.md') and child != 'index.md':
                 childFileNames.append(child.replace('.md', ''))
                 childTitle[child.replace('.md', '')] = readItemTitle(fullPath, child)
 
-    generateIndex(fullPath, relativePath, childDirNames, childFileNames, childTitle)
+    generateIndex(fullPath, relativePath, childDirNames, childFileNames, childTitle, childDirAliases)
 
 def readItemTitle(path, file):
     header = 0
@@ -48,7 +51,7 @@ def readItemTitle(path, file):
                 if key == 'title':
                     return pair[1].strip()
 
-def generateIndex(path, relativePath, childDirNames, childFileNames, childTitle):
+def generateIndex(path, relativePath, childDirNames, childFileNames, childTitle, childDirAliases):
     headers = []
     indexFile = path + '/index.md'
     if os.path.exists(indexFile):
@@ -76,10 +79,26 @@ def generateIndex(path, relativePath, childDirNames, childFileNames, childTitle)
         writeLine(f, line)
     writeLine(f, '')
     for name in childDirNames:
-        writeLine(f, '* [' + childTitle[name] + '/](' + rootPath + relativePath + '/' + name + '/)')
+        writeLine(f, '* [' + childTitle[name] + '/](' + rootPath + relativePath + '/' + name + '/' + joinDirAliases(childDirAliases, childTitle[name]) + ')')
     for name in childFileNames:
-        writeLine(f, '* [' + childTitle[name] + '](' + rootPath + relativePath + '/' + name + '.html)')
+        writeLine(f, '* [' + childTitle[name] + '](' + rootPath + relativePath + '/' + name + '.html' + joinDirAliases(childDirAliases, '') + ')')
     f.close()
+
+def joinDirAliases(dirAliases, dirName):
+    result = ''
+    if len(dirAliases):
+        for alias in dirAliases:
+            if result == '':
+                result += alias
+            else:
+                result += (',' + alias)
+    if (result == '' and dirName == ''):
+        return ''
+    elif (result == '' and dirName != ''):
+        return '?' + dirName
+    elif (result != '' and dirName == ''):
+        return '?' + result
+    return '?' + dirName + ',' + result
 
 def generateTitle(path):
     if path.find('/') > -1:
@@ -93,7 +112,7 @@ def main():
     print '--------------------------------------------------'
     print '[python] build home module begin.'
 
-    buildHomeModule('')
+    buildHomeModule('', [])
 
     print '[python] build home module success.'
     print '--------------------------------------------------'

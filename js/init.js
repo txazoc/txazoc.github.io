@@ -595,20 +595,21 @@ define(function (require, exports, module) {
             var modules = path.split('/');
             var $homeNav = $('.home-nav');
             var basePath = Init.wrapIndexSpeedDomain('/home/');
-            $homeNav.append('<a class="title" href="' + basePath + '">Home</a>');
+            $homeNav.append('<a class="title" href="' + basePath + '">分类</a>');
             var length = path.indexOf('.html') > -1 ? modules.length - 1 : modules.length;
-            if (length > 2) {
+            if (length > 3) {
                 $homeNav
                     .append('<span class="dire">&gt;&gt;</span>')
                     .append('<span class="tag">...</span>')
             }
-            var start = length > 2 ? length - 2 : 0;
+            var start = length > 3 ? length - 3 : 0;
+            var dirAliases = window.location.search.substring(1).split(",");
             for (var i = 0; i < length; i++) {
                 basePath += modules[i] + '/';
                 if (i >= start && modules[i] != '') {
                     $homeNav
                         .append('<span class="dire">&gt;&gt;</span>')
-                        .append('<a class="sub-title" href="' + basePath + '"><span class="tag">' + modules[i] + '</span></a>');
+                        .append('<a class="sub-title" href="' + basePath + '"><span class="tag">' + decodeURI(dirAliases[i]) + '</span></a>');
                 }
             }
             $homeNav.css('visibility', 'visible');
