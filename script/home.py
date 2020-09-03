@@ -98,7 +98,7 @@ def joinDirAliases(dirAliases, dirName):
         return '?' + dirName
     elif (result != '' and dirName == ''):
         return '?' + result
-    return '?' + dirName + ',' + result
+    return '?' + result + ',' + dirName
 
 def generateTitle(path):
     if path.find('/') > -1:
