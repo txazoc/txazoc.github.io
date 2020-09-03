@@ -611,10 +611,24 @@ define(function (require, exports, module) {
                 if (i >= start && modules[i] != '') {
                     $homeNav
                         .append('<span class="dire">&gt;&gt;</span>')
-                        .append('<a class="sub-title" href="' + basePath + '"><span class="tag">' + decodeURI(dirAliases[i]) + '</span></a>');
+                        .append('<a class="sub-title" href="' + basePath + Init.buildAliasQueryString(dirAliases, i) + '"><span class="tag">' + decodeURI(dirAliases[i]) + '</span></a>');
                 }
             }
             $homeNav.css('visibility', 'visible');
+        },
+
+        buildAliasQueryString: function (dirAliases, index) {
+            var queryString = '';
+            for (var i = 0; i < dirAliases.length; i++) {
+                if (i <= index) {
+                    if (i == 0) {
+                        queryString += '?' + dirAliases[i];
+                    } else {
+                        queryString += ',' + dirAliases[i];
+                    }
+                }
+            }
+            return queryString;
         },
 
         stripSlash: function (path) {

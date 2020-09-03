@@ -11,6 +11,6 @@ python2 script/new.py
 python2 script/arch.py
 python2 script/module.py
 
-open -g http://127.0.0.1:4000/arch
+open -g http://127.0.0.1:4000/
 
 bundle exec jekyll serve
