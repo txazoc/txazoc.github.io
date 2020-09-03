@@ -4,5 +4,5 @@ title: bbb
 date: 2017-09-27
 ---
 
-* [ccc/](/home/hotspot/gc/aaa/bbb/ccc/?虚拟机,垃圾回收,aaa,bbb,ccc)
-* [GC调优](/home/hotspot/gc/aaa/bbb/gc-tuning.html?虚拟机,垃圾回收,aaa,bbb)
+* [ccc/](/home/hotspot/gc/aaa/bbb/ccc/?%E8%99%9A%E6%8B%9F%E6%9C%BA%2C%E5%9E%83%E5%9C%BE%E5%9B%9E%E6%94%B6%2Caaa%2Cbbb%2Cccc)
+* [GC调优](/home/hotspot/gc/aaa/bbb/gc-tuning.html?%E8%99%9A%E6%8B%9F%E6%9C%BA%2C%E5%9E%83%E5%9C%BE%E5%9B%9E%E6%94%B6%2Caaa%2Cbbb)

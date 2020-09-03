@@ -4,7 +4,7 @@ title: 垃圾回收
 date: 2017-09-27
 ---
 
-* [aaa/](/home/hotspot/gc/aaa/?虚拟机,垃圾回收,aaa)
-* [GC调优](/home/hotspot/gc/gc-tuning.html?虚拟机,垃圾回收)
-* [Oop-Map](/home/hotspot/gc/oop-map.html?虚拟机,垃圾回收)
-* [GC](/home/hotspot/gc/gc.html?虚拟机,垃圾回收)
+* [aaa/](/home/hotspot/gc/aaa/?%E8%99%9A%E6%8B%9F%E6%9C%BA%2C%E5%9E%83%E5%9C%BE%E5%9B%9E%E6%94%B6%2Caaa)
+* [GC调优](/home/hotspot/gc/gc-tuning.html?%E8%99%9A%E6%8B%9F%E6%9C%BA%2C%E5%9E%83%E5%9C%BE%E5%9B%9E%E6%94%B6)
+* [Oop-Map](/home/hotspot/gc/oop-map.html?%E8%99%9A%E6%8B%9F%E6%9C%BA%2C%E5%9E%83%E5%9C%BE%E5%9B%9E%E6%94%B6)
+* [GC](/home/hotspot/gc/gc.html?%E8%99%9A%E6%8B%9F%E6%9C%BA%2C%E5%9E%83%E5%9C%BE%E5%9B%9E%E6%94%B6)

@@ -605,7 +605,7 @@ define(function (require, exports, module) {
                     .append('<span class="tag">...</span>')
             }
             var start = length > 3 ? length - 3 : 0;
-            var dirAliases = window.location.search.substring(1).split(",");
+            var dirAliases = window.location.search.substring(1).split("%2C");
             for (var i = 0; i < length; i++) {
                 basePath += modules[i] + '/';
                 if (i >= start && modules[i] != '') {
@@ -622,13 +622,17 @@ define(function (require, exports, module) {
             for (var i = 0; i < dirAliases.length; i++) {
                 if (i <= index) {
                     if (i == 0) {
-                        queryString += '?' + dirAliases[i];
+                        queryString += dirAliases[i];
                     } else {
-                        queryString += ',' + dirAliases[i];
+                        queryString += '%2C' + dirAliases[i];
                     }
                 }
             }
-            return queryString;
+
+            if (queryString == '') {
+                return queryString;
+            }
+            return '?' + queryString;
         },
 
         stripSlash: function (path) {

@@ -3,6 +3,7 @@
 
 import os
 import time
+import urllib
 
 rootPath = '/dict'
 rootDir = os.getcwd() + rootPath
@@ -92,13 +93,14 @@ def joinDirAliases(dirAliases, dirName):
                 result += alias
             else:
                 result += (',' + alias)
+
     if (result == '' and dirName == ''):
         return ''
     elif (result == '' and dirName != ''):
-        return '?' + dirName
+        return '?' + urllib.quote(dirName)
     elif (result != '' and dirName == ''):
-        return '?' + result
-    return '?' + result + ',' + dirName
+        return '?' + urllib.quote(result)
+    return '?' + urllib.quote(result + ',' + dirName)
 
 def generateTitle(path):
     if path.find('/') > -1:
