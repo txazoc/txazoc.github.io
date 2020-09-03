@@ -12,8 +12,8 @@ define(function (require, exports, module) {
         indexSpeedDomain: '//www.txazo.com',
         mapReg: new RegExp(/^\/(map|topic|new|arch|person|index|summary|javaadvanced)\/[^\.#]+\.html/),
         dirReg: new RegExp(/^\/(map|new|arch|person|index|summary|javaadvanced)\/[^\.#]+\.html/),
-        homeReg: new RegExp(/^\/(home)\/[^\.#]+\.html/),
-        homeListReg: new RegExp(/^\/home\/[^\.#]*/),
+        homeReg: new RegExp(/^\/(home|dict)\/[^\.#]+\.html/),
+        homeListReg: new RegExp(/^\/(home|dict)\/[^\.#]*/),
         isWindows: false,
 
         init: function (sourceDomain, indexSpeedDomain) {
@@ -273,7 +273,9 @@ define(function (require, exports, module) {
             } else if (pathName.length > 6 && pathName.substr(0, 7) == '/topic/') {
                 Init.initTopic(pathName);
             } else if (pathName.length > 5 && pathName.substr(0, 6) == '/home/') {
-                Init.initHome(pathName);
+                Init.initHome(pathName, '/home/');
+            } else if (pathName.length > 5 && pathName.substr(0, 6) == '/dict/') {
+                Init.initHome(pathName, '/dict/');
             }
         },
 
@@ -589,12 +591,12 @@ define(function (require, exports, module) {
             });
         },
 
-        initHome: function (pathName) {
+        initHome: function (pathName, module) {
             var path = pathName.substring(6, pathName.length);
             path = Init.stripSlash(path);
             var modules = path.split('/');
             var $homeNav = $('.home-nav');
-            var basePath = Init.wrapIndexSpeedDomain('/home/');
+            var basePath = Init.wrapIndexSpeedDomain(module);
             $homeNav.append('<a class="title" href="' + basePath + '">分类</a>');
             var length = path.indexOf('.html') > -1 ? modules.length - 1 : modules.length;
             if (length > 3) {
