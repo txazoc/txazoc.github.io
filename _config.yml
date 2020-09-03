@@ -56,7 +56,7 @@ menu:
     首页: /
     标签: /tag.html
     归档: /archive.html
-    专题: /topics.html
+    分类: /dict
     关于: /about.html
     # 首页: /
     # 标签: /
@@ -69,4 +69,4 @@ paginate: 10
 paginate_path: "index/:num"
 
 # 随机版本号
-randomVersion: "80d940effdb1fe82b711175f19430096"
+randomVersion: "5563d162141c3ac69b3df8275a92fd99"
