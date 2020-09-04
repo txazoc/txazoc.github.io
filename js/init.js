@@ -599,12 +599,12 @@ define(function (require, exports, module) {
             var basePath = Init.wrapIndexSpeedDomain(module);
             $homeNav.append('<a class="title" href="' + basePath + '">分类</a>');
             var length = path.indexOf('.html') > -1 ? modules.length - 1 : modules.length;
-            if (length > 3) {
+            if (length > 2) {
                 $homeNav
                     .append('<span class="dire">&gt;&gt;</span>')
                     .append('<span class="tag">...</span>')
             }
-            var start = length > 3 ? length - 3 : 0;
+            var start = length > 2 ? length - 2 : 0;
             var dirAliases = window.location.search.substring(1).split("%2C");
             for (var i = 0; i < length; i++) {
                 basePath += modules[i] + '/';
