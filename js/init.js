@@ -599,22 +599,40 @@ define(function (require, exports, module) {
             var basePath = Init.wrapIndexSpeedDomain(module);
             $homeNav.append('<a class="title" href="' + basePath + '">分类</a>');
             var length = path.indexOf('.html') > -1 ? modules.length - 1 : modules.length;
-            if (length > 3) {
+            if (length > 2) {
                 $homeNav
                     .append('<span class="dire">&gt;&gt;</span>')
                     .append('<span class="tag">...</span>')
             }
-            var start = length > 3 ? length - 3 : 0;
-            var dirAliases = window.location.search.substring(1).split(",");
+            var start = length > 2 ? length - 2 : 0;
+            var dirAliases = window.location.search.substring(1).split("%2C");
             for (var i = 0; i < length; i++) {
                 basePath += modules[i] + '/';
                 if (i >= start && modules[i] != '') {
                     $homeNav
                         .append('<span class="dire">&gt;&gt;</span>')
-                        .append('<a class="sub-title" href="' + basePath + '"><span class="tag">' + decodeURI(dirAliases[i]) + '</span></a>');
+                        .append('<a class="sub-title" href="' + basePath + Init.buildAliasQueryString(dirAliases, i) + '"><span class="tag">' + decodeURI(dirAliases[i]) + '</span></a>');
                 }
             }
             $homeNav.css('visibility', 'visible');
+        },
+
+        buildAliasQueryString: function (dirAliases, index) {
+            var queryString = '';
+            for (var i = 0; i < dirAliases.length; i++) {
+                if (i <= index) {
+                    if (i == 0) {
+                        queryString += dirAliases[i];
+                    } else {
+                        queryString += '%2C' + dirAliases[i];
+                    }
+                }
+            }
+
+            if (queryString == '') {
+                return queryString;
+            }
+            return '?' + queryString;
         },
 
         stripSlash: function (path) {
