@@ -18,14 +18,14 @@ url: "http://www.txazo.com"
 
 # Markdown引擎
 # kramdown, maruku, rdiscount, redcarpet
-markdown: rdiscount
+markdown: kramdown
 markdownStyle: md-primary
 
 # highlight高亮样式
 highlightstyle: hljs-txazo
 
 # 是否本地调试
-localDebug: "true"
+localDebug: "false"
 
 # 本地域名
 localDomain: "//127.0.0.1:4000"
@@ -69,4 +69,4 @@ paginate: 10
 paginate_path: "index/:num"
 
 # 随机版本号
-randomVersion: "21e60b2e2e3caed670a50013585eecf1"
+randomVersion: "1026ac1bda7f16a3939674b19c466c04"
