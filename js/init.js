@@ -682,19 +682,49 @@ define(function (require, exports, module) {
             // Home
             if (Init.homeReg.test(window.location.pathname)) {
                 var h4Array = [];
+                var levelArray = [];
+                var headArray = [];
+                var maxLevel = 7;
                 var $article = $('.md-primary');
                 $article.find('h1,h2,h3,h4,h5,h6').each(function () {
                     var title = $(this).html();
-                    $(this).html('').append($('<a>').attr('id', title).html(title));
-                    if ($(this)[0].tagName == 'H4') {
-                        h4Array.push(title);
-                    }
+                    $(this).html('').append($('<a>').attr('id', 'header-' + title).html(title));
+                    h4Array.push(title);
+                    var level = parseInt($(this)[0].tagName.substr(1, 1));
+                    maxLevel = Math.min(level, maxLevel);
+                    levelArray.push(level);
+                    headArray.push($(this));
                 });
+
+                maxLevel = levelArray[0];
+
+                if (h4Array.length <= 0) {
+                    return;
+                }
+
+                var listStack = [];
+                var lastLevelOneLi;
                 var $list = $('<ul>');
-                if (h4Array.length > 0) {
-                    $.each(h4Array, function (i) {
-                        $list.append($('<li>').append($('<a>').html(h4Array[i]).attr('href', '#' + h4Array[i])));
-                    });
+                var levelOneIndex = 0;
+                var levelTwoIndex = 0;
+                for (var i = 0; i < h4Array.length; i++) {
+                    if (levelArray[i] <= maxLevel) {
+                        while (listStack.length > 0) {
+                            listStack.pop();
+                        }
+                        levelTwoIndex = 0;
+                        lastLevelOneLi = $('<li>');
+                        lastLevelOneLi.append($('<a>').html(++levelOneIndex + '、' + h4Array[i]).attr('href', '#header-' + h4Array[i]));
+                        headArray[i].html(levelOneIndex + '、' + headArray[i].html());
+                        $list.append(lastLevelOneLi);
+                    } else {
+                        if (listStack.length == 0) {
+                            listStack.push($('<ul>'));
+                            lastLevelOneLi.append(listStack[0]);
+                        }
+                        listStack[0].append($('<li>').append($('<a>').html(levelOneIndex + '.' + ++levelTwoIndex + '、' + h4Array[i]).attr('href', '#header-' + h4Array[i])));
+                        headArray[i].html(levelOneIndex + '.' + levelTwoIndex + '、' + headArray[i].html());
+                    }
                 }
                 $article.prepend($list);
                 $article.prepend($('<h4>').append($('<strong>').append($('<em>').html('目录'))));
