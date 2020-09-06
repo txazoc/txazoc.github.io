@@ -715,7 +715,7 @@ define(function (require, exports, module) {
                         levelTwoIndex = 0;
                         lastLevelOneLi = $('<li>');
                         lastLevelOneLi.append($('<a>').html(++levelOneIndex + '、' + h4Array[i]).attr('href', '#header-' + h4Array[i]));
-                        headArray[i].html(levelOneIndex + '、' + headArray[i].html());
+                        headArray[i].find('a').html(levelOneIndex + '、' + headArray[i].find('a').html());
                         $list.append(lastLevelOneLi);
                     } else {
                         if (listStack.length == 0) {
