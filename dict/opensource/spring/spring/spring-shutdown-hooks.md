@@ -1,7 +1,8 @@
 ---
-layout: homelist
+layout: home
 title: Spring关闭钩子
 date: 2019-09-30
+tags:   [spring, 关闭钩子]
 ---
 
 #### Spring容器注册关闭钩子

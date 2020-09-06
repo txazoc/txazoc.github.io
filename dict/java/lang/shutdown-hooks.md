@@ -1,7 +1,8 @@
 ---
-layout: homelist
-title: 关闭钩子
-date: 2019-09-30
+layout: home
+title:  关闭钩子
+date:   2019-09-30
+tags:   [java, 关闭钩子]
 ---
 
 #### 关闭钩子

@@ -23,14 +23,14 @@ define(function (require, exports, module) {
             // 字体
             Init.initFont();
 
-            // 目录
-            Init.initDirectory();
-
             // 事件
             Init.initEvent();
 
             // 页面
             Init.initPage();
+
+            // 目录
+            Init.initDirectory();
 
             // 分页
             Init.initPagination();
@@ -705,6 +705,14 @@ define(function (require, exports, module) {
                 var listStack = [];
                 var lastLevelOneLi;
                 var $list = $('<ul>');
+
+                console.log($('.home-nav .sub-title').last().attr('href'));
+
+                $list.append($('<li>').append($('<a>').html('返回上级')
+                    .attr('href', $('.home-nav .sub-title').last().attr('href'))
+                    .attr('style', 'font-weight: bold;')
+                ));
+
                 var levelOneIndex = 0;
                 var levelTwoIndex = 0;
                 for (var i = 0; i < h4Array.length; i++) {
@@ -714,7 +722,8 @@ define(function (require, exports, module) {
                         }
                         levelTwoIndex = 0;
                         lastLevelOneLi = $('<li>');
-                        lastLevelOneLi.append($('<a>').html(++levelOneIndex + '、' + h4Array[i]).attr('href', '#header-' + h4Array[i]));
+                        lastLevelOneLi.append($('<a>').html(++levelOneIndex + '、' + h4Array[i]).attr('href', '#header-' + h4Array[i])
+                            .attr('style', 'font-weight: bold;'));
                         headArray[i].find('a').html(levelOneIndex + '、' + headArray[i].find('a').html());
                         $list.append(lastLevelOneLi);
                     } else {
@@ -722,7 +731,11 @@ define(function (require, exports, module) {
                             listStack.push($('<ul>'));
                             lastLevelOneLi.append(listStack[0]);
                         }
-                        listStack[0].append($('<li>').append($('<a>').html(levelOneIndex + '.' + ++levelTwoIndex + '、' + h4Array[i]).attr('href', '#header-' + h4Array[i])));
+                        listStack[0].append($('<li>').append($('<a>')
+                            .html(levelOneIndex + '.' + ++levelTwoIndex + '、' + h4Array[i])
+                            .attr('href', '#header-' + h4Array[i])
+                            .attr('style', 'font-size: 12px;')
+                        ));
                         headArray[i].html(levelOneIndex + '.' + levelTwoIndex + '、' + headArray[i].html());
                     }
                 }
