@@ -1,6 +1,6 @@
 ---
 layout: homelist
-title: SpringCloud
+title: Spring Cloud
 date: 2020-09-03
 ---
 

@@ -1,6 +1,6 @@
 ---
 layout: homelist
-title: SpringBoot
+title: Spring Boot
 date: 2020-09-03
 ---
 
