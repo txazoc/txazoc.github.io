@@ -26,3 +26,8 @@ tags:   [私活]
 * [智城](http://www.taskcity.com/)
 * [Sxsoft](https://www.sxsoft.com/)
 * [开发邦](https://www.kaifabang.com/)
+
+#### 参考
+* [https://www.zhihu.com/question/305351252/answer/704575270](https://www.zhihu.com/question/305351252/answer/704575270)
+* [https://www.zhihu.com/question/31893178/answer/700286952](https://www.zhihu.com/question/31893178/answer/700286952)
+* [https://www.zhihu.com/question/19703030/answer/687515227](https://www.zhihu.com/question/19703030/answer/687515227)
