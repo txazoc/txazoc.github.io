@@ -1,9 +1,8 @@
 ---
-layout: topic
-module: 操作系统
-title:  Linux内核-开机启动
-tags:   ['linux', '内核']
-date:   2017-05-03
+layout: home
+title:  Linux内核开机启动
+date:   2020-09-18
+tags:   [linux, 内核]
 ---
 
 #### 开机加电
