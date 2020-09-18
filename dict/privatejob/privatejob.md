@@ -26,6 +26,11 @@ tags:   [私活]
 * [智城](http://www.taskcity.com/)
 * [Sxsoft](https://www.sxsoft.com/)
 * [开发邦](https://www.kaifabang.com/)
+* [一早一晚](https://3cwork.com/)
+
+#### 国外私活网站
+
+* Upwork
 
 #### 参考
 * [https://www.zhihu.com/question/305351252/answer/704575270](https://www.zhihu.com/question/305351252/answer/704575270)
