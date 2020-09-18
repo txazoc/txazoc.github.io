@@ -1,8 +1,8 @@
 ---
-layout: topic
-module: 开发工具
+layout: home
 title:  Git
-date:   2017-02-07
+date:   2020-09-19
+tags:   [git]
 ---
 
 #### Git别名

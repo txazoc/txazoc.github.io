@@ -1,8 +1,8 @@
 ---
-layout: topic
-module: 性能优化
+layout: home
 title:  Reactor模式
-date:   2017-02-16
+date:   2020-09-19
+tags:   [reactor]
 ---
 
 #### BIO多线程模型
@@ -25,4 +25,4 @@ date:   2017-02-16
 * Task Queue: 任务队列
 * Thread Pool: 任务执行线程池
 
-<img src="/images/topic/performance/reactor.png" style="width: 480px" title="Reactor模式" />
+<img src="/images/topic/performance/reactor.png" style="width: 480px" title="Reactor模式" alt="Reactor模式" />
