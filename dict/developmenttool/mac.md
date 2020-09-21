@@ -5,6 +5,10 @@ date:   2020-09-19
 tags:   [git]
 ---
 
+#### jar包解压
+
+* `jar -xvf test.jar`
+
 #### 查看端口占用
 
 * `lsof -i`
