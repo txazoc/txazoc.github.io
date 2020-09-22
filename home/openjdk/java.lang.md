@@ -8,11 +8,6 @@ date: 2017-10-26
     * 自动装箱拆箱
     * Cache
     * Number: Byte、Short、Integer、Long、Float、Double
-* ClassLoader: 类加载器
-    * 双亲委派
-    * loadClass()
-    * findClass()
-    * defineClass()
 * Cloneable: 克隆标记接口
     * 浅克隆
 * 比较

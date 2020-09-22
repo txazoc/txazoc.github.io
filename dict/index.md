@@ -11,6 +11,7 @@ date: 2020-09-03
 * [分布式/](/dict/distributed/?%E5%88%86%E5%B8%83%E5%BC%8F)
 * [LeetCode/](/dict/leetcode/?LeetCode)
 * [网络/](/dict/network/?%E7%BD%91%E7%BB%9C)
+* [JVM/](/dict/jvm/?JVM)
 * [Java/](/dict/java/?Java)
 * [开源框架/](/dict/opensource/?%E5%BC%80%E6%BA%90%E6%A1%86%E6%9E%B6)
 * [前端/](/dict/front/?%E5%89%8D%E7%AB%AF)
