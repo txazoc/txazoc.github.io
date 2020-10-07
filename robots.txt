@@ -1,2 +1,12 @@
-User-agent: Baiduspider
-Disallow: /
+User-agent: *
+Disallow: /arch/
+Disallow: /css/
+Disallow: /dict/
+Disallow: /home/
+Disallow: /html/
+Disallow: /images/
+Disallow: /index/
+Disallow: /js/
+Disallow: /map/
+Disallow: /new/
+Disallow: /script/
