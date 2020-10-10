@@ -1,5 +1,5 @@
 ---
-layout: home
+layout: dict
 title:  Nginx真实IP
 date:   2020-09-19
 tags:   [nginx]

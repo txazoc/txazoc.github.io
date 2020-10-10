@@ -1,5 +1,5 @@
 ---
-layout: home
+layout: dict
 title:  关闭钩子
 date:   2019-09-30
 tags:   [java, 关闭钩子]

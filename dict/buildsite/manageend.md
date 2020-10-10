@@ -1,5 +1,5 @@
 ---
-layout: home
+layout: dict
 title:  管理后台规划
 date:   2020-09-25
 tags:   [管理后台]

@@ -1,5 +1,5 @@
 ---
-layout: home
+layout: dict
 title:  Webpack+React搭建
 date:   2020-09-20
 tags:   [webpack, react]

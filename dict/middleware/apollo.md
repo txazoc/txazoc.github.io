@@ -1,5 +1,5 @@
 ---
-layout: home
+layout: dict
 title:  Apollo
 date:   2020-09-24
 tags:   [apollo]

@@ -1,5 +1,5 @@
 ---
-layout: home
+layout: dict
 title:  后端规划
 date:   2020-09-25
 tags:   [后端]

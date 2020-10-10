@@ -1,5 +1,5 @@
 ---
-layout: home
+layout: dict
 title:  磁盘
 date:   2020-09-19
 tags:   [磁盘]

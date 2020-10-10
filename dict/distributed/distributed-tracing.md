@@ -1,5 +1,5 @@
 ---
-layout: home
+layout: dict
 title:  分布式链路追踪
 date:   2020-09-24
 tags:   [分布式链路追踪]

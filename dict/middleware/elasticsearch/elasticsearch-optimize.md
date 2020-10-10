@@ -1,5 +1,5 @@
 ---
-layout: home
+layout: dict
 title:  ElasticSearch调优
 date:   2020-09-23
 tags:   [elasticsearch]
