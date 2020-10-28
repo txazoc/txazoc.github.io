@@ -323,10 +323,6 @@ public void testSwitchString() {
     String mode = "ACTIVE";
     switch (mode) {
         case "ACTIVE":
-            System.out.println(mode);
-            break;
-        case "PASSIVE":
-            System.out.println(mode);
             break;
     }
 }
