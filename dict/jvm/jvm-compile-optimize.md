@@ -1,5 +1,5 @@
 ---
-layout: home
+layout: dict
 title:  JVM编译优化
 date:   2020-09-22
 tags:   [jvm]

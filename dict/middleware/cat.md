@@ -1,5 +1,5 @@
 ---
-layout: home
+layout: dict
 title:  Cat
 date:   2020-09-24
 tags:   [cat]

@@ -1,5 +1,5 @@
 ---
-layout: home
+layout: dict
 title:  Reactor模式
 date:   2020-09-19
 tags:   [reactor]

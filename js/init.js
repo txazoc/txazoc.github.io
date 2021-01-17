@@ -706,12 +706,10 @@ define(function (require, exports, module) {
                 var lastLevelOneLi;
                 var $list = $('<ul>');
 
-                console.log($('.home-nav .sub-title').last().attr('href'));
-
-                $list.append($('<li>').append($('<a>').html('返回上级')
-                    .attr('href', $('.home-nav .sub-title').last().attr('href'))
-                    .attr('style', 'font-weight: bold;')
-                ));
+//                $list.append($('<li>').append($('<a>').html('返回上级')
+//                    .attr('href', $('.home-nav .sub-title').last().attr('href'))
+//                    .attr('style', 'font-weight: bold;')
+//                ));
 
                 var levelOneIndex = 0;
                 var levelTwoIndex = 0;

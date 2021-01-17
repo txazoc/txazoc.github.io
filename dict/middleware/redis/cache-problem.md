@@ -1,5 +1,5 @@
 ---
-layout: home
+layout: dict
 title:  缓存问题
 date:   2020-09-19
 tags:   [缓存]

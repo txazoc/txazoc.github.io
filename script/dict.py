@@ -37,24 +37,11 @@ def buildHomeModule(relativePath, childDirAliases):
     generateIndex(fullPath, relativePath, childDirNames, childFileNames, childTitle, childDirAliases)
 
 def readItemTitle(path, file):
-    header = 0
-    for line in open(path + '/' + file, 'r'):
-        line = line.strip()
-        if line == '---':
-            header += 1
-        elif header >= 2:
-            break
-        else:
-            if line.find(':') > -1:
-                pair = line.split(':', 1)
-                key = pair[0].strip()
-                value = pair[1].strip()
-                if key == 'title':
-                    return pair[1].strip()
+    return path
 
 def generateIndex(path, relativePath, childDirNames, childFileNames, childTitle, childDirAliases):
     headers = []
-    indexFile = path + '/index.md'
+    indexFile = rootDir + '/index.md'
     if os.path.exists(indexFile):
         header = 0
         for line in open(indexFile, 'r'):

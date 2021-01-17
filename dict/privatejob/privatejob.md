@@ -1,5 +1,5 @@
 ---
-layout: home
+layout: dict
 title:  私活
 date:   2020-09-13
 tags:   [私活]

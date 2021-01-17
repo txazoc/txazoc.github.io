@@ -1,5 +1,5 @@
 ---
-layout: home
+layout: dict
 title:  Spring Boot启动
 date:   2002-09-08
 tags:   [spring boot]

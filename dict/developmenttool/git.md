@@ -1,5 +1,5 @@
 ---
-layout: home
+layout: dict
 title:  Git
 date:   2020-09-19
 tags:   [git]

@@ -1,5 +1,5 @@
 ---
-layout: home
+layout: dict
 title:  Linux内核开机启动
 date:   2020-09-18
 tags:   [linux, 内核]

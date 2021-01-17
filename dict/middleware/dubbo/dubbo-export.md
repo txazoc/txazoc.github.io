@@ -1,5 +1,5 @@
 ---
-layout: home
+layout: dict
 title:  Dubbo服务导出
 date:   2020-09-18
 tags:   [dubbo]

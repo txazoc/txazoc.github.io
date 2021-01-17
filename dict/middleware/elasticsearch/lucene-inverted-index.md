@@ -1,5 +1,5 @@
 ---
-layout: home
+layout: dict
 title:  Lucene倒排索引
 date:   2020-09-23
 tags:   [elasticsearch]
